@@ -203,7 +203,7 @@ hr {
 
 .brand {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 10px;
   font-weight: 600;
   font-size: 16px;
@@ -211,17 +211,18 @@ hr {
   color: var(--text);
   white-space: nowrap;
 }
-.brand .dot {
-  width: 9px;
-  height: 9px;
-  border-radius: 50%;
-  background: var(--accent);
-  align-self: center;
+.brand-logo {
+  height: 28px;
+  width: auto;
+  display: block;
+  user-select: none;
+  -webkit-user-drag: none;
 }
-.brand .tagline {
-  font-weight: 400;
-  color: var(--muted);
-  font-size: 12px;
+.brand-suffix {
+  font-weight: 600;
+  font-size: 16px;
+  color: var(--accent);
+  letter-spacing: 0.04em;
 }
 
 .tabs {
