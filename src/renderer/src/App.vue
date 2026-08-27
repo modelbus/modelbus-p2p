@@ -15,17 +15,25 @@ import { theme, themeOptions } from './ui/theme';
 import FlagIcon from './ui/FlagIcon.vue';
 import ThemeIcon from './ui/ThemeIcon.vue';
 
-import StatusView from './views/StatusView.vue';
-import SetupView from './views/SetupView.vue';
-import ProvisionView from './views/ProvisionView.vue';
-import ConsumeView from './views/ConsumeView.vue';
+import HomeView from './views/HomeView.vue';
+import LogsView from './views/LogsView.vue';
 import SettingsView from './views/SettingsView.vue';
+// SetupView / ProvisionView / ConsumeView are still implemented but
+// their content is now folded into HomeView / SettingsView for a more
+// compact layout. Kept here as reference imports in case a future
+// need arises to surface them again.
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import SetupView from './views/SetupView.vue';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import ProvisionView from './views/ProvisionView.vue';
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+import ConsumeView from './views/ConsumeView.vue';
 
 import type { EventLogEntry, AppRefs, AppActions, AppHelpers } from './views/types';
 
-type Tab = 'status' | 'setup' | 'provision' | 'consume' | 'settings';
+type Tab = 'home' | 'logs' | 'settings';
 
-const tab = ref<Tab>('status');
+const tab = ref<Tab>('home');
 
 // ---- state (kept as refs so we can pass to child views) ----
 const status = ref<{
@@ -276,12 +284,10 @@ function onDocClick(e: MouseEvent) {
   }
 }
 
-const tabs = computed<Array<{ id: Tab; label: string }>>(() => [
-  { id: 'status', label: t('nav.status') },
-  { id: 'setup', label: t('nav.setup') },
-  { id: 'provision', label: t('nav.provision') },
-  { id: 'consume', label: t('nav.consume') },
-  { id: 'settings', label: t('nav.settings') },
+const tabs = computed<Array<{ id: Tab; label: string; icon: string }>>(() => [
+  { id: 'home', label: t('nav.home'), icon: '🏠' },
+  { id: 'logs', label: t('nav.logs'), icon: '📋' },
+  { id: 'settings', label: t('nav.settings'), icon: '⚙' },
 ]);
 
 const refs: AppRefs = {
@@ -350,7 +356,8 @@ onBeforeUnmount(() => {
           :class="{ active: tab === tb.id }"
           @click="tab = tb.id"
         >
-          {{ tb.label }}
+          <span class="tab-icon">{{ tb.icon }}</span>
+          <span>{{ tb.label }}</span>
         </button>
       </nav>
 
@@ -361,11 +368,13 @@ onBeforeUnmount(() => {
           :title="status.peerId ?? ''"
         >
           <span class="led"></span>
-          {{
-            status.started
-              ? t('status.p2pOnline')
-              : t('status.p2pOffline')
-          }}
+          <span class="status-label">
+            {{
+              status.started
+                ? t('status.p2pOnline')
+                : t('status.p2pOffline')
+            }}
+          </span>
         </div>
 
         <div class="menu">
@@ -420,12 +429,8 @@ onBeforeUnmount(() => {
     </header>
 
     <main class="content">
-      <h2>{{ tabs.find((x) => x.id === tab)?.label }}</h2>
-
-      <StatusView v-if="tab === 'status'" :refs="refs" :actions="actions" :helpers="helpers" />
-      <SetupView v-else-if="tab === 'setup'" :refs="refs" :actions="actions" :helpers="helpers" />
-      <ProvisionView v-else-if="tab === 'provision'" :refs="refs" :actions="actions" :helpers="helpers" />
-      <ConsumeView v-else-if="tab === 'consume'" :refs="refs" :actions="actions" :helpers="helpers" />
+      <HomeView v-if="tab === 'home'" :refs="refs" :actions="actions" :helpers="helpers" />
+      <LogsView v-else-if="tab === 'logs'" :refs="refs" :actions="actions" :helpers="helpers" />
       <SettingsView v-else-if="tab === 'settings'" :refs="refs" :actions="actions" :helpers="helpers" />
     </main>
   </div>
