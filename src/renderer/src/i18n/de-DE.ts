@@ -6,6 +6,7 @@ export const deDE: Dict = {
     tagline: 'Dezentrale LLM-Token-Freigabe',
   },
 
+
   nav: {
     home: 'Home',
     models: 'Modelle',
@@ -141,6 +142,7 @@ export const deDE: Dict = {
     noConsumed: 'Noch kein konsumierter Verkehr.',
   },
 
+
   home: {
     nodeInfo: 'Knoteninfo',
     peerId: 'Peer-ID',
@@ -214,6 +216,11 @@ export const deDE: Dict = {
     colLatency: 'Latenz',
     nodesShort: '{n} Knoten',
     more: 'mehr',
+  },
+  system: {
+    menuLabel: 'System',
+    openDevTools: 'Entwicklertools öffnen',
+    openLogsFolder: 'Log- / Datenordner öffnen',
   },
 
 };
