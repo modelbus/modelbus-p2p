@@ -1,0 +1,51 @@
+# Dependencies
+node_modules
+.npm
+
+# Build output
+out
+release
+dist
+*.tsbuildinfo
+
+# Lockfiles (pick one package manager; we standardize on pnpm)
+package-lock.json
+pnpm-workspace.yaml
+
+# Logs
+*.log
+logs
+*.log.*
+
+# Environment & secrets
+.env
+.env.*
+.env.local
+
+# OS
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor / IDE
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# Electron
+out/
+release/
+
+# Coverage / cache
+coverage
+.nyc_output
+.cache
+.parcel-cache
+.eslintcache
+.vite
+.turbo
+
+# Native
+*.node
