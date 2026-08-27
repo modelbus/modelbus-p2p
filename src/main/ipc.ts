@@ -1,4 +1,4 @@
-import { BrowserWindow, ipcMain, shell } from 'electron';
+import { app, BrowserWindow, ipcMain, shell } from 'electron';
 import type { BootstrapConfig, NodeAnnouncement, ProvisionConfig, WalletScore, ModelEntry, LeaderboardEntry, ModelQualityNode } from '@shared/types';
 import type { Store } from './services/store.js';
 import type { ProviderService } from './services/providers.js';
@@ -142,6 +142,20 @@ export function registerIpc(deps: Deps): void {
 
   ipcMain.handle('system:openExternal', async (_e, url: string) => {
     await shell.openExternal(url);
+  });
+
+  ipcMain.handle('system:openDevTools', async () => {
+    const win = deps.getMainWindow();
+    if (win && !win.webContents.isDestroyed()) {
+      win.webContents.openDevTools({ mode: 'detach' });
+    }
+  });
+
+  ipcMain.handle('system:openLogsFolder', async () => {
+    // Electron writes main-process logs into the userData directory; on
+    // macOS that is ~/Library/Application Support/<appName>/. We open
+    // the parent folder so the user can also see the persisted store.
+    await shell.openPath(app.getPath('userData'));
   });
 
   // -------- Wallet --------
