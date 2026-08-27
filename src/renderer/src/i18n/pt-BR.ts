@@ -6,10 +6,8 @@ export const ptBR: Dict = {
     tagline: 'Compartilhamento descentralizado de tokens LLM',
   },
   nav: {
-    status: 'Status',
-    setup: 'Configuração',
-    provision: 'Compartilhar',
-    consume: 'Consumir',
+    home: 'Início',
+    logs: 'Logs',
     settings: 'Ajustes',
   },
   actions: {
@@ -63,7 +61,7 @@ export const ptBR: Dict = {
   },
   provision: {
     title: 'Compartilhar — seu token',
-    offlineHint: 'Inicie primeiro o nó P2P na aba Status.',
+    offlineHint: 'Inicie o nó P2P em Início primeiro.',
     activeHint: 'Você está compartilhando {provider} ({n} modelos). Outros peers rotearão requisições por você.',
     provider: 'Provedor',
     nickname: 'Apelido',
@@ -77,7 +75,7 @@ export const ptBR: Dict = {
   consume: {
     title: 'Consumir — token de outro peer',
     refreshHint: 'Clique em atualizar para obter o catálogo. Cada nó declara provedor e modelos.',
-    pickHint: 'Escolha um peer; o proxy HTTP local sobe em http://127.0.0.1:{port}. Qualquer cliente compatível com OpenAI / Anthropic funciona.',
+    pickHint: 'Escolha um peer; o proxy HTTP local sobe em http://127.0.0.1:{port}.',
     port: 'Porta do proxy local',
     target: 'Destino',
     proxyStatus: 'Proxy',
@@ -86,7 +84,7 @@ export const ptBR: Dict = {
     peerShort: 'peer',
     addrCount: '{n} endereços',
     modelCount: '{n} modelos',
-    noNodes: 'Sem nós ainda. Peça à outra parte clicar em «Começar a compartilhar».',
+    noNodes: 'Sem nós ainda. Peça à outra parte clicar em «Começar a compartilhar» em Início.',
     stats: 'Estatísticas',
     total: 'Total',
     success: 'Sucessos',
@@ -104,6 +102,24 @@ export const ptBR: Dict = {
     tcpPort: 'Porta TCP de escuta',
     bootstrap: 'Peers de bootstrap (um por linha)',
     saveHint: 'Reinicie o nó P2P para aplicar.',
+
+    proxyPortField: 'Porta do proxy local',
+    bootstrapHint: 'Peers que o libp2p disca ao iniciar',
+    tab: {
+      node: 'Nó',
+      register: 'Registrar',
+      provision: 'Compartilhar token',
+      service: 'Serviço de API',
+    },
+    nodeHint: 'Configure a rede libp2p local: URL do registro, porta TCP de escuta, peers de bootstrap.',
+    registerHint: 'Publique as informações do seu nó no registro global para que outros possam descobrir.',
+    registerHowto: 'Ao começar a compartilhar, o app envia um announce para a URL do registro. Você também pode salvar as configurações manualmente e clicar em «Começar a compartilhar» em Início.',
+    provisionHint: 'Configure o token LLM que você compartilha: escolha o provedor, cole a chave API, marque os modelos.',
+    serviceHint: 'Exponha um serviço de API público com uma chave API fixa — cada requisição é validada.',
+    consumerApiKey: 'Chave API do consumidor',
+    consumerApiKeyHint: 'Os chamadores devem enviar essa chave no cabeçalho Authorization (Bearer <key>) ao usar o proxy local.',
+    localEndpoint: 'Endpoint local',
+    authHeader: 'Cabeçalho de autenticação',
   },
   days: {
     today: 'hoje',
@@ -114,4 +130,12 @@ export const ptBR: Dict = {
     if (n < 1024 * 1024) return `${(n / 1024).toFixed(1)} KB`;
     return `${(n / (1024 * 1024)).toFixed(1)} MB`;
   },
+  logs: {
+    title: 'Logs',
+    supplied: 'Tráfego fornecido (requisições que atendi)',
+    consumed: 'Tráfego consumido (requisições que enviei)',
+    noSupplied: 'Ainda sem tráfego fornecido.',
+    noConsumed: 'Ainda sem tráfego consumido.',
+  },
+
 };
