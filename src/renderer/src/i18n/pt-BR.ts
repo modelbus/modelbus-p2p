@@ -6,6 +6,7 @@ export const ptBR: Dict = {
     tagline: 'Compartilhamento descentralizado de tokens LLM',
   },
 
+
   nav: {
     home: 'Home',
     models: 'Modelos',
@@ -141,6 +142,7 @@ export const ptBR: Dict = {
     noConsumed: 'Ainda sem tráfego consumido.',
   },
 
+
   home: {
     nodeInfo: 'Info do nó',
     peerId: 'ID do peer',
@@ -214,6 +216,11 @@ export const ptBR: Dict = {
     colLatency: 'Latência',
     nodesShort: '{n} nós',
     more: 'mais',
+  },
+  system: {
+    menuLabel: 'Sistema',
+    openDevTools: 'Abrir ferramentas de desenvolvedor',
+    openLogsFolder: 'Abrir pasta de logs / dados',
   },
 
 };
