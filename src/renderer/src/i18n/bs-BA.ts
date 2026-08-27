@@ -6,6 +6,7 @@ export const bsBA: Dict = {
     tagline: 'Decentralizirano dijeljenje LLM tokena',
   },
 
+
   nav: {
     home: 'Home',
     models: 'Modeli',
@@ -141,6 +142,7 @@ export const bsBA: Dict = {
     noConsumed: 'Još nema potrošenog prometa.',
   },
 
+
   home: {
     nodeInfo: 'Info čvora',
     peerId: 'ID čvora',
@@ -214,6 +216,11 @@ export const bsBA: Dict = {
     colLatency: 'Kašnjenje',
     nodesShort: '{n} čvorova',
     more: 'više',
+  },
+  system: {
+    menuLabel: 'Sistem',
+    openDevTools: 'Otvori razvojne alate',
+    openLogsFolder: 'Otvori folder dnevnika / podataka',
   },
 
 };
