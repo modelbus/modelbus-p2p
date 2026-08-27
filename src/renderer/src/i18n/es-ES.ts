@@ -6,6 +6,7 @@ export const esES: Dict = {
     tagline: 'Compartición descentralizada de tokens LLM',
   },
 
+
   nav: {
     home: 'Home',
     models: 'Modelos',
@@ -141,6 +142,7 @@ export const esES: Dict = {
     noConsumed: 'Aún no hay tráfico consumido.',
   },
 
+
   home: {
     nodeInfo: 'Información del nodo',
     peerId: 'ID del peer',
@@ -214,6 +216,11 @@ export const esES: Dict = {
     colLatency: 'Latencia',
     nodesShort: '{n} nodos',
     more: 'más',
+  },
+  system: {
+    menuLabel: 'Sistema',
+    openDevTools: 'Abrir herramientas de desarrollador',
+    openLogsFolder: 'Abrir carpeta de logs / datos',
   },
 
 };
