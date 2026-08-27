@@ -721,6 +721,26 @@ html[dir='rtl'] .kv dt {
   color: var(--accent);
   border-bottom-color: var(--accent);
 }
+.subtabs-spacer {
+  flex: 1;
+}
+.subtab-icon-btn {
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  align-self: center;
+  margin-bottom: -1px;
+}
+.subtab-icon-btn:hover {
+  color: var(--text);
+  background: var(--bg-elev);
+}
 
 .form-row {
   display: grid;

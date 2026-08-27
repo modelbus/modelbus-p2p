@@ -34,6 +34,18 @@ function clearApiKey() {
     localStorage.removeItem('modelbus.consumer.apiKey');
   }
 }
+
+function openDevTools() {
+  window.modelbus.system.openDevTools().catch((err) => {
+    console.error('[system] openDevTools failed:', err);
+  });
+}
+
+function openLogsFolder() {
+  window.modelbus.system.openLogsFolder().catch((err) => {
+    console.error('[system] openLogsFolder failed:', err);
+  });
+}
 </script>
 
 <template>
@@ -50,6 +62,22 @@ function clearApiKey() {
       </button>
       <button :class="{ active: sub === 'service' }" @click="sub = 'service'">
         {{ t('settings.tab.service') }}
+      </button>
+      <div class="subtabs-spacer" />
+      <button class="subtab-icon-btn" :title="t('system.openDevTools')" @click="openDevTools">
+        <svg :width="14" :height="14" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+          stroke-linejoin="round" aria-hidden="true">
+          <polyline points="16 18 22 12 16 6" />
+          <polyline points="8 6 2 12 8 18" />
+        </svg>
+      </button>
+      <button class="subtab-icon-btn" :title="t('system.openLogsFolder')" @click="openLogsFolder">
+        <svg :width="14" :height="14" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+          stroke-linejoin="round" aria-hidden="true">
+          <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+        </svg>
       </button>
     </nav>
 
