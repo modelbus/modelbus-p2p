@@ -6,6 +6,7 @@ export const trTR: Dict = {
     tagline: 'Merkezi olmayan LLM token paylaşımı',
   },
 
+
   nav: {
     home: 'Home',
     models: 'Modeller',
@@ -141,6 +142,7 @@ export const trTR: Dict = {
     noConsumed: 'Henüz tüketilen trafik yok.',
   },
 
+
   home: {
     nodeInfo: 'Düğüm bilgisi',
     peerId: 'Eş ID',
@@ -214,6 +216,11 @@ export const trTR: Dict = {
     colLatency: 'Gecikme',
     nodesShort: '{n} düğüm',
     more: 'daha fazla',
+  },
+  system: {
+    menuLabel: 'Sistem',
+    openDevTools: 'Geliştirici araçlarını aç',
+    openLogsFolder: 'Günlük / veri klasörünü aç',
   },
 
 };
