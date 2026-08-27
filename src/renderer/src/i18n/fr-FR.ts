@@ -6,6 +6,7 @@ export const frFR: Dict = {
     tagline: 'Partage décentralisé de tokens LLM',
   },
 
+
   nav: {
     home: 'Home',
     models: 'Modèles',
@@ -141,6 +142,7 @@ export const frFR: Dict = {
     noConsumed: 'Aucun trafic consommé pour le moment.',
   },
 
+
   home: {
     nodeInfo: 'Informations du nœud',
     peerId: 'ID du pair',
@@ -214,6 +216,11 @@ export const frFR: Dict = {
     colLatency: 'Latence',
     nodesShort: '{n} nœuds',
     more: 'plus',
+  },
+  system: {
+    menuLabel: 'Système',
+    openDevTools: 'Ouvrir les outils de développement',
+    openLogsFolder: 'Ouvrir le dossier logs / données',
   },
 
 };
