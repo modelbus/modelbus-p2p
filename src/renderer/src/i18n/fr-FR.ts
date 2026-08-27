@@ -6,10 +6,8 @@ export const frFR: Dict = {
     tagline: 'Partage décentralisé de tokens LLM',
   },
   nav: {
-    status: 'État',
-    setup: 'Configuration',
-    provision: 'Partager',
-    consume: 'Utiliser',
+    home: 'Accueil',
+    logs: 'Journaux',
     settings: 'Paramètres',
   },
   actions: {
@@ -63,7 +61,7 @@ export const frFR: Dict = {
   },
   provision: {
     title: 'Partager — votre token',
-    offlineHint: 'Démarrez d\'abord le nœud P2P depuis l\'onglet État.',
+    offlineHint: 'Démarrez d\'abord le nœud P2P depuis l\'onglet Accueil.',
     activeHint: 'Vous partagez {provider} ({n} modèles). Les autres pairs routeront les requêtes via vous.',
     provider: 'Fournisseur',
     nickname: 'Surnom',
@@ -77,7 +75,7 @@ export const frFR: Dict = {
   consume: {
     title: 'Utiliser — le token d\'un autre pair',
     refreshHint: 'Cliquez sur Actualiser pour récupérer le catalogue. Chaque nœud déclare fournisseur et modèles.',
-    pickHint: 'Choisissez un pair : le proxy HTTP local démarre sur http://127.0.0.1:{port}. Tout client compatible OpenAI / Anthropic fonctionne.',
+    pickHint: 'Choisissez un pair et le proxy HTTP local démarre sur http://127.0.0.1:{port}.',
     port: 'Port du proxy local',
     target: 'Cible',
     proxyStatus: 'Proxy',
@@ -86,7 +84,7 @@ export const frFR: Dict = {
     peerShort: 'pair',
     addrCount: '{n} adresses',
     modelCount: '{n} modèles',
-    noNodes: 'Aucun nœud. Demandez à l\'autre partie de cliquer « Commencer le partage ».',
+    noNodes: 'Aucun nœud. Demandez à l\'autre partie de cliquer « Commencer le partage » dans l\'onglet Accueil.',
     stats: 'Statistiques',
     total: 'Total',
     success: 'Succès',
@@ -104,6 +102,24 @@ export const frFR: Dict = {
     tcpPort: 'Port TCP d\'écoute',
     bootstrap: 'Pairs d\'amorçage (un par ligne)',
     saveHint: 'Redémarrez le nœud P2P pour appliquer.',
+
+    proxyPortField: 'Port du proxy local',
+    bootstrapHint: 'Pairs contactés par libp2p au démarrage',
+    tab: {
+      node: 'Nœud',
+      register: 'Enregistrer',
+      provision: 'Partage de token',
+      service: 'Service API',
+    },
+    nodeHint: 'Configurez le réseau libp2p local : URL du registre, port TCP d\'écoute, pairs d\'amorçage.',
+    registerHint: 'Publiez les informations de votre nœud dans l\'URL du registre global pour que d\'autres vous découvrent.',
+    registerHowto: 'Quand vous commencez le partage, l\'application envoie un announce à l\'URL du registre. Vous pouvez aussi enregistrer la configuration manuellement puis cliquer « Commencer le partage » dans Accueil.',
+    provisionHint: 'Configurez le token LLM que vous partagez : fournisseur, clé API, modèles sélectionnés.',
+    serviceHint: 'Exposez un service API public avec une clé API fixe — chaque requête est vérifiée.',
+    consumerApiKey: 'Clé API consommateur',
+    consumerApiKeyHint: 'Les appelants doivent envoyer cette clé dans l\'en-tête Authorization (Bearer <key>) pour utiliser le proxy local.',
+    localEndpoint: 'Point d\'accès local',
+    authHeader: 'En-tête d\'authentification',
   },
   days: {
     today: 'aujourd\'hui',
@@ -114,4 +130,12 @@ export const frFR: Dict = {
     if (n < 1024 * 1024) return `${(n / 1024).toFixed(1)} Ko`;
     return `${(n / (1024 * 1024)).toFixed(1)} Mo`;
   },
+  logs: {
+    title: 'Journaux',
+    supplied: 'Trafic fourni (requêtes que j\'ai servies)',
+    consumed: 'Trafic consommé (requêtes que j\'ai émises)',
+    noSupplied: 'Aucun trafic fourni pour le moment.',
+    noConsumed: 'Aucun trafic consommé pour le moment.',
+  },
+
 };
