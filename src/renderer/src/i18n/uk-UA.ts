@@ -6,6 +6,7 @@ export const ukUA: Dict = {
     tagline: 'Децентралізований обмін токенами LLM',
   },
 
+
   nav: {
     home: 'Home',
     models: 'Моделі',
@@ -141,6 +142,7 @@ export const ukUA: Dict = {
     noConsumed: 'Спожитого трафіку поки нема.',
   },
 
+
   home: {
     nodeInfo: 'Інформація про вузол',
     peerId: 'ID піра',
@@ -214,6 +216,11 @@ export const ukUA: Dict = {
     colLatency: 'Затримка',
     nodesShort: '{n} вузлів',
     more: 'ще',
+  },
+  system: {
+    menuLabel: 'Система',
+    openDevTools: 'Відкрити інструменти розробника',
+    openLogsFolder: 'Відкрити теку логів / даних',
   },
 
 };
