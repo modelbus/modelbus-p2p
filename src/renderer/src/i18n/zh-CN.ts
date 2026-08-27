@@ -204,6 +204,11 @@ export const zhCN = {
   days: {
     today: '今天',
   },
+  system: {
+    menuLabel: '系统',
+    openDevTools: '打开开发者工具',
+    openLogsFolder: '打开日志 / 数据目录',
+  },
   placeholder: '—',
   bytes: (n: number) => {
     if (n < 1024) return `${n} B`;
