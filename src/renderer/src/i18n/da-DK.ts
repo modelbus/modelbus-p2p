@@ -6,10 +6,8 @@ export const daDK: Dict = {
     tagline: 'Decentraliseret LLM-token-deling',
   },
   nav: {
-    status: 'Status',
-    setup: 'Opsætning',
-    provision: 'Del',
-    consume: 'Brug',
+    home: 'Start',
+    logs: 'Log',
     settings: 'Indstillinger',
   },
   actions: {
@@ -63,7 +61,7 @@ export const daDK: Dict = {
   },
   provision: {
     title: 'Del — din token',
-    offlineHint: 'Start først P2P-noden under Status.',
+    offlineHint: 'Start først P2P-noden fra Start.',
     activeHint: 'Du deler {provider} ({n} modeller). Andre peers ruter forespørgsler gennem dig.',
     provider: 'Udbyder',
     nickname: 'Kaldenavn',
@@ -77,7 +75,7 @@ export const daDK: Dict = {
   consume: {
     title: 'Brug — en anden peers token',
     refreshHint: 'Klik opdater for at hente kataloget. Hver node erklærer udbyder og modeller.',
-    pickHint: 'Vælg en peer, så starter den lokale HTTP-proxy på http://127.0.0.1:{port}. OpenAI- / Anthropic-kompatible klienter virker direkte.',
+    pickHint: 'Vælg en peer; den lokale HTTP-proxy starter på http://127.0.0.1:{port}.',
     port: 'Lokal proxy-port',
     target: 'Mål',
     proxyStatus: 'Proxy',
@@ -86,7 +84,7 @@ export const daDK: Dict = {
     peerShort: 'peer',
     addrCount: '{n} adresser',
     modelCount: '{n} modeller',
-    noNodes: 'Ingen noder endnu. Bed den anden side klikke «Start deling».',
+    noNodes: 'Ingen noder. Bed den anden side klikke «Start deling» under Start.',
     stats: 'Statistik',
     total: 'Total',
     success: 'Succes',
@@ -104,6 +102,24 @@ export const daDK: Dict = {
     tcpPort: 'TCP-lytteport',
     bootstrap: 'Bootstrap-peers (én pr. linje)',
     saveHint: 'Genstart P2P-noden for at anvende.',
+
+    proxyPortField: 'Lokal proxy-port',
+    bootstrapHint: 'Peers libp2p ringer op ved opstart',
+    tab: {
+      node: 'Node',
+      register: 'Registrer',
+      provision: 'Token-deling',
+      service: 'API-tjeneste',
+    },
+    nodeHint: 'Konfigurer det lokale libp2p-netværk: register-URL, TCP-lytteport, bootstrap-peers.',
+    registerHint: 'Publicer dine nodeoplysninger til den globale register-URL, så andre kan finde dig.',
+    registerHowto: 'Når du starter deling, sender appen en announce til register-URLen. Du kan også gemme indstillingerne manuelt og derefter klikke «Start deling» på Start.',
+    provisionHint: 'Opsæt den LLM-token du vil dele: vælg udbyder, indsæt API-nøgle, vælg modeller.',
+    serviceHint: 'Eksponer en offentlig API-tjeneste med en fast API-nøgle — hver anmodning tjekkes mod nøglen.',
+    consumerApiKey: 'Forbruger-API-nøgle',
+    consumerApiKeyHint: 'Kaldere skal sende denne nøgle i Authorization-headeren (Bearer <key>) når de bruger den lokale proxy.',
+    localEndpoint: 'Lokalt endpoint',
+    authHeader: 'Auth-header',
   },
   days: {
     today: 'i dag',
@@ -114,4 +130,12 @@ export const daDK: Dict = {
     if (n < 1024 * 1024) return `${(n / 1024).toFixed(1)} KB`;
     return `${(n / (1024 * 1024)).toFixed(1)} MB`;
   },
+  logs: {
+    title: 'Log',
+    supplied: 'Leveret trafik (forespørgsler jeg har betjent)',
+    consumed: 'Forbrugt trafik (forespørgsler jeg har sendt)',
+    noSupplied: 'Ingen leveret trafik endnu.',
+    noConsumed: 'Ingen forbrugt trafik endnu.',
+  },
+
 };
