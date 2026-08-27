@@ -191,29 +191,29 @@ hr {
 }
 
 .topbar {
-  height: 52px;
+  height: 64px;
   background: var(--panel);
   border-bottom: 1px solid var(--border);
   display: flex;
   align-items: center;
-  padding: 0 20px;
-  gap: 24px;
+  padding: 0 24px;
+  gap: 28px;
   flex-shrink: 0;
 }
 
 .brand {
   display: flex;
   align-items: baseline;
-  gap: 8px;
+  gap: 10px;
   font-weight: 600;
-  font-size: 15px;
+  font-size: 16px;
   letter-spacing: 0.02em;
   color: var(--text);
   white-space: nowrap;
 }
 .brand .dot {
-  width: 8px;
-  height: 8px;
+  width: 9px;
+  height: 9px;
   border-radius: 50%;
   background: var(--accent);
   align-self: center;
@@ -233,7 +233,7 @@ hr {
 .tabs button {
   background: transparent;
   border: none;
-  padding: 6px 12px;
+  padding: 8px 14px;
   color: var(--muted);
   font-size: 14px;
   border-radius: 6px;
@@ -301,7 +301,7 @@ hr {
 }
 .menu-pop {
   position: absolute;
-  top: calc(100% + 4px);
+  top: calc(100% + 6px);
   right: 0;
   background: var(--panel);
   border: 1px solid var(--border);
@@ -309,7 +309,7 @@ hr {
   box-shadow: var(--shadow);
   padding: 4px;
   z-index: 50;
-  min-width: 140px;
+  min-width: 180px;
 }
 .menu-pop button {
   display: flex;
@@ -317,9 +317,12 @@ hr {
   background: transparent;
   border: none;
   text-align: left;
-  padding: 6px 10px;
+  padding: 8px 10px;
   border-radius: 4px;
   color: var(--text);
+  align-items: center;
+  gap: 10px;
+  font-size: 14px;
 }
 .menu-pop button:hover {
   background: var(--bg-elev);
@@ -327,6 +330,34 @@ hr {
 .menu-pop button .check {
   margin-left: auto;
   color: var(--accent);
+  font-weight: 600;
+}
+.menu-pop .lang-flag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+.menu-pop .lang-flag img {
+  border-radius: 2px;
+  box-shadow: 0 0 0 1px var(--border);
+}
+
+.menu-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 10px;
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+}
+.menu-trigger:hover {
+  border-color: var(--border-strong);
 }
 
 .content {
