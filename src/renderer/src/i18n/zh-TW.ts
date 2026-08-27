@@ -6,10 +6,8 @@ export const zhTW: Dict = {
     tagline: '去中心化的 LLM Token 共享平台',
   },
   nav: {
-    status: '狀態',
-    setup: '設定',
-    provision: '上線',
-    consume: '呼叫',
+    home: '首頁',
+    logs: '日誌',
     settings: '設定',
   },
   actions: {
@@ -63,7 +61,7 @@ export const zhTW: Dict = {
   },
   provision: {
     title: '上線 · 分享我的 Token',
-    offlineHint: '請先在「狀態」頁面啟動 P2P 節點。',
+    offlineHint: '請先在首頁啟動 P2P 節點。',
     activeHint: '你正在分享 {provider}（{n} 個模型）。其他使用者選中你的節點後會透過你轉發請求。',
     provider: '模型供應商',
     nickname: '暱稱',
@@ -77,7 +75,7 @@ export const zhTW: Dict = {
   consume: {
     title: '呼叫 · 使用他人的 Token',
     refreshHint: '點擊重新整理以拉取節點清單。每個節點會宣告它分享的供應商與模型。',
-    pickHint: '選中節點後，本機 HTTP 代理將在 http://127.0.0.1:{port} 啟動，可用任何 OpenAI / Anthropic 相容用戶端呼叫。',
+    pickHint: '選中節點後，本機 HTTP 代理將在 http://127.0.0.1:{port} 啟動。',
     port: '本機代理通訊埠',
     target: '目前目標',
     proxyStatus: '代理狀態',
@@ -86,7 +84,7 @@ export const zhTW: Dict = {
     peerShort: '節點',
     addrCount: '{n} 個位址',
     modelCount: '{n} 個模型',
-    noNodes: '暫無可用節點。請對方在「上線」頁面點擊開始分享。',
+    noNodes: '暫無可用節點。請對方在首頁點擊開始分享。',
     stats: '呼叫統計',
     total: '總請求',
     success: '成功',
@@ -104,6 +102,24 @@ export const zhTW: Dict = {
     tcpPort: 'TCP 監聽通訊埠',
     bootstrap: '引導節點（每行一個）',
     saveHint: '修改後需重新啟動 P2P 節點才會生效。',
+
+    proxyPortField: '本機代理通訊埠',
+    bootstrapHint: '供 libp2p 啟動時連線的對等節點',
+    tab: {
+      node: '節點',
+      register: '註冊',
+      provision: 'Token 上線',
+      service: '呼叫服務',
+    },
+    nodeHint: '設定本機 libp2p 節點的網路參數：registry URL、TCP 監聽通訊埠、引導節點清單。',
+    registerHint: '將你的節點資訊註冊到全域節點清單（registry URL）以便其他使用者發現。',
+    registerHowto: 'Token 上線後，本應用會自動向 registry URL 發佈一次 announce。也可以手動儲存目前設定後再到首頁點擊「開始分享」。',
+    provisionHint: '設定你願意分享的 LLM Token：選擇供應商、填寫 API Key、勾選要分享的模型。',
+    serviceHint: '對外提供呼叫服務的設定：設定呼叫方所需的固定 API Key，請求時會校驗該 Key。',
+    consumerApiKey: '消費端 API Key',
+    consumerApiKeyHint: '呼叫方存取本機代理時必須在請求標頭中攜帶此 Key（Authorization: Bearer <key>）。',
+    localEndpoint: '本機端點',
+    authHeader: '鑑權請求標頭',
   },
   days: {
     today: '今天',
@@ -114,4 +130,12 @@ export const zhTW: Dict = {
     if (n < 1024 * 1024) return `${(n / 1024).toFixed(1)} KB`;
     return `${(n / (1024 * 1024)).toFixed(1)} MB`;
   },
+  logs: {
+    title: '日誌',
+    supplied: '供應流量（我服務的請求）',
+    consumed: '呼叫流量（我發出的請求）',
+    noSupplied: '暫無被呼叫記錄。',
+    noConsumed: '暫無呼叫記錄。',
+  },
+
 };
