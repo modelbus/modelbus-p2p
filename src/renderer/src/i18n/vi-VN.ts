@@ -6,10 +6,8 @@ export const viVN: Dict = {
     tagline: 'Chia sẻ token LLM phi tập trung',
   },
   nav: {
-    status: 'Trạng thái',
-    setup: 'Thiết lập',
-    provision: 'Chia sẻ',
-    consume: 'Sử dụng',
+    home: 'Trang chính',
+    logs: 'Nhật ký',
     settings: 'Cài đặt',
   },
   actions: {
@@ -63,7 +61,7 @@ export const viVN: Dict = {
   },
   provision: {
     title: 'Chia sẻ — token của bạn',
-    offlineHint: 'Hãy khởi động nút P2P ở tab Trạng thái trước.',
+    offlineHint: 'Hãy khởi động nút P2P ở tab Trang chính trước.',
     activeHint: 'Bạn đang chia sẻ {provider} ({n} mô hình). Các peer khác sẽ chuyển tiếp yêu cầu qua bạn.',
     provider: 'Nhà cung cấp',
     nickname: 'Bí danh',
@@ -77,7 +75,7 @@ export const viVN: Dict = {
   consume: {
     title: 'Sử dụng — token của peer khác',
     refreshHint: 'Bấm làm mới để lấy danh mục. Mỗi nút khai báo nhà cung cấp và mô hình.',
-    pickHint: 'Chọn một peer; proxy HTTP cục bộ sẽ khởi động tại http://127.0.0.1:{port}. Mọi client tương thích OpenAI / Anthropic đều hoạt động.',
+    pickHint: 'Chọn một peer; proxy HTTP cục bộ sẽ khởi động tại http://127.0.0.1:{port}.',
     port: 'Cổng proxy cục bộ',
     target: 'Mục tiêu',
     proxyStatus: 'Proxy',
@@ -86,7 +84,7 @@ export const viVN: Dict = {
     peerShort: 'peer',
     addrCount: '{n} địa chỉ',
     modelCount: '{n} mô hình',
-    noNodes: 'Chưa có nút nào. Nhờ phía bên kia bấm «Bắt đầu chia sẻ» ở tab Chia sẻ.',
+    noNodes: 'Chưa có nút nào. Nhờ phía bên kia bấm «Bắt đầu chia sẻ» ở tab Trang chính.',
     stats: 'Thống kê',
     total: 'Tổng',
     success: 'Thành công',
@@ -104,6 +102,24 @@ export const viVN: Dict = {
     tcpPort: 'Cổng lắng nghe TCP',
     bootstrap: 'Peer bootstrap (mỗi dòng một cái)',
     saveHint: 'Khởi động lại nút P2P để áp dụng.',
+
+    proxyPortField: 'Cổng proxy cục bộ',
+    bootstrapHint: 'Peer mà libp2p quay số khi khởi động',
+    tab: {
+      node: 'Nút',
+      register: 'Đăng ký',
+      provision: 'Chia sẻ token',
+      service: 'Dịch vụ API',
+    },
+    nodeHint: 'Cấu hình mạng libp2p cục bộ: URL registry, cổng lắng nghe TCP, peer bootstrap.',
+    registerHint: 'Công bố thông tin nút của bạn lên URL registry toàn cục để người khác có thể khám phá.',
+    registerHowto: 'Khi bạn bắt đầu chia sẻ, ứng dụng sẽ gửi một announce đến URL registry. Bạn cũng có thể lưu cài đặt thủ công rồi bấm «Bắt đầu chia sẻ» ở tab Trang chính.',
+    provisionHint: 'Thiết lập token LLM bạn muốn chia sẻ: chọn nhà cung cấp, dán khóa API, chọn mô hình.',
+    serviceHint: 'Mở dịch vụ API công khai với một khóa API cố định — mỗi yêu cầu được xác minh bằng khóa đó.',
+    consumerApiKey: 'Khóa API người dùng',
+    consumerApiKeyHint: 'Bên gọi phải gửi khóa này trong header Authorization (Bearer <key>) khi dùng proxy cục bộ.',
+    localEndpoint: 'Điểm cuối cục bộ',
+    authHeader: 'Header xác thực',
   },
   days: {
     today: 'hôm nay',
@@ -114,4 +130,12 @@ export const viVN: Dict = {
     if (n < 1024 * 1024) return `${(n / 1024).toFixed(1)} KB`;
     return `${(n / (1024 * 1024)).toFixed(1)} MB`;
   },
+  logs: {
+    title: 'Nhật ký',
+    supplied: 'Lưu lượng cung cấp (yêu cầu tôi đã phục vụ)',
+    consumed: 'Lưu lượng tiêu thụ (yêu cầu tôi đã gửi)',
+    noSupplied: 'Chưa có lưu lượng cung cấp.',
+    noConsumed: 'Chưa có lưu lượng tiêu thụ.',
+  },
+
 };
