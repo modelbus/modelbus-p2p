@@ -6,10 +6,8 @@ export const thTH: Dict = {
     tagline: 'การแชร์โทเคน LLM แบบกระจายศูนย์',
   },
   nav: {
-    status: 'สถานะ',
-    setup: 'ตั้งค่า',
-    provision: 'แชร์',
-    consume: 'ใช้งาน',
+    home: 'หน้าหลัก',
+    logs: 'บันทึก',
     settings: 'การตั้งค่า',
   },
   actions: {
@@ -63,7 +61,7 @@ export const thTH: Dict = {
   },
   provision: {
     title: 'แชร์ — โทเคนของคุณ',
-    offlineHint: 'กรุณาเริ่มโหนด P2P ในแท็บสถานะก่อน',
+    offlineHint: 'กรุณาเริ่มโหนด P2P จากแท็บหน้าหลักก่อน',
     activeHint: 'คุณกำลังแชร์ {provider} ({n} โมเดล) เพียร์อื่นๆ จะส่งต่อคำขอผ่านคุณ',
     provider: 'ผู้ให้บริการ',
     nickname: 'ชื่อเล่น',
@@ -77,7 +75,7 @@ export const thTH: Dict = {
   consume: {
     title: 'ใช้งาน — โทเคนจากเพียร์อื่น',
     refreshHint: 'กดรีเฟรชเพื่อดึงแค็ตตาล็อก แต่ละโหนดจะประกาศผู้ให้บริการและโมเดล',
-    pickHint: 'เลือกเพียร์ แล้วพร็อกซี HTTP ภายในจะเริ่มที่ http://127.0.0.1:{port} ไคลเอนต์ที่เข้ากันได้กับ OpenAI / Anthropic ทำงานได้ทันที',
+    pickHint: 'เลือกเพียร์ แล้วพร็อกซี HTTP ภายในจะเริ่มที่ http://127.0.0.1:{port}',
     port: 'พอร์ตพร็อกซีภายใน',
     target: 'เป้าหมาย',
     proxyStatus: 'พร็อกซี',
@@ -86,7 +84,7 @@ export const thTH: Dict = {
     peerShort: 'เพียร์',
     addrCount: '{n} ที่อยู่',
     modelCount: '{n} โมเดล',
-    noNodes: 'ยังไม่มีโหนด ขอให้อีกฝ่ายกด «เริ่มแชร์» ในแท็บแชร์',
+    noNodes: 'ยังไม่มีโหนด ขอให้อีกฝ่ายกด «เริ่มแชร์» ที่แท็บหน้าหลัก',
     stats: 'สถิติ',
     total: 'ทั้งหมด',
     success: 'สำเร็จ',
@@ -104,6 +102,24 @@ export const thTH: Dict = {
     tcpPort: 'พอร์ตฟัง TCP',
     bootstrap: 'เพียร์สำหรับบูตสแตรป (หนึ่งรายการต่อบรรทัด)',
     saveHint: 'รีสตาร์ทโหนด P2P เพื่อให้มีผล',
+
+    proxyPortField: 'พอร์ตพร็อกซีภายใน',
+    bootstrapHint: 'เพียร์ที่ libp2p โทรหาเมื่อเริ่มต้น',
+    tab: {
+      node: 'โหนด',
+      register: 'ลงทะเบียน',
+      provision: 'แชร์โทเคน',
+      service: 'บริการ API',
+    },
+    nodeHint: 'ตั้งค่าเครือข่าย libp2p ภายใน: URL รีจิสทรี พอร์ตฟัง TCP เพียร์สำหรับบูตสแตรป',
+    registerHint: 'เผยแพร่ข้อมูลโหนดของคุณไปยัง URL รีจิสทรีสากลเพื่อให้ผู้อื่นค้นพบ',
+    registerHowto: 'เมื่อคุณเริ่มแชร์ แอปจะส่ง announce ไปยัง URL รีจิสทรี คุณสามารถบันทึกการตั้งค่าด้วยตัวเองแล้วกด «เริ่มแชร์» ที่แท็บหน้าหลัก',
+    provisionHint: 'ตั้งค่าโทเคน LLM ที่จะแชร์: เลือกผู้ให้บริการ วางคีย์ API เลือกโมเดล',
+    serviceHint: 'เปิดบริการ API สาธารณะด้วยคีย์ API คงที่ — ทุกคำขอจะถูกตรวจสอบ',
+    consumerApiKey: 'คีย์ API สำหรับผู้บริโภค',
+    consumerApiKeyHint: 'ผู้เรียกต้องส่งคีย์นี้ในส่วนหัว Authorization (Bearer <key>) เมื่อใช้พร็อกซีภายใน',
+    localEndpoint: 'ปลายทางภายใน',
+    authHeader: 'ส่วนหัวการยืนยันตัวตน',
   },
   days: {
     today: 'วันนี้',
@@ -114,4 +130,12 @@ export const thTH: Dict = {
     if (n < 1024 * 1024) return `${(n / 1024).toFixed(1)} KB`;
     return `${(n / (1024 * 1024)).toFixed(1)} MB`;
   },
+  logs: {
+    title: 'บันทึก',
+    supplied: 'ทราฟฟิกที่ให้บริการ (คำขอที่ฉันให้บริการ)',
+    consumed: 'ทราฟฟิกที่ใช้ (คำขอที่ฉันส่งออก)',
+    noSupplied: 'ยังไม่มีทราฟฟิกที่ให้บริการ',
+    noConsumed: 'ยังไม่มีทราฟฟิกที่ใช้',
+  },
+
 };
