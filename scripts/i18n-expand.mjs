@@ -947,6 +947,39 @@ const PACKS = {
 // Same logic as i18n-update.mjs: drop existing nav / home / wallet / models
 // derived lines, then append fresh ones. The home / wallet / models blocks
 // did not exist in the previous iteration so this is mostly additive.
+    // Each PACK also needs a `system` block (for the developer / logs
+    // entries in the top-right menu).
+    const sysByLang = {
+      'zh-TW': { 'menuLabel': '系統', 'openDevTools': '開啟開發者工具', 'openLogsFolder': '開啟日誌 / 資料夾' },
+      'en-US': { 'menuLabel': 'System', 'openDevTools': 'Open developer tools', 'openLogsFolder': 'Open logs / data folder' },
+      'ko-KR': { 'menuLabel': '시스템', 'openDevTools': '개발자 도구 열기', 'openLogsFolder': '로그 / 데이터 폴더 열기' },
+      'de-DE': { 'menuLabel': 'System', 'openDevTools': 'Entwicklertools öffnen', 'openLogsFolder': 'Log- / Datenordner öffnen' },
+      'es-ES': { 'menuLabel': 'Sistema', 'openDevTools': 'Abrir herramientas de desarrollador', 'openLogsFolder': 'Abrir carpeta de logs / datos' },
+      'fr-FR': { 'menuLabel': 'Système', 'openDevTools': 'Ouvrir les outils de développement', 'openLogsFolder': 'Ouvrir le dossier logs / données' },
+      'it-IT': { 'menuLabel': 'Sistema', 'openDevTools': 'Apri strumenti per sviluppatori', 'openLogsFolder': 'Apri cartella log / dati' },
+      'da-DK': { 'menuLabel': 'System', 'openDevTools': 'Åbn udviklerværktøjer', 'openLogsFolder': 'Åbn log- / datamappe' },
+      'ja-JP': { 'menuLabel': 'システム', 'openDevTools': '開発者ツールを開く', 'openLogsFolder': 'ログ / データフォルダを開く' },
+      'pl-PL': { 'menuLabel': 'System', 'openDevTools': 'Otwórz narzędzia deweloperskie', 'openLogsFolder': 'Otwórz folder logów / danych' },
+      'ru-RU': { 'menuLabel': 'Система', 'openDevTools': 'Открыть инструменты разработчика', 'openLogsFolder': 'Открыть папку логов / данных' },
+      'bs-BA': { 'menuLabel': 'Sistem', 'openDevTools': 'Otvori razvojne alate', 'openLogsFolder': 'Otvori folder dnevnika / podataka' },
+      'ar-SA': { 'menuLabel': 'النظام', 'openDevTools': 'افتح أدوات المطور', 'openLogsFolder': 'افتح مجلد السجل / البيانات' },
+      'nb-NO': { 'menuLabel': 'System', 'openDevTools': 'Åpne utviklerverktøy', 'openLogsFolder': 'Åpne logg- / datamappe' },
+      'pt-BR': { 'menuLabel': 'Sistema', 'openDevTools': 'Abrir ferramentas de desenvolvedor', 'openLogsFolder': 'Abrir pasta de logs / dados' },
+      'th-TH': { 'menuLabel': 'ระบบ', 'openDevTools': 'เปิดเครื่องมือสำหรับนักพัฒนา', 'openLogsFolder': 'เปิดโฟลเดอร์บันทึก / ข้อมูล' },
+      'tr-TR': { 'menuLabel': 'Sistem', 'openDevTools': 'Geliştirici araçlarını aç', 'openLogsFolder': 'Günlük / veri klasörünü aç' },
+      'uk-UA': { 'menuLabel': 'Система', 'openDevTools': 'Відкрити інструменти розробника', 'openLogsFolder': 'Відкрити теку логів / даних' },
+      'bn-BD': { 'menuLabel': 'সিস্টেম', 'openDevTools': 'ডেভেলপার টুল খুলুন', 'openLogsFolder': 'লগ / ডেটা ফোল্ডার খুলুন' },
+      'el-GR': { 'menuLabel': 'Σύστημα', 'openDevTools': 'Άνοιγμα εργαλείων προγραμματιστή', 'openLogsFolder': 'Άνοιγμα φακέλου logs / δεδομένων' },
+      'vi-VN': { 'menuLabel': 'Hệ thống', 'openDevTools': 'Mở công cụ dành cho nhà phát triển', 'openLogsFolder': 'Mở thư mục nhật ký / dữ liệu' },
+    };
+    for (const lang of Object.keys(PACKS)) {
+      PACKS[lang].system = PACKS[lang].system || sysByLang[lang] || {
+        menuLabel: 'System',
+        openDevTools: 'Open developer tools',
+        openLogsFolder: 'Open logs / data folder',
+      };
+    }
+
 async function run() {
   for (const [lang, pack] of Object.entries(PACKS)) {
     const file = path.join(i18nDir, `${lang}.ts`);
@@ -956,14 +989,15 @@ async function run() {
 
     // Drop existing derived lines so the patch is idempotent.
     let out = text;
-    const dropKeys = ['models', 'wallet'];
+    const dropKeys = ['models', 'wallet', 'system'];
     for (const k of dropKeys) {
       out = out.replace(new RegExp(`\\n    ${k}:\\s*'[^']*',?`), '');
     }
-    // Drop any existing home / wallet / models blocks entirely.
+    // Drop any existing home / wallet / models / system blocks entirely.
     out = out.replace(/\n  home:\s*\{[\s\S]*?\n  \},\n/g, '\n');
     out = out.replace(/\n  wallet:\s*\{[\s\S]*?\n  \},\n/g, '\n');
     out = out.replace(/\n  models:\s*\{[\s\S]*?\n  \},\n/g, '\n');
+    out = out.replace(/\n  system:\s*\{[\s\S]*?\n  \},\n/g, '\n');
 
     // Rebuild nav block with all five keys. Preserve the existing logs /
     // settings translations from the file (since navLabels were already
@@ -1020,10 +1054,14 @@ async function run() {
       })
       .join('\n');
 
-    const blocks =
-      `\n  home: {\n${homeLines}\n  },\n` +
-      `  wallet: {\n${walletLines}\n  },\n` +
-      `  models: {\n${modelsLines}\n  },\n`;
+    const homeBlock = `\n  home: {\n${homeLines}\n  },\n`;
+    const walletBlock = `  wallet: {\n${walletLines}\n  },\n`;
+    const modelsBlock = `  models: {\n${modelsLines}\n  },\n`;
+    const systemLines = Object.entries(pack.system)
+      .map(([k, v]) => `    ${k}: '${q(v)}',`)
+      .join('\n');
+    const systemBlock = `  system: {\n${systemLines}\n  },\n`;
+    const blocks = homeBlock + walletBlock + modelsBlock + systemBlock;
 
     out = out.replace(/(\n\};)\s*$/, `${blocks}$1`);
 
