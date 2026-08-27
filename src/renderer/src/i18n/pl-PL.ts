@@ -6,10 +6,8 @@ export const plPL: Dict = {
     tagline: 'Zdecentralizowane udostępnianie tokenów LLM',
   },
   nav: {
-    status: 'Status',
-    setup: 'Konfiguracja',
-    provision: 'Udostępnij',
-    consume: 'Użyj',
+    home: 'Strona główna',
+    logs: 'Logi',
     settings: 'Ustawienia',
   },
   actions: {
@@ -63,7 +61,7 @@ export const plPL: Dict = {
   },
   provision: {
     title: 'Udostępnij — swój token',
-    offlineHint: 'Najpierw uruchom węzeł P2P w zakładce Status.',
+    offlineHint: 'Najpierw uruchom węzeł P2P na stronie głównej.',
     activeHint: 'Udostępniasz {provider} ({n} modeli). Inne węzły będą kierować zapytania przez Ciebie.',
     provider: 'Dostawca',
     nickname: 'Pseudonim',
@@ -77,7 +75,7 @@ export const plPL: Dict = {
   consume: {
     title: 'Użyj — token innego węzła',
     refreshHint: 'Kliknij odśwież, aby pobrać katalog. Każdy węzeł deklaruje dostawcę i modele.',
-    pickHint: 'Wybierz węzeł, a lokalny proxy HTTP wystartuje na http://127.0.0.1:{port}. Działa z każdym klientem zgodnym z OpenAI / Anthropic.',
+    pickHint: 'Wybierz węzeł; lokalny proxy HTTP wystartuje na http://127.0.0.1:{port}.',
     port: 'Port lokalnego proxy',
     target: 'Cel',
     proxyStatus: 'Proxy',
@@ -86,7 +84,7 @@ export const plPL: Dict = {
     peerShort: 'węzeł',
     addrCount: '{n} adresów',
     modelCount: '{n} modeli',
-    noNodes: 'Brak węzłów. Poproś drugą stronę o kliknięcie „Zacznij udostępniać".',
+    noNodes: 'Brak węzłów. Poproś drugą stronę o kliknięcie „Zacznij udostępniać" na stronie głównej.',
     stats: 'Statystyki',
     total: 'Łącznie',
     success: 'Sukcesy',
@@ -104,6 +102,24 @@ export const plPL: Dict = {
     tcpPort: 'Port nasłuchujący TCP',
     bootstrap: 'Węzły bootstrap (jeden na linię)',
     saveHint: 'Uruchom ponownie węzeł P2P, aby zastosować.',
+
+    proxyPortField: 'Port lokalnego proxy',
+    bootstrapHint: 'Węzły, które libp2p odpyta przy starcie',
+    tab: {
+      node: 'Węzeł',
+      register: 'Zarejestruj',
+      provision: 'Token',
+      service: 'Serwis API',
+    },
+    nodeHint: 'Skonfiguruj sieć libp2p: URL rejestru, port nasłuchujący TCP, węzły bootstrap.',
+    registerHint: 'Opublikuj informacje o swoim węźle w globalnym rejestrze, aby inni mogli Cię znaleźć.',
+    registerHowto: 'Po rozpoczęciu udostępniania aplikacja wysyła announce do URL rejestru. Możesz też ręcznie zapisać ustawienia, a potem kliknąć „Zacznij udostępniać" na stronie głównej.',
+    provisionHint: 'Skonfiguruj token LLM, który chcesz udostępnić: wybierz dostawcę, wklej klucz API, zaznacz modele.',
+    serviceHint: 'Udostępnij publiczny serwis API ze stałym kluczem API — każde żądanie jest sprawdzane.',
+    consumerApiKey: 'Klucz API konsumenta',
+    consumerApiKeyHint: 'Wywołujący muszą wysyłać ten klucz w nagłówku Authorization (Bearer <key>), gdy korzystają z lokalnego proxy.',
+    localEndpoint: 'Lokalny endpoint',
+    authHeader: 'Nagłówek autoryzacji',
   },
   days: {
     today: 'dziś',
@@ -114,4 +130,12 @@ export const plPL: Dict = {
     if (n < 1024 * 1024) return `${(n / 1024).toFixed(1)} KB`;
     return `${(n / (1024 * 1024)).toFixed(1)} MB`;
   },
+  logs: {
+    title: 'Logi',
+    supplied: 'Ruch dostarczony (żądania, które obsłużyłem)',
+    consumed: 'Ruch skonsumowany (żądania, które wysłałem)',
+    noSupplied: 'Brak dostarczonego ruchu.',
+    noConsumed: 'Brak skonsumowanego ruchu.',
+  },
+
 };
