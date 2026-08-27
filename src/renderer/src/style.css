@@ -585,3 +585,65 @@ details summary {
 details[open] summary {
   margin-bottom: 8px;
 }
+
+/* ============================================================
+   RTL support — Arabic (ar-SA). The whole tree is laid out
+   with logical properties where possible; this block only has
+   to fix the remaining physical offsets (borders, paddings,
+   inline check icons) so the picker and content still read
+   naturally when the document direction flips.
+   ============================================================ */
+
+html[dir='rtl'] {
+  text-align: right;
+}
+
+html[dir='rtl'] .menu-pop {
+  right: auto;
+  left: 0;
+}
+
+html[dir='rtl'] .menu-pop button .check {
+  margin-left: 0;
+  margin-right: auto;
+}
+
+html[dir='rtl'] .tabs button.active {
+  border-left: none;
+}
+
+html[dir='rtl'] .tabs {
+  direction: rtl;
+}
+
+html[dir='rtl'] .topbar {
+  direction: rtl;
+}
+
+html[dir='rtl'] .lang-flag {
+  flex-direction: row-reverse;
+}
+
+html[dir='rtl'] .list-item {
+  direction: rtl;
+}
+
+html[dir='rtl'] .list-item .meta {
+  text-align: right;
+}
+
+html[dir='rtl'] .log-table {
+  direction: rtl;
+}
+
+html[dir='rtl'] .kv {
+  direction: rtl;
+}
+
+html[dir='rtl'] .chip-grid {
+  direction: rtl;
+}
+
+html[dir='rtl'] .kv dt {
+  text-align: right;
+}
