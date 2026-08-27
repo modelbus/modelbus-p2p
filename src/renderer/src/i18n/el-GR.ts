@@ -6,6 +6,7 @@ export const elGR: Dict = {
     tagline: 'Αποκεντρωμένη κοινή χρήση LLM token',
   },
 
+
   nav: {
     home: 'Home',
     models: 'Μοντέλα',
@@ -141,6 +142,7 @@ export const elGR: Dict = {
     noConsumed: 'Καμία καταναλωμένη κίνηση ακόμη.',
   },
 
+
   home: {
     nodeInfo: 'Πληροφορίες κόμβου',
     peerId: 'ID peer',
@@ -214,6 +216,11 @@ export const elGR: Dict = {
     colLatency: 'Καθυστέρηση',
     nodesShort: '{n} κόμβοι',
     more: 'περισσότερα',
+  },
+  system: {
+    menuLabel: 'Σύστημα',
+    openDevTools: 'Άνοιγμα εργαλείων προγραμματιστή',
+    openLogsFolder: 'Άνοιγμα φακέλου logs / δεδομένων',
   },
 
 };
