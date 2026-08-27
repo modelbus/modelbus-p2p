@@ -6,10 +6,8 @@ export const itIT: Dict = {
     tagline: 'Condivisione decentralizzata di token LLM',
   },
   nav: {
-    status: 'Stato',
-    setup: 'Configurazione',
-    provision: 'Condividi',
-    consume: 'Usa',
+    home: 'Home',
+    logs: 'Registri',
     settings: 'Impostazioni',
   },
   actions: {
@@ -63,7 +61,7 @@ export const itIT: Dict = {
   },
   provision: {
     title: 'Condividi — il tuo token',
-    offlineHint: 'Avvia prima il nodo P2P dalla scheda Stato.',
+    offlineHint: 'Avvia prima il nodo P2P dalla scheda Home.',
     activeHint: 'Stai condividendo {provider} ({n} modelli). Gli altri peer instraderanno le richieste tramite te.',
     provider: 'Provider',
     nickname: 'Soprannome',
@@ -77,7 +75,7 @@ export const itIT: Dict = {
   consume: {
     title: 'Usa — token di un altro peer',
     refreshHint: 'Clicca aggiorna per ottenere il catalogo. Ogni nodo dichiara provider e modelli.',
-    pickHint: 'Scegli un peer: il proxy HTTP locale parte su http://127.0.0.1:{port}. Funziona con qualsiasi client compatibile OpenAI / Anthropic.',
+    pickHint: 'Scegli un peer: il proxy HTTP locale parte su http://127.0.0.1:{port}.',
     port: 'Porta proxy locale',
     target: 'Destinazione',
     proxyStatus: 'Proxy',
@@ -86,7 +84,7 @@ export const itIT: Dict = {
     peerShort: 'peer',
     addrCount: '{n} indirizzi',
     modelCount: '{n} modelli',
-    noNodes: 'Nessun nodo. Chiedi all\'altra parte di cliccare «Inizia a condividere».',
+    noNodes: 'Nessun nodo. Chiedi all\'altra parte di cliccare «Inizia a condividere» nella scheda Home.',
     stats: 'Statistiche',
     total: 'Totale',
     success: 'Successi',
@@ -104,6 +102,24 @@ export const itIT: Dict = {
     tcpPort: 'Porta TCP di ascolto',
     bootstrap: 'Peer di bootstrap (uno per riga)',
     saveHint: 'Riavvia il nodo P2P per applicare.',
+
+    proxyPortField: 'Porta proxy locale',
+    bootstrapHint: 'Peer contattati da libp2p all\'avvio',
+    tab: {
+      node: 'Nodo',
+      register: 'Registra',
+      provision: 'Condivisione token',
+      service: 'Servizio API',
+    },
+    nodeHint: 'Configura la rete libp2p locale: URL del registro, porta TCP di ascolto, peer di bootstrap.',
+    registerHint: 'Pubblica le informazioni del tuo nodo nell\'URL del registro globale per farti scoprire.',
+    registerHowto: 'Quando inizi a condividere, l\'app invia un announce all\'URL del registro. Puoi anche salvare manualmente la configurazione e poi cliccare «Inizia a condividere» nella scheda Home.',
+    provisionHint: 'Configura il token LLM che condividi: provider, chiave API, modelli.',
+    serviceHint: 'Esponi un servizio API pubblico con una chiave API fissa — ogni richiesta viene verificata.',
+    consumerApiKey: 'Chiave API consumer',
+    consumerApiKeyHint: 'I client devono inviare questa chiave nell\'header Authorization (Bearer <key>) quando usano il proxy locale.',
+    localEndpoint: 'Endpoint locale',
+    authHeader: 'Header di autenticazione',
   },
   days: {
     today: 'oggi',
@@ -114,4 +130,12 @@ export const itIT: Dict = {
     if (n < 1024 * 1024) return `${(n / 1024).toFixed(1)} KB`;
     return `${(n / (1024 * 1024)).toFixed(1)} MB`;
   },
+  logs: {
+    title: 'Registri',
+    supplied: 'Traffico servito (richieste che ho servito)',
+    consumed: 'Traffico consumato (richieste che ho inviato)',
+    noSupplied: 'Nessun traffico servito.',
+    noConsumed: 'Nessun traffico consumato.',
+  },
+
 };
