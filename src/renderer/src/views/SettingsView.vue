@@ -3,15 +3,16 @@ import { ref } from 'vue';
 import type { AppRefs, AppActions, AppHelpers } from './types';
 import { t } from '../i18n';
 
-defineProps<{
+const props = defineProps<{
   refs: AppRefs;
   actions: AppActions;
   helpers: AppHelpers;
+  initialSub?: 'node' | 'register' | 'provision' | 'service';
 }>();
 
 type Sub = 'node' | 'register' | 'provision' | 'service';
 
-const sub = ref<Sub>('node');
+const sub = ref<Sub>(props.initialSub ?? 'node');
 
 // API key used to authenticate callers of the consume proxy. In a future
 // release this will be wired through the IPC layer; for now it lives in
