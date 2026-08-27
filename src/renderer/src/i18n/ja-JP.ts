@@ -6,10 +6,8 @@ export const jaJP: Dict = {
     tagline: '分散型 LLM トークン共有プラットフォーム',
   },
   nav: {
-    status: 'ステータス',
-    setup: 'セットアップ',
-    provision: '共有',
-    consume: '利用',
+    home: 'ホーム',
+    logs: 'ログ',
     settings: '設定',
   },
   actions: {
@@ -63,7 +61,7 @@ export const jaJP: Dict = {
   },
   provision: {
     title: '共有 · トークンを共有する',
-    offlineHint: 'まず「ステータス」タブで P2P ノードを起動してください。',
+    offlineHint: 'まずホームタブで P2P ノードを起動してください。',
     activeHint: '{provider}（{n} モデル）を共有中です。他の利用者があなたのノードを選ぶとリクエストが経由されます。',
     provider: 'プロバイダー',
     nickname: 'ニックネーム',
@@ -77,7 +75,7 @@ export const jaJP: Dict = {
   consume: {
     title: '利用 · 他者のトークンを使用する',
     refreshHint: '更新をクリックしてノード一覧を取得します。各ノードはプロバイダーとモデルを公開します。',
-    pickHint: 'ノードを選ぶとローカル HTTP プロキシが http://127.0.0.1:{port} で起動し、OpenAI / Anthropic 互換クライアントがそのまま使えます。',
+    pickHint: 'ピアを選ぶとローカル HTTP プロキシが http://127.0.0.1:{port} で起動します。',
     port: 'ローカルプロキシポート',
     target: '対象',
     proxyStatus: 'プロキシ',
@@ -86,7 +84,7 @@ export const jaJP: Dict = {
     peerShort: 'ピア',
     addrCount: '{n} アドレス',
     modelCount: '{n} モデル',
-    noNodes: '利用可能なノードがありません。相手に「共有」タブで開始してもらってください。',
+    noNodes: '利用可能なノードがありません。ホームタブで「共有を開始」をクリックしてもらってください。',
     stats: '統計',
     total: '合計',
     success: '成功',
@@ -104,6 +102,24 @@ export const jaJP: Dict = {
     tcpPort: 'TCP リスンポート',
     bootstrap: 'ブートストラップノード（1 行に 1 つ）',
     saveHint: '反映には P2P ノードの再起動が必要です。',
+
+    proxyPortField: 'ローカルプロキシポート',
+    bootstrapHint: '起動時に libp2p がダイヤルするピア',
+    tab: {
+      node: 'ノード',
+      register: '登録',
+      provision: 'トークン共有',
+      service: 'API サービス',
+    },
+    nodeHint: 'ローカル libp2p のネットワークを設定：レジストリ URL、TCP リスンポート、ブートストラップピア。',
+    registerHint: 'グローバルレジストリ URL にノード情報を公開して、他のユーザーから見つけてもらえるようにします。',
+    registerHowto: '共有を開始するとアプリがレジストリ URL に announce を投稿します。手動で設定を保存してからホームタブで開始することもできます。',
+    provisionHint: '共有する LLM トークンを設定します：プロバイダーを選択し、API キーを貼り付け、モデルを選びます。',
+    serviceHint: '固定 API キーを設定して公開 API サービスを公開します。すべてのリクエストがそのキーで検証されます。',
+    consumerApiKey: 'コンシューマー API キー',
+    consumerApiKeyHint: '呼び出し側は Authorization ヘッダー (Bearer <key>) でこのキーを送信する必要があります。',
+    localEndpoint: 'ローカルエンドポイント',
+    authHeader: '認証ヘッダー',
   },
   days: {
     today: '今日',
@@ -114,4 +130,12 @@ export const jaJP: Dict = {
     if (n < 1024 * 1024) return `${(n / 1024).toFixed(1)} KB`;
     return `${(n / (1024 * 1024)).toFixed(1)} MB`;
   },
+  logs: {
+    title: 'ログ',
+    supplied: '提供したトラフィック（自分が処理したリクエスト）',
+    consumed: '消費したトラフィック（自分が送ったリクエスト）',
+    noSupplied: '提供したトラフィックはまだありません。',
+    noConsumed: '消費したトラフィックはまだありません。',
+  },
+
 };
