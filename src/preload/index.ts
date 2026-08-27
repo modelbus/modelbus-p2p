@@ -7,6 +7,10 @@ import type {
   ProxyStats,
   NodeRole,
   BootstrapConfig,
+  WalletScore,
+  ModelEntry,
+  LeaderboardEntry,
+  ModelQualityNode,
 } from '../shared/types.js';
 
 const api = {
@@ -29,7 +33,7 @@ const api = {
       started: boolean;
       peerId: string | null;
       multiaddrs: string[];
-      role: NodeRole;
+      role: 'idle' | 'provision' | 'consume';
       connected: number;
     }> => ipcRenderer.invoke('p2p:status'),
     start: (): Promise<void> => ipcRenderer.invoke('p2p:start'),
@@ -66,6 +70,16 @@ const api = {
       ipcRenderer.on('proxy:event', listener);
       return () => ipcRenderer.off('proxy:event', listener);
     },
+  },
+  wallet: {
+    score: (): Promise<WalletScore> => ipcRenderer.invoke('wallet:score'),
+  },
+  models: {
+    catalogue: (): Promise<{
+      models: ModelEntry[];
+      nodes: ModelQualityNode[];
+      leaderboard: LeaderboardEntry[];
+    }> => ipcRenderer.invoke('models:catalogue'),
   },
   system: {
     openExternal: (url: string): Promise<void> => ipcRenderer.invoke('system:openExternal', url),
