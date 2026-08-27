@@ -6,6 +6,7 @@ export const zhTW: Dict = {
     tagline: '去中心化的 LLM Token 共享平台',
   },
 
+
   nav: {
     home: '首页',
     models: '模型',
@@ -141,6 +142,7 @@ export const zhTW: Dict = {
     noConsumed: '暫無呼叫記錄。',
   },
 
+
   home: {
     nodeInfo: '節點資訊',
     peerId: '節點 ID',
@@ -214,6 +216,11 @@ export const zhTW: Dict = {
     colLatency: '延遲',
     nodesShort: '{n} 節點',
     more: '更多',
+  },
+  system: {
+    menuLabel: '系統',
+    openDevTools: '開啟開發者工具',
+    openLogsFolder: '開啟日誌 / 資料夾',
   },
 
 };
