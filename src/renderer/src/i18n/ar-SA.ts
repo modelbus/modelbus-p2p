@@ -6,6 +6,7 @@ export const arSA: Dict = {
     tagline: 'مشاركة رموز LLM لا مركزيًا',
   },
 
+
   nav: {
     home: 'Home',
     models: 'النماذج',
@@ -141,6 +142,7 @@ export const arSA: Dict = {
     noConsumed: 'لا توجد حركة مستهلكة بعد.',
   },
 
+
   home: {
     nodeInfo: 'معلومات العقدة',
     peerId: 'معرّف النظير',
@@ -214,6 +216,11 @@ export const arSA: Dict = {
     colLatency: 'الكمون',
     nodesShort: '{n} عقد',
     more: 'المزيد',
+  },
+  system: {
+    menuLabel: 'النظام',
+    openDevTools: 'افتح أدوات المطور',
+    openLogsFolder: 'افتح مجلد السجل / البيانات',
   },
 
 };
