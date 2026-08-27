@@ -65,7 +65,7 @@ export function setLocale(next: Locale) {
 
 export const availableLocales: Array<{ id: Locale; label: string; cc: string }> = [
   { id: 'zh-CN', label: '简体中文', cc: 'cn' },
-  { id: 'zh-TW', label: '繁體中文', cc: 'tw' },
+  { id: 'zh-TW', label: '繁體中文', cc: 'cn' },
   { id: 'en-US', label: 'English', cc: 'us' },
   { id: 'ja-JP', label: '日本語', cc: 'jp' },
   { id: 'ko-KR', label: '한국어', cc: 'kr' },
