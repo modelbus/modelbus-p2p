@@ -6,10 +6,8 @@ export const trTR: Dict = {
     tagline: 'Merkezi olmayan LLM token paylaşımı',
   },
   nav: {
-    status: 'Durum',
-    setup: 'Kurulum',
-    provision: 'Paylaş',
-    consume: 'Kullan',
+    home: 'Ana sayfa',
+    logs: 'Günlükler',
     settings: 'Ayarlar',
   },
   actions: {
@@ -63,7 +61,7 @@ export const trTR: Dict = {
   },
   provision: {
     title: 'Paylaş — tokenını paylaş',
-    offlineHint: 'Önce Durum sekmesinden P2P düğümünü başlat.',
+    offlineHint: 'Önce Ana sayfa sekmesinden P2P düğümünü başlat.',
     activeHint: '{provider} ({n} model) paylaşıyorsun. Diğer eşler istekleri senin üzerinden yönlendirecek.',
     provider: 'Sağlayıcı',
     nickname: 'Takma ad',
@@ -77,7 +75,7 @@ export const trTR: Dict = {
   consume: {
     title: 'Kullan — başka bir eşin tokenı',
     refreshHint: 'Kataloğu çekmek için yenile\'ye tıkla. Her düğüm sağlayıcısını ve modellerini belirtir.',
-    pickHint: 'Bir eş seç; yerel HTTP proxy http://127.0.0.1:{port} adresinde başlar. OpenAI / Anthropic uyumlu istemciler doğrudan çalışır.',
+    pickHint: 'Bir eş seç; yerel HTTP proxy http://127.0.0.1:{port} adresinde başlar.',
     port: 'Yerel proxy portu',
     target: 'Hedef',
     proxyStatus: 'Proxy',
@@ -86,7 +84,7 @@ export const trTR: Dict = {
     peerShort: 'eş',
     addrCount: '{n} adres',
     modelCount: '{n} model',
-    noNodes: 'Henüz düğüm yok. Karşı taraftan Paylaş sekmesinde «Paylaşımı başlat»a tıklamasını iste.',
+    noNodes: 'Henüz düğüm yok. Karşı taraftan Ana sayfa sekmesinde «Paylaşımı başlat»a tıklamasını iste.',
     stats: 'İstatistikler',
     total: 'Toplam',
     success: 'Başarılı',
@@ -104,6 +102,24 @@ export const trTR: Dict = {
     tcpPort: 'TCP dinleme portu',
     bootstrap: 'Önyükleme eşleri (her satıra bir tane)',
     saveHint: 'Uygulamak için P2P düğümünü yeniden başlat.',
+
+    proxyPortField: 'Yerel proxy portu',
+    bootstrapHint: 'libp2p\'nin başlangıçta aradığı eşler',
+    tab: {
+      node: 'Düğüm',
+      register: 'Kayıt',
+      provision: 'Token paylaşımı',
+      service: 'API servisi',
+    },
+    nodeHint: 'Yerel libp2p ağını yapılandır: kayıt URL\'si, TCP dinleme portu, önyükleme eşleri.',
+    registerHint: 'Düğüm bilgilerinizi küresel kayıt URL\'sinde yayınlayın ki diğerleri sizi bulsun.',
+    registerHowto: 'Paylaşımı başlattığınızda uygulama kayıt URL\'sine bir announce gönderir. Ayarları kendiniz de kaydedip Ana sayfa sekmesinden başlatabilirsiniz.',
+    provisionHint: 'Paylaşacağınız LLM tokenını ayarlayın: sağlayıcı seçin, API anahtarını yapıştırın, modelleri işaretleyin.',
+    serviceHint: 'Sabit bir API anahtarıyla herkese açık bir API servisi sunun — her istek bu anahtarla doğrulanır.',
+    consumerApiKey: 'Tüketici API anahtarı',
+    consumerApiKeyHint: 'Çağıranlar yerel proxy\'yi kullanırken bu anahtarı Authorization başlığında (Bearer <key>) göndermelidir.',
+    localEndpoint: 'Yerel uç nokta',
+    authHeader: 'Kimlik doğrulama başlığı',
   },
   days: {
     today: 'bugün',
@@ -114,4 +130,12 @@ export const trTR: Dict = {
     if (n < 1024 * 1024) return `${(n / 1024).toFixed(1)} KB`;
     return `${(n / (1024 * 1024)).toFixed(1)} MB`;
   },
+  logs: {
+    title: 'Günlükler',
+    supplied: 'Sağlanan trafik (yanıtladığım istekler)',
+    consumed: 'Tüketilen trafik (gönderdiğim istekler)',
+    noSupplied: 'Henüz sağlanan trafik yok.',
+    noConsumed: 'Henüz tüketilen trafik yok.',
+  },
+
 };
