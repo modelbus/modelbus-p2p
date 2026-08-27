@@ -36,7 +36,7 @@ import type { EventLogEntry, AppRefs, AppActions, AppHelpers } from './views/typ
 type Tab = 'home' | 'models' | 'wallet' | 'logs' | 'settings';
 
 const tab = ref<Tab>('home');
-const settingsSub = ref<string>('node');
+const settingsSub = ref<'node' | 'register' | 'provision' | 'service'>('node');
 
 // ---- state (kept as refs so we can pass to child views) ----
 const status = ref<{
@@ -96,6 +96,19 @@ const error = ref<string | null>(null);
 // ---- popover state ----
 const langMenuOpen = ref(false);
 const themeMenuOpen = ref(false);
+const systemMenuOpen = ref(false);
+
+function openDevTools() {
+  window.modelbus.system.openDevTools().catch((err) => {
+    console.error('[system] openDevTools failed:', err);
+  });
+}
+
+function openLogsFolder() {
+  window.modelbus.system.openLogsFolder().catch((err) => {
+    console.error('[system] openLogsFolder failed:', err);
+  });
+}
 
 // ---- actions ----
 async function loadProviders(force = false) {
@@ -284,6 +297,7 @@ function onDocClick(e: MouseEvent) {
   if (!target.closest('.menu')) {
     langMenuOpen.value = false;
     themeMenuOpen.value = false;
+    systemMenuOpen.value = false;
   }
 }
 
@@ -346,7 +360,9 @@ function onNavEvent(e: Event) {
   const detail = (e as CustomEvent<{ tab?: Tab; sub?: string }>).detail;
   if (!detail) return;
   if (detail.tab) tab.value = detail.tab;
-  if (detail.sub) settingsSub.value = detail.sub;
+  if (detail.sub && (detail.sub === 'node' || detail.sub === 'register' || detail.sub === 'provision' || detail.sub === 'service')) {
+    settingsSub.value = detail.sub;
+  }
 }
 
 onBeforeUnmount(() => {
@@ -395,7 +411,7 @@ onBeforeUnmount(() => {
           <button
             class="menu-trigger"
             :title="currentLocaleLabel"
-            @click.stop="langMenuOpen = !langMenuOpen; themeMenuOpen = false"
+            @click.stop="langMenuOpen = !langMenuOpen; themeMenuOpen = false; systemMenuOpen = false"
           >
             <FlagIcon :cc="currentLocaleCc" :width="18" />
             <span>{{ currentLocaleLabel }}</span>
@@ -421,7 +437,7 @@ onBeforeUnmount(() => {
             class="icon-btn"
             :title="currentThemeLabel"
             aria-label="Theme"
-            @click.stop="themeMenuOpen = !themeMenuOpen; langMenuOpen = false"
+            @click.stop="themeMenuOpen = !themeMenuOpen; langMenuOpen = false; systemMenuOpen = false"
           >
             <ThemeIcon :theme="theme" :size="16" />
           </button>
@@ -436,6 +452,45 @@ onBeforeUnmount(() => {
                 <span>{{ o.label }}</span>
               </span>
               <span v-if="o.id === theme" class="check">✓</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="menu">
+          <button
+            class="icon-btn"
+            :title="t('system.menuLabel')"
+            aria-label="System"
+            @click.stop="systemMenuOpen = !systemMenuOpen; langMenuOpen = false; themeMenuOpen = false"
+          >
+            <svg :width="16" :height="16" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+              stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="3" />
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+            </svg>
+          </button>
+          <div v-if="systemMenuOpen" class="menu-pop">
+            <button @click="openDevTools(); systemMenuOpen = false">
+              <span class="lang-flag">
+                <svg :width="16" :height="16" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                  stroke-linejoin="round" aria-hidden="true">
+                  <polyline points="16 18 22 12 16 6" />
+                  <polyline points="8 6 2 12 8 18" />
+                </svg>
+                <span>{{ t('system.openDevTools') }}</span>
+              </span>
+            </button>
+            <button @click="openLogsFolder(); systemMenuOpen = false">
+              <span class="lang-flag">
+                <svg :width="16" :height="16" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+                  stroke-linejoin="round" aria-hidden="true">
+                  <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z" />
+                </svg>
+                <span>{{ t('system.openLogsFolder') }}</span>
+              </span>
             </button>
           </div>
         </div>
