@@ -6,10 +6,8 @@ export const deDE: Dict = {
     tagline: 'Dezentrale LLM-Token-Freigabe',
   },
   nav: {
-    status: 'Status',
-    setup: 'Einrichtung',
-    provision: 'Bereitstellen',
-    consume: 'Nutzen',
+    home: 'Start',
+    logs: 'Protokolle',
     settings: 'Einstellungen',
   },
   actions: {
@@ -63,7 +61,7 @@ export const deDE: Dict = {
   },
   provision: {
     title: 'Bereitstellen — Token freigeben',
-    offlineHint: 'Bitte zuerst den P2P-Knoten auf der Status-Seite starten.',
+    offlineHint: 'Bitte starte den P2P-Knoten zuerst auf der Startseite.',
     activeHint: 'Du gibst {provider} frei ({n} Modelle). Andere Peers leiten Anfragen über dich.',
     provider: 'Anbieter',
     nickname: 'Spitzname',
@@ -77,7 +75,7 @@ export const deDE: Dict = {
   consume: {
     title: 'Nutzen — Token eines anderen Peers',
     refreshHint: 'Aktualisieren klicken, um die Knotenliste abzurufen. Jeder Knoten deklariert Anbieter und Modelle.',
-    pickHint: 'Wähle einen Peer; der lokale HTTP-Proxy startet auf http://127.0.0.1:{port}. OpenAI- / Anthropic-kompatible Clients funktionieren direkt.',
+    pickHint: 'Wähle einen Peer und der lokale HTTP-Proxy startet auf http://127.0.0.1:{port}.',
     port: 'Lokaler Proxy-Port',
     target: 'Ziel',
     proxyStatus: 'Proxy',
@@ -86,7 +84,7 @@ export const deDE: Dict = {
     peerShort: 'Peer',
     addrCount: '{n} Adressen',
     modelCount: '{n} Modelle',
-    noNodes: 'Noch keine Knoten. Bitte die Gegenseite auf der „Bereitstellen"-Seite starten lassen.',
+    noNodes: 'Keine Knoten. Bitte die Gegenseite auf der Startseite auf «Freigabe starten» klicken lassen.',
     stats: 'Statistik',
     total: 'Gesamt',
     success: 'Erfolg',
@@ -104,6 +102,24 @@ export const deDE: Dict = {
     tcpPort: 'TCP-Listen-Port',
     bootstrap: 'Bootstrap-Peers (einer pro Zeile)',
     saveHint: 'P2P-Knoten neu starten, um zu übernehmen.',
+
+    proxyPortField: 'Lokaler Proxy-Port',
+    bootstrapHint: 'Peers, die libp2p beim Start anruft',
+    tab: {
+      node: 'Knoten',
+      register: 'Registrieren',
+      provision: 'Token-Freigabe',
+      service: 'API-Dienst',
+    },
+    nodeHint: 'Konfiguriere das lokale libp2p-Netzwerk: Registry-URL, TCP-Listen-Port, Bootstrap-Peers.',
+    registerHint: 'Veröffentliche deine Knoteninformationen in der globalen Registry, damit andere dich finden.',
+    registerHowto: 'Sobald du die Freigabe startest, postet die App ein Announce an die Registry-URL. Du kannst die Einstellungen auch manuell speichern und dann auf der Startseite auf «Freigabe starten» klicken.',
+    provisionHint: 'Richte das LLM-Token ein, das du teilen möchtest: Anbieter wählen, API-Schlüssel einfügen, Modelle auswählen.',
+    serviceHint: 'Stelle einen öffentlichen API-Dienst mit einem festen API-Schlüssel bereit — jeder Request wird gegen diesen Schlüssel geprüft.',
+    consumerApiKey: 'Consumer-API-Schlüssel',
+    consumerApiKeyHint: 'Aufrufer müssen diesen Schlüssel im Authorization-Header (Bearer <key>) senden, wenn sie den lokalen Proxy nutzen.',
+    localEndpoint: 'Lokaler Endpunkt',
+    authHeader: 'Auth-Header',
   },
   days: {
     today: 'heute',
@@ -114,4 +130,12 @@ export const deDE: Dict = {
     if (n < 1024 * 1024) return `${(n / 1024).toFixed(1)} KB`;
     return `${(n / (1024 * 1024)).toFixed(1)} MB`;
   },
+  logs: {
+    title: 'Protokolle',
+    supplied: 'Bereitgestellter Verkehr (von mir bediente Requests)',
+    consumed: 'Konsumierter Verkehr (von mir gesendete Requests)',
+    noSupplied: 'Noch keine bereitgestellten Anfragen.',
+    noConsumed: 'Noch kein konsumierter Verkehr.',
+  },
+
 };
