@@ -6,11 +6,9 @@ export const koKR: Dict = {
     tagline: '탈중앙화 LLM 토큰 공유 플랫폼',
   },
   nav: {
-    status: '상태',
-    setup: '설정',
-    provision: '공유',
-    consume: '사용',
-    settings: '환경설정',
+    home: '홈',
+    logs: '로그',
+    settings: '설정',
   },
   actions: {
     start: '노드 시작',
@@ -63,8 +61,8 @@ export const koKR: Dict = {
   },
   provision: {
     title: '공유 · 내 토큰 공유하기',
-    offlineHint: '먼저 「상태」 탭에서 P2P 노드를 시작하세요.',
-    activeHint: '{provider} ({n}개 모델)을(를) 공유 중입니다. 다른 사용자가 내 노드를 선택하면 요청이 경유됩니다.',
+    offlineHint: '먼저 홈 탭에서 P2P 노드를 시작하세요.',
+    activeHint: '{provider} ({n} 모델)을 공유 중입니다. 다른 사용자가 내 노드를 선택하면 요청이 경유됩니다.',
     provider: '프로바이더',
     nickname: '닉네임',
     apiBase: 'API 기본 URL 재정의 (선택)',
@@ -77,7 +75,7 @@ export const koKR: Dict = {
   consume: {
     title: '사용 · 다른 노드의 토큰 사용',
     refreshHint: '새로고침을 눌러 노드 목록을 가져옵니다. 각 노드는 프로바이더와 모델을 공개합니다.',
-    pickHint: '노드를 선택하면 로컬 HTTP 프록시가 http://127.0.0.1:{port} 에서 시작되며 OpenAI / Anthropic 호환 클라이언트를 그대로 사용할 수 있습니다.',
+    pickHint: '피어를 선택하면 로컬 HTTP 프록시가 http://127.0.0.1:{port} 에서 시작됩니다.',
     port: '로컬 프록시 포트',
     target: '대상',
     proxyStatus: '프록시',
@@ -86,7 +84,7 @@ export const koKR: Dict = {
     peerShort: '피어',
     addrCount: '주소 {n}개',
     modelCount: '모델 {n}개',
-    noNodes: '사용 가능한 노드가 없습니다. 상대방이 「공유」 탭에서 시작하도록 요청하세요.',
+    noNodes: '사용 가능한 노드가 없습니다. 상대방에게 홈 탭에서 공유 시작을 요청하세요.',
     stats: '통계',
     total: '전체',
     success: '성공',
@@ -104,6 +102,24 @@ export const koKR: Dict = {
     tcpPort: 'TCP 리스닝 포트',
     bootstrap: '부트스트랩 노드 (한 줄에 하나)',
     saveHint: 'P2P 노드를 재시작해야 적용됩니다.',
+
+    proxyPortField: '로컬 프록시 포트',
+    bootstrapHint: 'libp2p가 시작 시 접속할 피어',
+    tab: {
+      node: '노드',
+      register: '등록',
+      provision: 'Token 공유',
+      service: '호출 서비스',
+    },
+    nodeHint: '로컬 libp2p 네트워크 설정: 레지스트리 URL, TCP 리스닝 포트, 부트스트랩 피어.',
+    registerHint: '다른 사용자가 찾을 수 있도록 노드 정보를 글로벌 레지스트리 URL에 게시합니다.',
+    registerHowto: '공유를 시작하면 앱이 레지스트리 URL에 announce를 게시합니다. 설정을 수동으로 저장한 다음 홈 탭에서 시작할 수도 있습니다.',
+    provisionHint: '공유할 LLM 토큰을 설정합니다: 프로바이더 선택, API 키 입력, 모델 선택.',
+    serviceHint: '고정 API 키로 호출을 인증하는 공개 API 서비스를 노출합니다.',
+    consumerApiKey: '소비자 API 키',
+    consumerApiKeyHint: '로컬 프록시에 접근할 때 호출자는 이 키를 Authorization 헤더에 포함해야 합니다 (Bearer <key>).',
+    localEndpoint: '로컬 엔드포인트',
+    authHeader: '인증 헤더',
   },
   days: {
     today: '오늘',
@@ -114,4 +130,12 @@ export const koKR: Dict = {
     if (n < 1024 * 1024) return `${(n / 1024).toFixed(1)} KB`;
     return `${(n / (1024 * 1024)).toFixed(1)} MB`;
   },
+  logs: {
+    title: '로그',
+    supplied: '공급 트래픽 (내가 서비스한 요청)',
+    consumed: '소비 트래픽 (내가 보낸 요청)',
+    noSupplied: '공급 트래픽이 없습니다.',
+    noConsumed: '소비 트래픽이 없습니다.',
+  },
+
 };
