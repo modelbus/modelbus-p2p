@@ -6,6 +6,7 @@ export const jaJP: Dict = {
     tagline: '分散型 LLM トークン共有プラットフォーム',
   },
 
+
   nav: {
     home: 'Home',
     models: 'モデル',
@@ -141,6 +142,7 @@ export const jaJP: Dict = {
     noConsumed: '消費したトラフィックはまだありません。',
   },
 
+
   home: {
     nodeInfo: 'ノード情報',
     peerId: 'ピア ID',
@@ -214,6 +216,11 @@ export const jaJP: Dict = {
     colLatency: '遅延',
     nodesShort: '{n} ノード',
     more: 'さらに表示',
+  },
+  system: {
+    menuLabel: 'システム',
+    openDevTools: '開発者ツールを開く',
+    openLogsFolder: 'ログ / データフォルダを開く',
   },
 
 };
