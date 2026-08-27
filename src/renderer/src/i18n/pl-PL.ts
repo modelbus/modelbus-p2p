@@ -6,6 +6,7 @@ export const plPL: Dict = {
     tagline: 'Zdecentralizowane udostępnianie tokenów LLM',
   },
 
+
   nav: {
     home: 'Home',
     models: 'Modele',
@@ -141,6 +142,7 @@ export const plPL: Dict = {
     noConsumed: 'Brak skonsumowanego ruchu.',
   },
 
+
   home: {
     nodeInfo: 'Informacje o węźle',
     peerId: 'ID węzła',
@@ -214,6 +216,11 @@ export const plPL: Dict = {
     colLatency: 'Opóźnienie',
     nodesShort: '{n} węzłów',
     more: 'więcej',
+  },
+  system: {
+    menuLabel: 'System',
+    openDevTools: 'Otwórz narzędzia deweloperskie',
+    openLogsFolder: 'Otwórz folder logów / danych',
   },
 
 };
