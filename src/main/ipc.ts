@@ -1,11 +1,13 @@
 import { BrowserWindow, ipcMain, shell } from 'electron';
-import type { BootstrapConfig, NodeAnnouncement, ProvisionConfig } from '@shared/types';
+import type { BootstrapConfig, NodeAnnouncement, ProvisionConfig, WalletScore, ModelEntry, LeaderboardEntry, ModelQualityNode } from '@shared/types';
 import type { Store } from './services/store.js';
 import type { ProviderService } from './services/providers.js';
 import type { RegistryService } from './services/registry.js';
 import type { P2PService } from './services/p2p.js';
 import type { ProvisionerService } from './services/provisioner.js';
 import type { ConsumerProxy } from './services/proxy-server.js';
+import { computeWallet } from './services/wallet.js';
+import { buildModelViews } from './services/models.js';
 
 export interface Deps {
   store: Store;
@@ -142,6 +144,51 @@ export function registerIpc(deps: Deps): void {
     await shell.openExternal(url);
   });
 
+  // -------- Wallet --------
+
+  ipcMain.handle('wallet:score', async (): Promise<WalletScore> => {
+    const localPeerId = p2p.peerIdString();
+    const stats = proxy.getStats();
+    const provision = provisioner.config();
+    const inputs = {
+      onlineMinutes: Math.max(0, Math.floor(p2p.uptime() / 60_000)),
+      providedTokens: provision?.modelIds.length ?? 0,
+      servedRequests: stats.successRequests + stats.failedRequests,
+      avgLatencyMs: avgServedLatencyMs(),
+    };
+    return computeWallet(inputs);
+  });
+
+  // -------- Models / Leaderboard --------
+
+  ipcMain.handle('models:catalogue', async (): Promise<{
+    models: ModelEntry[];
+    nodes: ModelQualityNode[];
+    leaderboard: LeaderboardEntry[];
+  }> => {
+    const items = await registry.fetch(store.getBootstrap().registryUrl);
+    // Always include the local node if it is provisioned.
+    if (provisioner.isActive()) {
+      const local = provisioner.config()!;
+      const localEntry: NodeAnnouncement = {
+        peerId: local.peerId,
+        nickname: local.nickname,
+        providerId: local.providerId,
+        providerName: local.providerName,
+        modelIds: local.modelIds,
+        multiaddrs: p2p.multiaddrs(),
+        announcedAt: Date.now(),
+      };
+      if (!items.find((it) => it.peerId === localEntry.peerId)) items.unshift(localEntry);
+    }
+    return buildModelViews(items, {
+      peerId: p2p.peerIdString(),
+      uptimeMinutes: Math.max(0, Math.floor(p2p.uptime() / 60_000)),
+      avgLatencyMs: avgServedLatencyMs(),
+      servedRequests: proxy.getStats().successRequests + proxy.getStats().failedRequests,
+    });
+  });
+
   // Forward service events to the renderer.
   const forward = (event: { type: string; payload: unknown }) => {
     for (const win of BrowserWindow.getAllWindows()) {
@@ -152,6 +199,13 @@ export function registerIpc(deps: Deps): void {
   // Hook into services via a tiny helper:
   (deps as unknown as { __forward?: typeof forward }).__forward = forward;
   void getMainWindow;
+
+  function avgServedLatencyMs(): number {
+    const logs = proxy.getLogs(200);
+    if (!logs.length) return 1500;
+    const sum = logs.reduce((acc: number, l: { latencyMs: number }) => acc + l.latencyMs, 0);
+    return Math.round(sum / logs.length);
+  }
 }
 
 async function announceToRegistry(
@@ -196,3 +250,6 @@ async function announceToRegistry(
     console.warn('[announce] failed:', (err as Error).message);
   }
 }
+
+
+
