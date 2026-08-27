@@ -1,0 +1,24 @@
+[
+  {
+    "peerId": "12D3KooWBnM2JxV67R3sX8kHnYwYqGRkfKvFnhGPGFJ6mhYMwRkz",
+    "nickname": "alpha-share",
+    "providerId": "openai",
+    "providerName": "OpenAI",
+    "modelIds": ["openai/gpt-5", "openai/gpt-5-mini"],
+    "multiaddrs": [
+      "/ip4/127.0.0.1/tcp/15001/p2p/12D3KooWBnM2JxV67R3sX8kHnYwYqGRkfKvFnhGPGFJ6mhYMwRkz"
+    ],
+    "announcedAt": 1714000000000
+  },
+  {
+    "peerId": "12D3KooWPdYJoS8darshV7KHrL6YhQfJvE1xMLQbR5mU2nXzKfX",
+    "nickname": "beta-anthropic",
+    "providerId": "anthropic",
+    "providerName": "Anthropic",
+    "modelIds": ["anthropic/claude-opus-4-7", "anthropic/claude-sonnet-4-6"],
+    "multiaddrs": [
+      "/ip4/127.0.0.1/tcp/15003/p2p/12D3KooWPdYJoS8darshV7KHrL6YhQfJvE1xMLQbR5mU2nXzKfX"
+    ],
+    "announcedAt": 1714000005000
+  }
+]
