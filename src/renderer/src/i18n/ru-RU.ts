@@ -6,6 +6,7 @@ export const ruRU: Dict = {
     tagline: 'Децентрализованный обмен токенами LLM',
   },
 
+
   nav: {
     home: 'Home',
     models: 'Модели',
@@ -141,6 +142,7 @@ export const ruRU: Dict = {
     noConsumed: 'Потреблённого трафика пока нет.',
   },
 
+
   home: {
     nodeInfo: 'Информация об узле',
     peerId: 'ID пира',
@@ -214,6 +216,11 @@ export const ruRU: Dict = {
     colLatency: 'Задержка',
     nodesShort: '{n} узлов',
     more: 'ещё',
+  },
+  system: {
+    menuLabel: 'Система',
+    openDevTools: 'Открыть инструменты разработчика',
+    openLogsFolder: 'Открыть папку логов / данных',
   },
 
 };
