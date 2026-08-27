@@ -6,6 +6,7 @@ export const nbNO: Dict = {
     tagline: 'Desentralisert deling av LLM-tokens',
   },
 
+
   nav: {
     home: 'Home',
     models: 'Modeller',
@@ -141,6 +142,7 @@ export const nbNO: Dict = {
     noConsumed: 'Ingen konsumert trafikk ennå.',
   },
 
+
   home: {
     nodeInfo: 'Nodeinfo',
     peerId: 'Peer-ID',
@@ -214,6 +216,11 @@ export const nbNO: Dict = {
     colLatency: 'Latens',
     nodesShort: '{n} noder',
     more: 'mer',
+  },
+  system: {
+    menuLabel: 'System',
+    openDevTools: 'Åpne utviklerverktøy',
+    openLogsFolder: 'Åpne logg- / datamappe',
   },
 
 };
