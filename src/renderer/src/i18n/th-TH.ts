@@ -6,6 +6,7 @@ export const thTH: Dict = {
     tagline: 'การแชร์โทเคน LLM แบบกระจายศูนย์',
   },
 
+
   nav: {
     home: 'Home',
     models: 'โมเดล',
@@ -141,6 +142,7 @@ export const thTH: Dict = {
     noConsumed: 'ยังไม่มีทราฟฟิกที่ใช้',
   },
 
+
   home: {
     nodeInfo: 'ข้อมูลโหนด',
     peerId: 'รหัสเพียร์',
@@ -214,6 +216,11 @@ export const thTH: Dict = {
     colLatency: 'เวลาแฝง',
     nodesShort: '{n} โหนด',
     more: 'เพิ่มเติม',
+  },
+  system: {
+    menuLabel: 'ระบบ',
+    openDevTools: 'เปิดเครื่องมือสำหรับนักพัฒนา',
+    openLogsFolder: 'เปิดโฟลเดอร์บันทึก / ข้อมูล',
   },
 
 };
