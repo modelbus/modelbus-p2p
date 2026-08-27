@@ -6,6 +6,7 @@ export const enUS: Dict = {
     tagline: 'Decentralized LLM Token Sharing',
   },
 
+
   nav: {
     home: 'Home',
     models: 'Models',
@@ -141,6 +142,7 @@ export const enUS: Dict = {
     noConsumed: 'No consumed traffic yet.',
   },
 
+
   home: {
     nodeInfo: 'Node info',
     peerId: 'Peer ID',
@@ -214,6 +216,11 @@ export const enUS: Dict = {
     colLatency: 'Latency',
     nodesShort: '{n} nodes',
     more: 'more',
+  },
+  system: {
+    menuLabel: 'System',
+    openDevTools: 'Open developer tools',
+    openLogsFolder: 'Open logs / data folder',
   },
 
 };
