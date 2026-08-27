@@ -6,10 +6,8 @@ export const elGR: Dict = {
     tagline: 'Αποκεντρωμένη κοινή χρήση LLM token',
   },
   nav: {
-    status: 'Κατάσταση',
-    setup: 'Ρύθμιση',
-    provision: 'Κοινή χρήση',
-    consume: 'Χρήση',
+    home: 'Αρχική',
+    logs: 'Αρχεία',
     settings: 'Ρυθμίσεις',
   },
   actions: {
@@ -63,7 +61,7 @@ export const elGR: Dict = {
   },
   provision: {
     title: 'Κοινή χρήση — το token σας',
-    offlineHint: 'Ξεκινήστε πρώτα τον κόμβο P2P στην καρτέλα Κατάσταση.',
+    offlineHint: 'Ξεκινήστε πρώτα τον κόμβο P2P από την Αρχική.',
     activeHint: 'Παρέχετε {provider} ({n} μοντέλα). Άλλοι peer θα δρομολογούν αιτήματα μέσω εσάς.',
     provider: 'Πάροχος',
     nickname: 'Ψευδώνυμο',
@@ -77,7 +75,7 @@ export const elGR: Dict = {
   consume: {
     title: 'Χρήση — token άλλου peer',
     refreshHint: 'Πατήστε ανανέωση για να λάβετε τον κατάλογο. Κάθε κόμβος δηλώνει πάροχο και μοντέλα.',
-    pickHint: 'Επιλέξτε ένα peer και ο τοπικός HTTP proxy θα ξεκινήσει στο http://127.0.0.1:{port}. Λειτουργεί με οποιονδήποτε client συμβατό με OpenAI / Anthropic.',
+    pickHint: 'Επιλέξτε ένα peer και ο τοπικός HTTP proxy θα ξεκινήσει στο http://127.0.0.1:{port}.',
     port: 'Τοπική θύρα proxy',
     target: 'Στόχος',
     proxyStatus: 'Proxy',
@@ -86,7 +84,7 @@ export const elGR: Dict = {
     peerShort: 'peer',
     addrCount: '{n} διευθύνσεις',
     modelCount: '{n} μοντέλα',
-    noNodes: 'Δεν υπάρχουν κόμβοι. Ζητήστε από την άλλη πλευρά να πατήσει «Έναρξη κοινής χρήσης».',
+    noNodes: 'Δεν υπάρχουν κόμβοι. Ζητήστε από την άλλη πλευρά να πατήσει «Έναρξη κοινής χρήσης» στην Αρχική.',
     stats: 'Στατιστικά',
     total: 'Σύνολο',
     success: 'Επιτυχίες',
@@ -104,6 +102,24 @@ export const elGR: Dict = {
     tcpPort: 'Θύρα ακρόασης TCP',
     bootstrap: 'Bootstrap peers (ένας ανά γραμμή)',
     saveHint: 'Επανεκκινήστε τον κόμβο P2P για να εφαρμοστούν.',
+
+    proxyPortField: 'Τοπική θύρα proxy',
+    bootstrapHint: 'Peer που καλεί το libp2p κατά την εκκίνηση',
+    tab: {
+      node: 'Κόμβος',
+      register: 'Εγγραφή',
+      provision: 'Διαμοιρασμός token',
+      service: 'Υπηρεσία API',
+    },
+    nodeHint: 'Ρυθμίστε το τοπικό δίκτυο libp2p: URL μητρώου, θύρα ακρόασης TCP, bootstrap peers.',
+    registerHint: 'Δημοσιεύστε τις πληροφορίες του κόμβου σας στο παγκόσμιο μητρώο ώστε να σας βρουν.',
+    registerHowto: 'Όταν ξεκινήσετε την κοινή χρήση, η εφαρμογή στέλνει ένα announce στο URL του μητρώου. Μπορείτε επίσης να αποθηκεύσετε τις ρυθμίσεις χειροκίνητα και να πατήσετε «Έναρξη κοινής χρήσης» στην Αρχική.',
+    provisionHint: 'Ρυθμίστε το LLM token που μοιράζεστε: επιλέξτε πάροχο, επικολλήστε το κλειδί API, τσεκάρετε μοντέλα.',
+    serviceHint: 'Δημόσια υπηρεσία API με σταθερό κλειδί API — κάθε αίτημα ελέγχεται.',
+    consumerApiKey: 'Κλειδί API καταναλωτή',
+    consumerApiKeyHint: 'Οι καλούντες πρέπει να στέλνουν αυτό το κλειδί στην κεφαλίδα Authorization (Bearer <key>) όταν χρησιμοποιούν τον τοπικό proxy.',
+    localEndpoint: 'Τοπικό endpoint',
+    authHeader: 'Κεφαλίδα πιστοποίησης',
   },
   days: {
     today: 'σήμερα',
@@ -114,4 +130,12 @@ export const elGR: Dict = {
     if (n < 1024 * 1024) return `${(n / 1024).toFixed(1)} KB`;
     return `${(n / (1024 * 1024)).toFixed(1)} MB`;
   },
+  logs: {
+    title: 'Αρχεία',
+    supplied: 'Παρεχόμενη κίνηση (αιτήματα που εξυπηρέτησα)',
+    consumed: 'Καταναλωμένη κίνηση (αιτήματα που έστειλα)',
+    noSupplied: 'Καμία παρεχόμενη κίνηση ακόμη.',
+    noConsumed: 'Καμία καταναλωμένη κίνηση ακόμη.',
+  },
+
 };
