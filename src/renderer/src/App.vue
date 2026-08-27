@@ -16,6 +16,8 @@ import FlagIcon from './ui/FlagIcon.vue';
 import ThemeIcon from './ui/ThemeIcon.vue';
 
 import HomeView from './views/HomeView.vue';
+import ModelsView from './views/ModelsView.vue';
+import WalletView from './views/WalletView.vue';
 import LogsView from './views/LogsView.vue';
 import SettingsView from './views/SettingsView.vue';
 // SetupView / ProvisionView / ConsumeView are still implemented but
@@ -31,9 +33,10 @@ import ConsumeView from './views/ConsumeView.vue';
 
 import type { EventLogEntry, AppRefs, AppActions, AppHelpers } from './views/types';
 
-type Tab = 'home' | 'logs' | 'settings';
+type Tab = 'home' | 'models' | 'wallet' | 'logs' | 'settings';
 
 const tab = ref<Tab>('home');
+const settingsSub = ref<string>('node');
 
 // ---- state (kept as refs so we can pass to child views) ----
 const status = ref<{
@@ -286,6 +289,8 @@ function onDocClick(e: MouseEvent) {
 
 const tabs = computed<Array<{ id: Tab; label: string; icon: string }>>(() => [
   { id: 'home', label: t('nav.home'), icon: '🏠' },
+  { id: 'models', label: t('nav.models'), icon: '🧠' },
+  { id: 'wallet', label: t('nav.wallet'), icon: '💰' },
   { id: 'logs', label: t('nav.logs'), icon: '📋' },
   { id: 'settings', label: t('nav.settings'), icon: '⚙' },
 ]);
@@ -334,10 +339,19 @@ onMounted(async () => {
     if (eventLog.value.length > 100) eventLog.value.length = 100;
   });
   document.addEventListener('click', onDocClick);
+  window.addEventListener('modelbus:nav', onNavEvent);
 });
+
+function onNavEvent(e: Event) {
+  const detail = (e as CustomEvent<{ tab?: Tab; sub?: string }>).detail;
+  if (!detail) return;
+  if (detail.tab) tab.value = detail.tab;
+  if (detail.sub) settingsSub.value = detail.sub;
+}
 
 onBeforeUnmount(() => {
   document.removeEventListener('click', onDocClick);
+  window.removeEventListener('modelbus:nav', onNavEvent);
 });
 </script>
 
@@ -430,8 +444,10 @@ onBeforeUnmount(() => {
 
     <main class="content">
       <HomeView v-if="tab === 'home'" :refs="refs" :actions="actions" :helpers="helpers" />
+      <ModelsView v-else-if="tab === 'models'" />
+      <WalletView v-else-if="tab === 'wallet'" />
       <LogsView v-else-if="tab === 'logs'" :refs="refs" :actions="actions" :helpers="helpers" />
-      <SettingsView v-else-if="tab === 'settings'" :refs="refs" :actions="actions" :helpers="helpers" />
+      <SettingsView v-else-if="tab === 'settings'" :key="settingsSub" :initial-sub="settingsSub" />
     </main>
   </div>
 </template>
