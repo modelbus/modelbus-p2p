@@ -1,0 +1,76 @@
+{
+  "name": "modelbus-p2p",
+  "version": "0.1.0",
+  "description": "A decentralized token sharing platform powered by js-libp2p and Electron",
+  "main": "out/main/index.js",
+  "type": "module",
+  "author": "modelbus-p2p",
+  "license": "MIT",
+  "scripts": {
+    "dev": "electron-vite dev",
+    "build": "electron-vite build",
+    "start": "electron-vite preview",
+    "package": "electron-vite build && electron-builder",
+    "package:mac": "electron-vite build && electron-builder --mac",
+    "package:win": "electron-vite build && electron-builder --win",
+    "typecheck": "tsc --noEmit -p tsconfig.node.json && tsc --noEmit -p tsconfig.web.json"
+  },
+  "dependencies": {
+    "@chainsafe/libp2p-noise": "^16.1.0",
+    "@chainsafe/libp2p-yamux": "^7.0.1",
+    "@libp2p/autonat": "^2.0.10",
+    "@libp2p/bootstrap": "^11.0.1",
+    "@libp2p/circuit-relay-v2": "^3.2.0",
+    "@libp2p/crypto": "^5.1.4",
+    "@libp2p/identify": "^3.0.10",
+    "@libp2p/kad-dht": "^15.0.1",
+    "@libp2p/peer-id": "^5.1.4",
+    "@libp2p/ping": "^2.0.10",
+    "@libp2p/prometheus-metrics": "^4.3.4",
+    "@libp2p/tcp": "^10.1.4",
+    "@libp2p/upnp-nat": "^3.1.4",
+    "@libp2p/websockets": "^9.1.4",
+    "@multiformats/multiaddr": "^12.3.3",
+    "electron-store": "^8.2.0",
+    "it-length-prefixed": "^10.0.1",
+    "libp2p": "^2.3.0",
+    "uint8arraylist": "^2.4.3",
+    "uint8arrays": "^5.1.1"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.5",
+    "@vitejs/plugin-vue": "^5.2.1",
+    "electron": "^33.3.0",
+    "electron-builder": "^25.1.8",
+    "electron-vite": "^2.3.0",
+    "typescript": "^5.7.3",
+    "vite": "^5.4.11",
+    "vue": "^3.5.13"
+  },
+  "pnpm": {
+    "onlyBuiltDependencies": [
+      "electron"
+    ]
+  },
+  "build": {
+    "appId": "com.modelbus.p2p",
+    "productName": "ModelBus P2P",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "out/**/*",
+      "node_modules/**/*"
+    ],
+    "mac": {
+      "target": "dmg",
+      "category": "public.app-category.developer-tools"
+    },
+    "win": {
+      "target": "nsis"
+    },
+    "linux": {
+      "target": "AppImage"
+    }
+  }
+}
