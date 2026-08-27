@@ -502,7 +502,7 @@ onBeforeUnmount(() => {
       <ModelsView v-else-if="tab === 'models'" />
       <WalletView v-else-if="tab === 'wallet'" />
       <LogsView v-else-if="tab === 'logs'" :refs="refs" :actions="actions" :helpers="helpers" />
-      <SettingsView v-else-if="tab === 'settings'" :key="settingsSub" :initial-sub="settingsSub" />
+      <SettingsView v-else-if="tab === 'settings'" :key="settingsSub" :initial-sub="settingsSub" :refs="refs" :actions="actions" :helpers="helpers" />
     </main>
   </div>
 </template>
