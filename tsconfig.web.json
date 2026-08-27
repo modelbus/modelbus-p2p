@@ -14,7 +14,10 @@
     "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
-    "types": []
+    "types": [],
+    "paths": {
+      "@shared/*": ["./src/shared/*"]
+    }
   },
   "include": [
     "src/renderer/**/*.ts",
