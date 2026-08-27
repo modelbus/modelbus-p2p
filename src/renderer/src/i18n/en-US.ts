@@ -6,10 +6,8 @@ export const enUS: Dict = {
     tagline: 'Decentralized LLM Token Sharing',
   },
   nav: {
-    status: 'Status',
-    setup: 'Setup',
-    provision: 'Provision',
-    consume: 'Consume',
+    home: 'Home',
+    logs: 'Logs',
     settings: 'Settings',
   },
   actions: {
@@ -63,7 +61,7 @@ export const enUS: Dict = {
   },
   provision: {
     title: 'Provision — share your token',
-    offlineHint: 'Please start the P2P node on the Status tab first.',
+    offlineHint: 'Please start the P2P node from the Home tab first.',
     activeHint: 'Sharing {provider} ({n} models). Other peers will route inference requests through you.',
     provider: 'Provider',
     nickname: 'Nickname',
@@ -77,7 +75,7 @@ export const enUS: Dict = {
   consume: {
     title: 'Consume — drive another peer\'s token',
     refreshHint: 'Click refresh to pull the node catalogue. Each node declares its provider and models.',
-    pickHint: 'Pick a peer and the local HTTP proxy starts at http://127.0.0.1:{port}. Any OpenAI / Anthropic compatible client works.',
+    pickHint: 'Pick a peer and the local HTTP proxy starts at http://127.0.0.1:{port}.',
     port: 'Local proxy port',
     target: 'Target',
     proxyStatus: 'Proxy',
@@ -86,7 +84,7 @@ export const enUS: Dict = {
     peerShort: 'peer',
     addrCount: '{n} addrs',
     modelCount: '{n} models',
-    noNodes: 'No nodes yet. Ask the other side to click "Start sharing" on the Provision tab.',
+    noNodes: 'No nodes yet. Ask the other side to click "Start sharing" on the Home tab.',
     stats: 'Stats',
     total: 'Total',
     success: 'Success',
@@ -104,6 +102,24 @@ export const enUS: Dict = {
     tcpPort: 'TCP listen port',
     bootstrap: 'Bootstrap multiaddrs (one per line)',
     saveHint: 'Restart the P2P node to apply.',
+
+    proxyPortField: 'Local proxy port',
+    bootstrapHint: 'Peers libp2p dials when the node starts',
+    tab: {
+      node: 'Node',
+      register: 'Register',
+      provision: 'Provision',
+      service: 'Service',
+    },
+    nodeHint: 'Configure the local libp2p networking: registry URL, TCP listen port, bootstrap peers.',
+    registerHint: 'Publish your node information to the global registry URL so others can discover you.',
+    registerHowto: 'Once you start sharing, this app posts an announce to the registry URL. You can also save the current settings manually and then click "Start sharing" on the Home tab.',
+    provisionHint: 'Set up the LLM token you are willing to share: pick a provider, paste the API key, select the models.',
+    serviceHint: 'Expose a public API with a fixed API key — every incoming request is checked for the key.',
+    consumerApiKey: 'Consumer API key',
+    consumerApiKeyHint: 'Callers must send this key in the Authorization header (Bearer <key>) when hitting the local proxy.',
+    localEndpoint: 'Local endpoint',
+    authHeader: 'Auth header',
   },
   days: {
     today: 'today',
@@ -114,4 +130,12 @@ export const enUS: Dict = {
     if (n < 1024 * 1024) return `${(n / 1024).toFixed(1)} KB`;
     return `${(n / (1024 * 1024)).toFixed(1)} MB`;
   },
+  logs: {
+    title: 'Logs',
+    supplied: 'Supplied traffic (requests I served)',
+    consumed: 'Consumed traffic (requests I made)',
+    noSupplied: 'No supplied traffic yet.',
+    noConsumed: 'No consumed traffic yet.',
+  },
+
 };
