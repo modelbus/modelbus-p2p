@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
 import type {
   ProviderSummary,
   ProviderDetail,
@@ -8,12 +8,31 @@ import type {
   ProxyStats,
   BootstrapConfig,
   ModelInfo,
-} from '../../shared/types';
+} from '@shared/types';
+
+import { t, currentLocale, availableLocales, setLocale } from './i18n';
+import { theme, themeOptions } from './ui/theme';
+
+import StatusView from './views/StatusView.vue';
+import SetupView from './views/SetupView.vue';
+import ProvisionView from './views/ProvisionView.vue';
+import ConsumeView from './views/ConsumeView.vue';
+import SettingsView from './views/SettingsView.vue';
+
+import type { EventLogEntry, AppRefs, AppActions, AppHelpers } from './views/types';
 
 type Tab = 'status' | 'setup' | 'provision' | 'consume' | 'settings';
 
 const tab = ref<Tab>('status');
-const status = ref<{ started: boolean; peerId: string | null; multiaddrs: string[]; role: 'idle' | 'provision' | 'consume'; connected: number }>({
+
+// ---- state (kept as refs so we can pass to child views) ----
+const status = ref<{
+  started: boolean;
+  peerId: string | null;
+  multiaddrs: string[];
+  role: 'idle' | 'provision' | 'consume';
+  connected: number;
+}>({
   started: false,
   peerId: null,
   multiaddrs: [],
@@ -58,24 +77,14 @@ const cfg = ref<BootstrapConfig>({
   proxyPort: 18100,
 });
 
-const eventLog = ref<Array<{ ts: number; type: string; msg: string }>>([]);
+const eventLog = ref<EventLogEntry[]>([]);
 const error = ref<string | null>(null);
 
-const tabs: Array<{ id: Tab; label: string }> = [
-  { id: 'status', label: 'Status' },
-  { id: 'setup', label: 'Setup' },
-  { id: 'provision', label: 'Provision (Share)' },
-  { id: 'consume', label: 'Consume (Drive)' },
-  { id: 'settings', label: 'Settings' },
-];
+// ---- popover state ----
+const langMenuOpen = ref(false);
+const themeMenuOpen = ref(false);
 
-const providerFilter = ref('');
-const filteredProviders = computed(() => {
-  const q = providerFilter.value.trim().toLowerCase();
-  if (!q) return providers.value;
-  return providers.value.filter((p) => p.name.toLowerCase().includes(q) || p.id.toLowerCase().includes(q));
-});
-
+// ---- actions ----
 async function loadProviders(force = false) {
   providerLoading.value = true;
   error.value = null;
@@ -86,14 +95,6 @@ async function loadProviders(force = false) {
   } finally {
     providerLoading.value = false;
   }
-}
-
-async function loadProviderDetail(id: string) {
-  if (!id) {
-    providerDetail.value = null;
-    return;
-  }
-  providerDetail.value = await window.modelbus.providers.get(id);
 }
 
 async function refreshStatus() {
@@ -151,6 +152,14 @@ async function stopNode() {
   await refreshStatus();
 }
 
+async function loadProviderDetail(id: string) {
+  if (!id) {
+    providerDetail.value = null;
+    return;
+  }
+  providerDetail.value = await window.modelbus.providers.get(id);
+}
+
 async function selectProvider(id: string) {
   draft.value.providerId = id;
   draft.value.selectedModels = [];
@@ -167,18 +176,21 @@ async function saveProvision() {
   error.value = null;
   try {
     const provider = providers.value.find((p) => p.id === draft.value.providerId);
-    if (!provider) throw new Error('please pick a provider first');
-    if (!draft.value.apiKey) throw new Error('apiKey is required');
+    if (!provider) {
+      error.value = t('provision.needPick');
+      return;
+    }
+    if (!draft.value.apiKey) {
+      error.value = t('provision.needKey');
+      return;
+    }
     if (!draft.value.nickname) draft.value.nickname = status.value.peerId?.slice(-6) ?? 'anonymous';
     const detail = providerDetail.value ?? (await window.modelbus.providers.get(provider.id));
     const allowed = new Set((detail?.models ?? []).map((m) => m.id));
     const models = draft.value.selectedModels.length
       ? draft.value.selectedModels.filter((id) => allowed.has(id))
       : (detail?.models ?? []).map((m) => m.id);
-    const peerId = status.value.peerId ?? (await window.modelbus.p2p.status()).peerId;
-    if (!peerId) {
-      await startNode();
-    }
+    if (!status.value.peerId) await startNode();
     const full = await window.modelbus.provision.set({
       nickname: draft.value.nickname,
       providerId: provider.id,
@@ -236,19 +248,63 @@ async function saveConfig() {
   await window.modelbus.bootstrap.setConfig(cfg.value);
 }
 
+function setError(msg: string | null) {
+  error.value = msg;
+}
+
+// ---- helpers ----
 function fmtBytes(n: number): string {
   if (n < 1024) return `${n} B`;
   if (n < 1024 * 1024) return `${(n / 1024).toFixed(1)} KB`;
   return `${(n / (1024 * 1024)).toFixed(1)} MB`;
 }
-
 function fmtTime(ts: number): string {
   return new Date(ts).toLocaleTimeString();
 }
-
 function peerShort(id?: string | null): string {
   return id ? `${id.slice(0, 6)}…${id.slice(-4)}` : '—';
 }
+
+// ---- click-outside close for menus ----
+function onDocClick(e: MouseEvent) {
+  const target = e.target as HTMLElement;
+  if (!target.closest('.menu')) {
+    langMenuOpen.value = false;
+    themeMenuOpen.value = false;
+  }
+}
+
+const tabs = computed<Array<{ id: Tab; label: string }>>(() => [
+  { id: 'status', label: t('nav.status') },
+  { id: 'setup', label: t('nav.setup') },
+  { id: 'provision', label: t('nav.provision') },
+  { id: 'consume', label: t('nav.consume') },
+  { id: 'settings', label: t('nav.settings') },
+]);
+
+const refs: AppRefs = {
+  status, providers, providerDetail, providerLoading,
+  provision, draft,
+  nodes, registryLoading, nodesRefreshing,
+  proxyStats, proxyTarget, proxyLogs,
+  proxyPort, cfg,
+  eventLog, error,
+};
+
+const actions: AppActions = {
+  refreshStatus, refreshProvision, refreshProxy, refreshNodes, refreshAll,
+  startNode, stopNode,
+  loadProviders, loadProviderDetail, selectProvider, toggleModel,
+  saveProvision, clearProvision,
+  pickTarget, clearTarget,
+  loadConfig, saveConfig,
+  setError,
+};
+
+const helpers: AppHelpers = { fmtBytes, fmtTime, peerShort };
+
+const currentLocaleLabel = computed(() => availableLocales.find((l) => l.id === currentLocale.value)?.label ?? '');
+const currentThemeLabel = computed(() => themeOptions.find((o) => o.id === theme.value)?.label ?? '');
 
 onMounted(async () => {
   await loadConfig();
@@ -267,329 +323,90 @@ onMounted(async () => {
     eventLog.value.unshift({ ts: Date.now(), type: 'proxy:' + evt.type, msg: JSON.stringify(evt.payload).slice(0, 120) });
     if (eventLog.value.length > 100) eventLog.value.length = 100;
   });
+  document.addEventListener('click', onDocClick);
+});
+
+onBeforeUnmount(() => {
+  document.removeEventListener('click', onDocClick);
 });
 </script>
 
 <template>
-  <div class="shell">
-    <aside class="sidebar">
-      <h1>ModelBus · P2P</h1>
-      <nav>
-        <button v-for="t in tabs" :key="t.id" :class="{ active: tab === t.id }" @click="tab = t.id">
-          {{ t.label }}
+  <div class="app">
+    <header class="topbar">
+      <div class="brand">
+        <span class="dot"></span>
+        <span>{{ t('app.title') }}</span>
+        <span class="tagline">{{ t('app.tagline') }}</span>
+      </div>
+
+      <nav class="tabs">
+        <button
+          v-for="tb in tabs"
+          :key="tb.id"
+          :class="{ active: tab === tb.id }"
+          @click="tab = tb.id"
+        >
+          {{ tb.label }}
         </button>
       </nav>
-      <div class="status">
-        <div>
-          <span class="tag" :class="status.started ? 'success' : 'danger'">
-            {{ status.started ? 'P2P online' : 'P2P offline' }}
-          </span>
+
+      <div class="toolbar">
+        <div
+          class="status-pill"
+          :class="{ online: status.started }"
+          :title="status.peerId ?? ''"
+        >
+          <span class="led"></span>
+          {{
+            status.started
+              ? t('status.p2pOnline')
+              : t('status.p2pOffline')
+          }}
         </div>
-        <div style="margin-top:6px">peer: <span class="muted">{{ peerShort(status.peerId) }}</span></div>
-        <div>peers: <span class="muted">{{ status.connected }}</span></div>
-        <div>role: <span class="muted">{{ status.role }}</span></div>
+
+        <div class="menu">
+          <button class="icon-btn" :title="currentLocaleLabel" @click.stop="langMenuOpen = !langMenuOpen; themeMenuOpen = false">
+            🌐
+          </button>
+          <div v-if="langMenuOpen" class="menu-pop">
+            <button
+              v-for="l in availableLocales"
+              :key="l.id"
+              @click="setLocale(l.id); langMenuOpen = false"
+            >
+              <span>{{ l.label }}</span>
+              <span v-if="l.id === currentLocale" class="check">✓</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="menu">
+          <button class="icon-btn" :title="currentThemeLabel" @click.stop="themeMenuOpen = !themeMenuOpen; langMenuOpen = false">
+            🎨
+          </button>
+          <div v-if="themeMenuOpen" class="menu-pop">
+            <button
+              v-for="o in themeOptions"
+              :key="o.id"
+              @click="theme = o.id; themeMenuOpen = false"
+            >
+              <span>{{ o.label }}</span>
+              <span v-if="o.id === theme" class="check">✓</span>
+            </button>
+          </div>
+        </div>
       </div>
-    </aside>
+    </header>
 
     <main class="content">
-      <div v-if="error" class="banner">{{ error }}</div>
+      <h2>{{ tabs.find((x) => x.id === tab)?.label }}</h2>
 
-      <section v-if="tab === 'status'">
-        <h2>Status</h2>
-
-        <div class="card">
-          <div style="display:flex; gap:12px; align-items:center; flex-wrap:wrap;">
-            <button v-if="!status.started" class="primary" @click="startNode">Start P2P node</button>
-            <button v-else class="danger" @click="stopNode">Stop P2P node</button>
-            <button @click="refreshAll">Refresh</button>
-            <span class="muted">role: {{ status.role }}</span>
-          </div>
-          <dl class="kv" style="margin-top:12px">
-            <dt>Peer ID</dt><dd class="code">{{ status.peerId ?? '—' }}</dd>
-            <dt>Listen</dt>
-            <dd>
-              <div v-if="status.multiaddrs.length">
-                <div v-for="m in status.multiaddrs" :key="m" class="code">{{ m }}</div>
-              </div>
-              <span v-else class="muted">—</span>
-            </dd>
-            <dt>Connections</dt><dd>{{ status.connected }}</dd>
-          </dl>
-        </div>
-
-        <div class="card">
-          <h3 style="margin-top:0">Event log</h3>
-          <div class="scroll">
-            <table class="log-table">
-              <thead><tr><th>Time</th><th>Type</th><th>Payload</th></tr></thead>
-              <tbody>
-                <tr v-for="(e, i) in eventLog" :key="i">
-                  <td>{{ fmtTime(e.ts) }}</td>
-                  <td><span class="tag">{{ e.type }}</span></td>
-                  <td>{{ e.msg }}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      <section v-else-if="tab === 'setup'">
-        <h2>Pick your provider</h2>
-        <div class="banner">
-          Pick a provider from the <a href="#" @click.prevent="loadProviders(true)">models.dev</a> registry and load your account key.
-          Your key is stored locally in your userData and used only when you explicitly start the Provision mode.
-        </div>
-
-        <div class="card">
-          <div style="display:flex; gap:12px; align-items:center;">
-            <button @click="loadProviders(true)" :disabled="providerLoading">
-              {{ providerLoading ? 'Loading…' : 'Refresh from models.dev' }}
-            </button>
-            <span class="muted">{{ providers.length }} providers</span>
-          </div>
-          <div style="margin-top:12px">
-            <label>Search</label>
-            <input v-model="providerFilter" placeholder="filter providers by name or id" />
-            <select size="10" style="margin-top:8px; height:auto;" :value="draft.providerId" @change="selectProvider(($event.target as HTMLSelectElement).value)">
-              <option v-for="p in filteredProviders" :key="p.id" :value="p.id">
-                {{ p.name }} ({{ p.id }}) — {{ p.modelCount }} models
-              </option>
-            </select>
-          </div>
-        </div>
-
-        <div v-if="providerDetail" class="card">
-          <h3 style="margin-top:0">{{ providerDetail.name }}</h3>
-          <dl class="kv">
-            <dt>ID</dt><dd>{{ providerDetail.id }}</dd>
-            <dt>npm</dt><dd>{{ providerDetail.npm || '—' }}</dd>
-            <dt>API base</dt><dd>{{ providerDetail.api || '(not declared, defaults to OpenAI-compatible)' }}</dd>
-            <dt>Env vars</dt><dd>{{ providerDetail.env.join(', ') || '—' }}</dd>
-            <dt>Doc</dt><dd>{{ providerDetail.doc || '—' }}</dd>
-            <dt>Models</dt><dd>{{ providerDetail.models.length }}</dd>
-          </dl>
-          <details style="margin-top:8px">
-            <summary>Browse models</summary>
-            <div class="chip-grid" style="margin-top:8px">
-              <span v-for="m in providerDetail.models" :key="m.id" class="chip">
-                {{ m.id }}
-                <span v-if="m.context" class="muted"> · {{ Math.round(m.context / 1024) }}k ctx</span>
-              </span>
-            </div>
-          </details>
-        </div>
-      </section>
-
-      <section v-else-if="tab === 'provision'">
-        <h2>Provision — share your token</h2>
-        <div v-if="!status.started" class="banner">
-          The P2P node is offline. Click <a href="#" @click.prevent="startNode">Start</a> on the Status tab to bring it up before provisioning.
-        </div>
-        <div v-else-if="provision" class="banner ok">
-          You're sharing <strong>{{ provision.providerName }}</strong> ({{ provision.modelIds.length }} models).
-          Other clients that select your peer will route inference requests through you.
-        </div>
-
-        <div class="card">
-          <div class="row cols-2">
-            <div>
-              <label>Provider</label>
-              <select :value="draft.providerId" @change="selectProvider(($event.target as HTMLSelectElement).value)">
-                <option value="">— pick one —</option>
-                <option v-for="p in providers" :key="p.id" :value="p.id">{{ p.name }}</option>
-              </select>
-            </div>
-            <div>
-              <label>Nickname</label>
-              <input v-model="draft.nickname" placeholder="so others can pick you" />
-            </div>
-          </div>
-          <div class="row cols-2">
-            <div>
-              <label>API base override (optional)</label>
-              <input v-model="draft.apiBase" :placeholder="providerDetail?.api ?? 'https://api.openai.com/v1'" />
-            </div>
-            <div>
-              <label>API key</label>
-              <input type="password" v-model="draft.apiKey" placeholder="sk-…" autocomplete="off" />
-            </div>
-          </div>
-          <div v-if="providerDetail" style="margin-top:8px">
-            <label>Models to share (empty = all)</label>
-            <div class="chip-grid">
-              <span
-                v-for="m in providerDetail.models"
-                :key="m.id"
-                class="chip"
-                :class="{ selected: draft.selectedModels.includes(m.id) }"
-                @click="toggleModel(m)"
-              >
-                {{ m.id }}
-              </span>
-            </div>
-            <div style="margin-top:8px; display:flex; gap:8px;">
-              <button @click="draft.selectedModels = providerDetail.models.map((m) => m.id)">Select all</button>
-              <button @click="draft.selectedModels = []">Clear</button>
-            </div>
-          </div>
-
-          <div style="margin-top:14px; display:flex; gap:8px; align-items:center;">
-            <button class="primary" @click="saveProvision" :disabled="!draft.providerId || !draft.apiKey">
-              {{ provision ? 'Update' : 'Start sharing' }}
-            </button>
-            <button v-if="provision" class="danger" @click="clearProvision">Stop sharing</button>
-            <span v-if="error" class="tag danger">{{ error }}</span>
-          </div>
-        </div>
-
-        <div v-if="provision" class="card">
-          <h3 style="margin-top:0">Active share</h3>
-          <dl class="kv">
-            <dt>Peer ID</dt><dd class="code">{{ provision.peerId }}</dd>
-            <dt>Provider</dt><dd>{{ provision.providerName }}</dd>
-            <dt>Models</dt><dd>{{ provision.modelIds.join(', ') }}</dd>
-            <dt>Listen addresses</dt>
-            <dd>
-              <div v-for="m in status.multiaddrs" :key="m" class="code">{{ m }}</div>
-            </dd>
-          </dl>
-        </div>
-      </section>
-
-      <section v-else-if="tab === 'consume'">
-        <h2>Consume — drive someone else's token</h2>
-        <div class="card">
-          <div style="display:flex; align-items:center; gap:12px;">
-            <button class="primary" @click="refreshNodes" :disabled="registryLoading">
-              {{ registryLoading ? 'Fetching…' : 'Refresh node list' }}
-            </button>
-            <span class="muted">{{ nodes.length }} nodes · last refresh {{ fmtTime(nodesRefreshing) }}</span>
-          </div>
-          <p class="muted" style="margin-top:6px">
-            Each node lists its provider and which models it shares. Pick one to start the local HTTP proxy
-            on <code>http://127.0.0.1:{{ proxyPort }}</code> — point any OpenAI/Anthropic-compatible client at it.
-          </p>
-        </div>
-
-        <div class="card">
-          <h3 style="margin-top:0">Available nodes</h3>
-          <div class="list">
-            <div v-if="!nodes.length" class="muted">
-              No nodes published yet. Ask the other side to click "Start sharing" on the Provision tab.
-            </div>
-            <div
-              v-for="n in nodes"
-              :key="n.peerId"
-              class="list-item"
-              :class="{ active: proxyTarget.peerId === n.peerId }"
-            >
-              <div>
-                <div>
-                  <strong>{{ n.nickname }}</strong>
-                  <span class="tag accent">{{ n.providerName }}</span>
-                  <span v-if="proxyTarget.peerId === n.peerId" class="tag success">active</span>
-                </div>
-                <div class="meta">
-                  peer <span class="code">{{ peerShort(n.peerId) }}</span> ·
-                  {{ n.modelIds.length }} models ·
-                  {{ n.multiaddrs.length }} addrs
-                </div>
-                <div class="meta muted">{{ n.modelIds.slice(0, 6).join(', ') }}{{ n.modelIds.length > 6 ? '…' : '' }}</div>
-              </div>
-              <div style="display:flex; gap:8px;">
-                <button v-if="proxyTarget.peerId !== n.peerId" class="primary" @click="pickTarget(n.peerId)">Use</button>
-                <button v-else class="danger" @click="clearTarget">Stop</button>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="card">
-          <h3 style="margin-top:0">Local proxy</h3>
-          <div class="row cols-3">
-            <div>
-              <label>Listen port</label>
-              <input type="number" v-model.number="proxyPort" />
-            </div>
-            <div>
-              <label>Target</label>
-              <input :value="proxyTarget.peerId ?? '(none)'" disabled />
-            </div>
-            <div>
-              <label>Status</label>
-              <input :value="proxyTarget.peerId ? `running on :${proxyPort}` : 'idle'" disabled />
-            </div>
-          </div>
-
-          <div class="code" style="margin-top:8px">
-# OpenAI-compatible example:
-curl http://127.0.0.1:{{ proxyPort }}/v1/chat/completions \
-  -H "Content-Type: application/json" \
-  -d '{ "model": "&lt;paste a model id&gt;", "messages": [{"role":"user","content":"hi"}] }'
-          </div>
-        </div>
-
-        <div class="card">
-          <h3 style="margin-top:0">Stats</h3>
-          <dl class="kv">
-            <dt>Total</dt><dd>{{ proxyStats.totalRequests }}</dd>
-            <dt>Success</dt><dd>{{ proxyStats.successRequests }}</dd>
-            <dt>Failed</dt><dd>{{ proxyStats.failedRequests }}</dd>
-            <dt>Bytes sent</dt><dd>{{ fmtBytes(proxyStats.bytesSent) }}</dd>
-            <dt>Bytes received</dt><dd>{{ fmtBytes(proxyStats.bytesReceived) }}</dd>
-          </dl>
-          <button @click="refreshProxy" style="margin-top:8px">Refresh</button>
-        </div>
-
-        <div class="card">
-          <h3 style="margin-top:0">Recent traffic</h3>
-          <div class="scroll">
-            <table class="log-table">
-              <thead><tr><th>Time</th><th>Method</th><th>Path</th><th>Status</th><th>Latency</th><th>Peer</th></tr></thead>
-              <tbody>
-                <tr v-for="(l, i) in proxyLogs" :key="i">
-                  <td>{{ fmtTime(l.ts) }}</td>
-                  <td>{{ l.method }}</td>
-                  <td>{{ l.path }}</td>
-                  <td>
-                    <span class="tag" :class="l.status < 400 ? 'success' : 'danger'">{{ l.status }}</span>
-                  </td>
-                  <td>{{ l.latencyMs }}ms</td>
-                  <td>{{ peerShort(l.peerId) }}</td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </section>
-
-      <section v-else-if="tab === 'settings'">
-        <h2>Settings</h2>
-        <div class="card">
-          <div class="row cols-2">
-            <div>
-              <label>Registry URL</label>
-              <input v-model="cfg.registryUrl" placeholder="http://example.com/nodes.json or file:///mock/nodes.json" />
-            </div>
-            <div>
-              <label>TCP listen port</label>
-              <input type="number" v-model.number="cfg.tcpPort" />
-            </div>
-          </div>
-          <div class="row">
-            <div>
-              <label>Bootstrap multiaddrs (one per line)</label>
-              <textarea v-model="cfg.bootstrapMultiaddrs" rows="4" placeholder="/ip4/.../tcp/.../p2p/..."></textarea>
-            </div>
-          </div>
-          <div style="margin-top:8px; display:flex; gap:8px;">
-            <button class="primary" @click="saveConfig">Save</button>
-            <button @click="loadConfig">Reload</button>
-            <span class="muted">changes apply after restarting the P2P node.</span>
-          </div>
-        </div>
-      </section>
+      <StatusView v-if="tab === 'status'" :refs="refs" :actions="actions" :helpers="helpers" />
+      <SetupView v-else-if="tab === 'setup'" :refs="refs" :actions="actions" :helpers="helpers" />
+      <ProvisionView v-else-if="tab === 'provision'" :refs="refs" :actions="actions" :helpers="helpers" />
+      <ConsumeView v-else-if="tab === 'consume'" :refs="refs" :actions="actions" :helpers="helpers" />
+      <SettingsView v-else-if="tab === 'settings'" :refs="refs" :actions="actions" :helpers="helpers" />
     </main>
   </div>
 </template>
