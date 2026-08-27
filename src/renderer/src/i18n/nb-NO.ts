@@ -6,10 +6,8 @@ export const nbNO: Dict = {
     tagline: 'Desentralisert deling av LLM-tokens',
   },
   nav: {
-    status: 'Status',
-    setup: 'Oppsett',
-    provision: 'Del',
-    consume: 'Bruk',
+    home: 'Hjem',
+    logs: 'Logger',
     settings: 'Innstillinger',
   },
   actions: {
@@ -63,7 +61,7 @@ export const nbNO: Dict = {
   },
   provision: {
     title: 'Del — din token',
-    offlineHint: 'Start P2P-noden under Status først.',
+    offlineHint: 'Start P2P-noden fra Hjem først.',
     activeHint: 'Du deler {provider} ({n} modeller). Andre peers ruter forespørsler gjennom deg.',
     provider: 'Leverandør',
     nickname: 'Kallenavn',
@@ -77,7 +75,7 @@ export const nbNO: Dict = {
   consume: {
     title: 'Bruk — en annen peers token',
     refreshHint: 'Klikk oppdater for å hente katalogen. Hver node oppgir leverandør og modeller.',
-    pickHint: 'Velg en peer; den lokale HTTP-proxyen starter på http://127.0.0.1:{port}. OpenAI- / Anthropic-kompatible klienter virker direkte.',
+    pickHint: 'Velg en peer; den lokale HTTP-proxyen starter på http://127.0.0.1:{port}.',
     port: 'Lokal proxy-port',
     target: 'Mål',
     proxyStatus: 'Proxy',
@@ -86,7 +84,7 @@ export const nbNO: Dict = {
     peerShort: 'peer',
     addrCount: '{n} adresser',
     modelCount: '{n} modeller',
-    noNodes: 'Ingen noder. Be den andre parten klikke «Start deling».',
+    noNodes: 'Ingen noder. Be den andre parten klikke «Start deling» under Hjem.',
     stats: 'Statistikk',
     total: 'Totalt',
     success: 'Vellykket',
@@ -104,6 +102,24 @@ export const nbNO: Dict = {
     tcpPort: 'TCP-lytteport',
     bootstrap: 'Bootstrap-peers (én per linje)',
     saveHint: 'Start P2P-noden på nytt for å ta i bruk.',
+
+    proxyPortField: 'Lokal proxy-port',
+    bootstrapHint: 'Peers libp2p ringer ved oppstart',
+    tab: {
+      node: 'Node',
+      register: 'Registrer',
+      provision: 'Token-deling',
+      service: 'API-tjeneste',
+    },
+    nodeHint: 'Konfigurer det lokale libp2p-nettverket: register-URL, TCP-lytteport, bootstrap-peers.',
+    registerHint: 'Publiser nodeinformasjonen din til den globale register-URLen slik at andre kan finne deg.',
+    registerHowto: 'Når du starter deling, sender appen en announce til register-URLen. Du kan også lagre innstillingene manuelt og deretter klikke «Start deling» under Hjem.',
+    provisionHint: 'Sett opp LLM-tokenen du vil dele: velg leverandør, lim inn API-nøkkel, velg modeller.',
+    serviceHint: 'Tilby en offentlig API-tjeneste med en fast API-nøkkel — hver forespørsel sjekkes.',
+    consumerApiKey: 'Forbruker-API-nøkkel',
+    consumerApiKeyHint: 'Kallere må sende denne nøkkelen i Authorization-headeren (Bearer <key>) når de bruker den lokale proxyen.',
+    localEndpoint: 'Lokalt endepunkt',
+    authHeader: 'Auth-header',
   },
   days: {
     today: 'i dag',
@@ -114,4 +130,12 @@ export const nbNO: Dict = {
     if (n < 1024 * 1024) return `${(n / 1024).toFixed(1)} KB`;
     return `${(n / (1024 * 1024)).toFixed(1)} MB`;
   },
+  logs: {
+    title: 'Logger',
+    supplied: 'Levert trafikk (forespørsler jeg har betjent)',
+    consumed: 'Konsumert trafikk (forespørsler jeg har sendt)',
+    noSupplied: 'Ingen levert trafikk ennå.',
+    noConsumed: 'Ingen konsumert trafikk ennå.',
+  },
+
 };
