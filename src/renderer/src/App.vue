@@ -12,6 +12,7 @@ import type {
 
 import { t, currentLocale, availableLocales, setLocale } from './i18n';
 import { theme, themeOptions } from './ui/theme';
+import FlagIcon from './ui/FlagIcon.vue';
 
 import StatusView from './views/StatusView.vue';
 import SetupView from './views/SetupView.vue';
@@ -303,8 +304,17 @@ const actions: AppActions = {
 
 const helpers: AppHelpers = { fmtBytes, fmtTime, peerShort };
 
-const currentLocaleLabel = computed(() => availableLocales.find((l) => l.id === currentLocale.value)?.label ?? '');
+const currentLocaleEntry = computed(() => availableLocales.find((l) => l.id === currentLocale.value));
+const currentLocaleLabel = computed(() => currentLocaleEntry.value?.label ?? '');
+const currentLocaleCc = computed(() => currentLocaleEntry.value?.cc ?? 'cn');
 const currentThemeLabel = computed(() => themeOptions.find((o) => o.id === theme.value)?.label ?? '');
+
+const themeIcon = computed(() => iconFor(theme.value));
+function iconFor(id: typeof theme.value): string {
+  if (id === 'light') return '☀';
+  if (id === 'dark') return '🌙';
+  return '⚙';
+}
 
 onMounted(async () => {
   await loadConfig();
@@ -366,8 +376,14 @@ onBeforeUnmount(() => {
         </div>
 
         <div class="menu">
-          <button class="icon-btn" :title="currentLocaleLabel" @click.stop="langMenuOpen = !langMenuOpen; themeMenuOpen = false">
-            🌐
+          <button
+            class="menu-trigger"
+            :title="currentLocaleLabel"
+            @click.stop="langMenuOpen = !langMenuOpen; themeMenuOpen = false"
+          >
+            <FlagIcon :cc="currentLocaleCc" :width="18" />
+            <span>{{ currentLocaleLabel }}</span>
+            <span class="muted" style="font-size: 10px">▾</span>
           </button>
           <div v-if="langMenuOpen" class="menu-pop">
             <button
@@ -375,15 +391,24 @@ onBeforeUnmount(() => {
               :key="l.id"
               @click="setLocale(l.id); langMenuOpen = false"
             >
-              <span>{{ l.label }}</span>
+              <span class="lang-flag">
+                <FlagIcon :cc="l.cc" :width="18" />
+                <span>{{ l.label }}</span>
+              </span>
               <span v-if="l.id === currentLocale" class="check">✓</span>
             </button>
           </div>
         </div>
 
         <div class="menu">
-          <button class="icon-btn" :title="currentThemeLabel" @click.stop="themeMenuOpen = !themeMenuOpen; langMenuOpen = false">
-            🎨
+          <button
+            class="menu-trigger"
+            :title="currentThemeLabel"
+            @click.stop="themeMenuOpen = !themeMenuOpen; langMenuOpen = false"
+          >
+            <span style="font-size: 16px">{{ themeIcon }}</span>
+            <span>{{ currentThemeLabel }}</span>
+            <span class="muted" style="font-size: 10px">▾</span>
           </button>
           <div v-if="themeMenuOpen" class="menu-pop">
             <button
@@ -391,6 +416,7 @@ onBeforeUnmount(() => {
               :key="o.id"
               @click="theme = o.id; themeMenuOpen = false"
             >
+              <span style="font-size: 16px">{{ iconFor(o.id) }}</span>
               <span>{{ o.label }}</span>
               <span v-if="o.id === theme" class="check">✓</span>
             </button>
