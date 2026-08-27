@@ -83,6 +83,8 @@ const api = {
   },
   system: {
     openExternal: (url: string): Promise<void> => ipcRenderer.invoke('system:openExternal', url),
+    openDevTools: (): Promise<void> => ipcRenderer.invoke('system:openDevTools'),
+    openLogsFolder: (): Promise<void> => ipcRenderer.invoke('system:openLogsFolder'),
   },
 };
 
