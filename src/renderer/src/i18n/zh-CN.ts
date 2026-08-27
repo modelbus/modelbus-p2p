@@ -115,4 +115,9 @@ export const zhCN = {
 };
 
 export type Dict = typeof zhCN;
-export type Locale = 'zh-CN' | 'zh-TW' | 'en-US' | 'ja-JP' | 'ko-KR';
+export type Locale =
+  | 'zh-CN' | 'zh-TW' | 'en-US' | 'ja-JP' | 'ko-KR'
+  | 'de-DE' | 'es-ES' | 'fr-FR' | 'it-IT' | 'da-DK'
+  | 'pl-PL' | 'ru-RU' | 'bs-BA' | 'ar-SA' | 'nb-NO'
+  | 'pt-BR' | 'th-TH' | 'tr-TR' | 'uk-UA' | 'bn-BD'
+  | 'el-GR' | 'vi-VN';
