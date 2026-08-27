@@ -6,6 +6,7 @@ export const koKR: Dict = {
     tagline: '탈중앙화 LLM 토큰 공유 플랫폼',
   },
 
+
   nav: {
     home: 'Home',
     models: '모델',
@@ -141,6 +142,7 @@ export const koKR: Dict = {
     noConsumed: '소비 트래픽이 없습니다.',
   },
 
+
   home: {
     nodeInfo: '노드 정보',
     peerId: '피어 ID',
@@ -214,6 +216,11 @@ export const koKR: Dict = {
     colLatency: '지연',
     nodesShort: '노드 {n}개',
     more: '더보기',
+  },
+  system: {
+    menuLabel: '시스템',
+    openDevTools: '개발자 도구 열기',
+    openLogsFolder: '로그 / 데이터 폴더 열기',
   },
 
 };
