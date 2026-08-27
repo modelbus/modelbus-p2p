@@ -6,6 +6,7 @@ export const bnBD: Dict = {
     tagline: 'বিকেন্দ্রীভূত LLM টোকেন শেয়ারিং',
   },
 
+
   nav: {
     home: 'Home',
     models: 'মডেল',
@@ -141,6 +142,7 @@ export const bnBD: Dict = {
     noConsumed: 'কোনো ব্যবহৃত ট্রাফিক নেই।',
   },
 
+
   home: {
     nodeInfo: 'নোড তথ্য',
     peerId: 'পিয়ার আইডি',
@@ -214,6 +216,11 @@ export const bnBD: Dict = {
     colLatency: 'বিলম্ব',
     nodesShort: '{n} নোড',
     more: 'আরো',
+  },
+  system: {
+    menuLabel: 'সিস্টেম',
+    openDevTools: 'ডেভেলপার টুল খুলুন',
+    openLogsFolder: 'লগ / ডেটা ফোল্ডার খুলুন',
   },
 
 };
