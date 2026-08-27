@@ -6,6 +6,7 @@ export const itIT: Dict = {
     tagline: 'Condivisione decentralizzata di token LLM',
   },
 
+
   nav: {
     home: 'Home',
     models: 'Modelli',
@@ -141,6 +142,7 @@ export const itIT: Dict = {
     noConsumed: 'Nessun traffico consumato.',
   },
 
+
   home: {
     nodeInfo: 'Info nodo',
     peerId: 'ID peer',
@@ -214,6 +216,11 @@ export const itIT: Dict = {
     colLatency: 'Latenza',
     nodesShort: '{n} nodi',
     more: 'altri',
+  },
+  system: {
+    menuLabel: 'Sistema',
+    openDevTools: 'Apri strumenti per sviluppatori',
+    openLogsFolder: 'Apri cartella log / dati',
   },
 
 };
