@@ -6,10 +6,8 @@ export const bsBA: Dict = {
     tagline: 'Decentralizirano dijeljenje LLM tokena',
   },
   nav: {
-    status: 'Status',
-    setup: 'Podešavanje',
-    provision: 'Dijeli',
-    consume: 'Koristi',
+    home: 'Početna',
+    logs: 'Dnevnik',
     settings: 'Postavke',
   },
   actions: {
@@ -63,7 +61,7 @@ export const bsBA: Dict = {
   },
   provision: {
     title: 'Dijeli — svoj token',
-    offlineHint: 'Najprije pokrenite P2P čvor na kartici Status.',
+    offlineHint: 'Najprije pokrenite P2P čvor na kartici Početna.',
     activeHint: 'Dijelite {provider} ({n} modela). Ostali čvorovi će usmjeravati zahtjeve preko vas.',
     provider: 'Dobavljač',
     nickname: 'Nadimak',
@@ -77,7 +75,7 @@ export const bsBA: Dict = {
   consume: {
     title: 'Koristi — token drugog čvora',
     refreshHint: 'Kliknite osvježi za dohvat kataloga. Svaki čvor deklarira dobavljača i modele.',
-    pickHint: 'Odaberite čvor; lokalni HTTP proxy starta na http://127.0.0.1:{port}. Radi sa svakim OpenAI / Anthropic kompatibilnim klijentom.',
+    pickHint: 'Odaberite čvor; lokalni HTTP proxy starta na http://127.0.0.1:{port}.',
     port: 'Lokalni proxy port',
     target: 'Cilj',
     proxyStatus: 'Proxy',
@@ -86,7 +84,7 @@ export const bsBA: Dict = {
     peerShort: 'čvor',
     addrCount: '{n} adresa',
     modelCount: '{n} modela',
-    noNodes: 'Nema čvorova. Zamolite drugu stranu da klikne «Počni dijeliti».',
+    noNodes: 'Nema čvorova. Zamolite drugu stranu da klikne «Počni dijeliti» na kartici Početna.',
     stats: 'Statistika',
     total: 'Ukupno',
     success: 'Uspjeh',
@@ -104,6 +102,24 @@ export const bsBA: Dict = {
     tcpPort: 'TCP port za slušanje',
     bootstrap: 'Bootstrap čvorovi (jedan po liniji)',
     saveHint: 'Ponovo pokrenite P2P čvor za primjenu.',
+
+    proxyPortField: 'Lokalni proxy port',
+    bootstrapHint: 'Peer-ovi koje libp2p poziva pri pokretanju',
+    tab: {
+      node: 'Čvor',
+      register: 'Registriraj',
+      provision: 'Token dijeljenje',
+      service: 'API usluga',
+    },
+    nodeHint: 'Konfigurirajte lokalnu libp2p mrežu: URL registra, TCP port za slušanje, bootstrap peer-ove.',
+    registerHint: 'Objavite informacije o svom čvoru u globalni registar kako bi vas drugi mogli pronaći.',
+    registerHowto: 'Kada počnete dijeliti, aplikacija šalje announce na URL registra. Možete i ručno spremiti postavke, a zatim kliknuti «Počni dijeliti» na kartici Početna.',
+    provisionHint: 'Postavite LLM token koji dijelite: odaberite dobavljača, unesite API ključ, označite modele.',
+    serviceHint: 'Javno API sučelje s fiksnim API ključem — svaki zahtjev se provjerava.',
+    consumerApiKey: 'Consumer API ključ',
+    consumerApiKeyHint: 'Pozivatelji moraju slati ovaj ključ u Authorization zaglavlju (Bearer <key>) kada koriste lokalni proxy.',
+    localEndpoint: 'Lokalna krajnja točka',
+    authHeader: 'Auth zaglavlje',
   },
   days: {
     today: 'danas',
@@ -114,4 +130,12 @@ export const bsBA: Dict = {
     if (n < 1024 * 1024) return `${(n / 1024).toFixed(1)} KB`;
     return `${(n / (1024 * 1024)).toFixed(1)} MB`;
   },
+  logs: {
+    title: 'Dnevnik',
+    supplied: 'Pruženi promet (zahtjevi koje sam opslužio)',
+    consumed: 'Potrošeni promet (zahtjevi koje sam poslao)',
+    noSupplied: 'Još nema pruženog prometa.',
+    noConsumed: 'Još nema potrošenog prometa.',
+  },
+
 };
