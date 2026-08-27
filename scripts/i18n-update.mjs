@@ -22,7 +22,7 @@ const i18nDir = path.resolve(__dirname, '..', 'src', 'renderer', 'src', 'i18n');
 
 const translations = {
   'zh-TW': {
-    navHome: '首頁', navLogs: '日誌', navSettings: '設定',
+    navHome: '首頁', navModels: '模型', navWallet: '錢包', navLogs: '日誌', navSettings: '設定',
     pickHint: '選中節點後，本機 HTTP 代理將在 http://127.0.0.1:{port} 啟動。',
     noNodes: '暫無可用節點。請對方在首頁點擊開始分享。',
     proxyPortField: '本機代理通訊埠',
@@ -44,7 +44,7 @@ const translations = {
     activeHint: '你正在分享 {provider}（{n} 個模型）。其他使用者選中你的節點後會透過你轉發請求。',
   },
   'en-US': {
-    navHome: 'Home', navLogs: 'Logs', navSettings: 'Settings',
+    navHome: 'Home', navModels: 'Models', navWallet: 'Wallet', navLogs: 'Logs', navSettings: 'Settings',
     pickHint: 'Pick a peer and the local HTTP proxy starts at http://127.0.0.1:{port}.',
     noNodes: 'No nodes yet. Ask the other side to click "Start sharing" on the Home tab.',
     proxyPortField: 'Local proxy port',
@@ -66,7 +66,7 @@ const translations = {
     activeHint: 'Sharing {provider} ({n} models). Other peers will route inference requests through you.',
   },
   'ko-KR': {
-    navHome: '홈', navLogs: '로그', navSettings: '설정',
+    navHome: '홈', navModels: '모델', navWallet: '지갑', navLogs: '로그', navSettings: '설정',
     pickHint: '피어를 선택하면 로컬 HTTP 프록시가 http://127.0.0.1:{port} 에서 시작됩니다.',
     noNodes: '사용 가능한 노드가 없습니다. 상대방에게 홈 탭에서 공유 시작을 요청하세요.',
     proxyPortField: '로컬 프록시 포트',
@@ -88,7 +88,7 @@ const translations = {
     activeHint: '{provider} ({n} 모델)을 공유 중입니다. 다른 사용자가 내 노드를 선택하면 요청이 경유됩니다.',
   },
   'de-DE': {
-    navHome: 'Start', navLogs: 'Protokolle', navSettings: 'Einstellungen',
+    navHome: 'Start', navModels: 'Modelle', navWallet: 'Wallet', navLogs: 'Protokolle', navSettings: 'Einstellungen',
     pickHint: 'Wähle einen Peer und der lokale HTTP-Proxy startet auf http://127.0.0.1:{port}.',
     noNodes: 'Keine Knoten. Bitte die Gegenseite auf der Startseite auf «Freigabe starten» klicken lassen.',
     proxyPortField: 'Lokaler Proxy-Port',
@@ -110,7 +110,7 @@ const translations = {
     activeHint: 'Du gibst {provider} frei ({n} Modelle). Andere Peers leiten Anfragen über dich.',
   },
   'es-ES': {
-    navHome: 'Inicio', navLogs: 'Registros', navSettings: 'Ajustes',
+    navHome: 'Inicio', navModels: 'Modelos', navWallet: 'Cartera', navLogs: 'Registros', navSettings: 'Ajustes',
     pickHint: 'Elige un peer y el proxy HTTP local arrancará en http://127.0.0.1:{port}.',
     noNodes: 'Sin nodos. Pide a la otra parte que pulse «Empezar a compartir» en la pestaña Inicio.',
     proxyPortField: 'Puerto del proxy local',
@@ -132,7 +132,7 @@ const translations = {
     activeHint: 'Estás compartiendo {provider} ({n} modelos). Otros peers enrutarán las peticiones a través de ti.',
   },
   'fr-FR': {
-    navHome: 'Accueil', navLogs: 'Journaux', navSettings: 'Paramètres',
+    navHome: 'Accueil', navModels: 'Modèles', navWallet: 'Portefeuille', navLogs: 'Journaux', navSettings: 'Paramètres',
     pickHint: 'Choisissez un pair et le proxy HTTP local démarre sur http://127.0.0.1:{port}.',
     noNodes: 'Aucun nœud. Demandez à l\'autre partie de cliquer « Commencer le partage » dans l\'onglet Accueil.',
     proxyPortField: 'Port du proxy local',
@@ -154,7 +154,7 @@ const translations = {
     activeHint: 'Vous partagez {provider} ({n} modèles). Les autres pairs routeront les requêtes via vous.',
   },
   'it-IT': {
-    navHome: 'Home', navLogs: 'Registri', navSettings: 'Impostazioni',
+    navHome: 'Home', navModels: 'Modelli', navWallet: 'Portafoglio', navLogs: 'Registri', navSettings: 'Impostazioni',
     pickHint: 'Scegli un peer: il proxy HTTP locale parte su http://127.0.0.1:{port}.',
     noNodes: 'Nessun nodo. Chiedi all\'altra parte di cliccare «Inizia a condividere» nella scheda Home.',
     proxyPortField: 'Porta proxy locale',
@@ -176,7 +176,7 @@ const translations = {
     activeHint: 'Stai condividendo {provider} ({n} modelli). Gli altri peer instraderanno le richieste tramite te.',
   },
   'da-DK': {
-    navHome: 'Start', navLogs: 'Log', navSettings: 'Indstillinger',
+    navHome: 'Start', navModels: 'Modeller', navWallet: 'Wallet', navLogs: 'Log', navSettings: 'Indstillinger',
     pickHint: 'Vælg en peer; den lokale HTTP-proxy starter på http://127.0.0.1:{port}.',
     noNodes: 'Ingen noder. Bed den anden side klikke «Start deling» under Start.',
     proxyPortField: 'Lokal proxy-port',
@@ -198,7 +198,7 @@ const translations = {
     activeHint: 'Du deler {provider} ({n} modeller). Andre peers ruter forespørgsler gennem dig.',
   },
   'ja-JP': {
-    navHome: 'ホーム', navLogs: 'ログ', navSettings: '設定',
+    navHome: 'ホーム', navModels: 'モデル', navWallet: 'ウォレット', navLogs: 'ログ', navSettings: '設定',
     pickHint: 'ピアを選ぶとローカル HTTP プロキシが http://127.0.0.1:{port} で起動します。',
     noNodes: '利用可能なノードがありません。ホームタブで「共有を開始」をクリックしてもらってください。',
     proxyPortField: 'ローカルプロキシポート',
@@ -220,7 +220,7 @@ const translations = {
     activeHint: '{provider}（{n} モデル）を共有中です。他の利用者があなたのノードを選ぶとリクエストが経由されます。',
   },
   'pl-PL': {
-    navHome: 'Strona główna', navLogs: 'Logi', navSettings: 'Ustawienia',
+    navHome: 'Strona główna', navModels: 'Modele', navWallet: 'Portfel', navLogs: 'Logi', navSettings: 'Ustawienia',
     pickHint: 'Wybierz węzeł; lokalny proxy HTTP wystartuje na http://127.0.0.1:{port}.',
     noNodes: 'Brak węzłów. Poproś drugą stronę o kliknięcie „Zacznij udostępniać" na stronie głównej.',
     proxyPortField: 'Port lokalnego proxy',
@@ -242,7 +242,7 @@ const translations = {
     activeHint: 'Udostępniasz {provider} ({n} modeli). Inne węzły będą kierować zapytania przez Ciebie.',
   },
   'ru-RU': {
-    navHome: 'Главная', navLogs: 'Журналы', navSettings: 'Параметры',
+    navHome: 'Главная', navModels: 'Модели', navWallet: 'Кошелёк', navLogs: 'Журналы', navSettings: 'Параметры',
     pickHint: 'Выберите пир — локальный HTTP-прокси запустится на http://127.0.0.1:{port}.',
     noNodes: 'Узлов нет. Попросите другую сторону нажать «Начать делиться» на вкладке Главная.',
     proxyPortField: 'Порт локального прокси',
@@ -264,7 +264,7 @@ const translations = {
     activeHint: 'Вы делитесь {provider} ({n} моделей). Другие пиры будут маршрутизировать запросы через вас.',
   },
   'bs-BA': {
-    navHome: 'Početna', navLogs: 'Dnevnik', navSettings: 'Postavke',
+    navHome: 'Početna', navModels: 'Modeli', navWallet: 'Novčanik', navLogs: 'Dnevnik', navSettings: 'Postavke',
     pickHint: 'Odaberite čvor; lokalni HTTP proxy starta na http://127.0.0.1:{port}.',
     noNodes: 'Nema čvorova. Zamolite drugu stranu da klikne «Počni dijeliti» na kartici Početna.',
     proxyPortField: 'Lokalni proxy port',
@@ -286,7 +286,7 @@ const translations = {
     activeHint: 'Dijelite {provider} ({n} modela). Ostali čvorovi će usmjeravati zahtjeve preko vas.',
   },
   'ar-SA': {
-    navHome: 'الرئيسية', navLogs: 'السجلات', navSettings: 'الإعدادات',
+    navHome: 'الرئيسية', navModels: 'النماذج', navWallet: 'المحفظة', navLogs: 'السجلات', navSettings: 'الإعدادات',
     pickHint: 'اختر نظيرًا وسيبدأ وكيل HTTP المحلي على http://127.0.0.1:{port}.',
     noNodes: 'لا توجد عقد. اطلب من الطرف الآخر النقر على «بدء المشاركة» في تبويب الرئيسية.',
     proxyPortField: 'منفذ الوكيل المحلي',
@@ -308,7 +308,7 @@ const translations = {
     activeHint: 'تشارك {provider} ({n} نماذج). سيقوم الآخرون بتوجيه الطلبات عبرك.',
   },
   'nb-NO': {
-    navHome: 'Hjem', navLogs: 'Logger', navSettings: 'Innstillinger',
+    navHome: 'Hjem', navModels: 'Modeller', navWallet: 'Lommebok', navLogs: 'Logger', navSettings: 'Innstillinger',
     pickHint: 'Velg en peer; den lokale HTTP-proxyen starter på http://127.0.0.1:{port}.',
     noNodes: 'Ingen noder. Be den andre parten klikke «Start deling» under Hjem.',
     proxyPortField: 'Lokal proxy-port',
@@ -330,7 +330,7 @@ const translations = {
     activeHint: 'Du deler {provider} ({n} modeller). Andre peers ruter forespørsler gjennom deg.',
   },
   'pt-BR': {
-    navHome: 'Início', navLogs: 'Logs', navSettings: 'Ajustes',
+    navHome: 'Início', navModels: 'Modelos', navWallet: 'Carteira', navLogs: 'Logs', navSettings: 'Ajustes',
     pickHint: 'Escolha um peer; o proxy HTTP local sobe em http://127.0.0.1:{port}.',
     noNodes: 'Sem nós ainda. Peça à outra parte clicar em «Começar a compartilhar» em Início.',
     proxyPortField: 'Porta do proxy local',
@@ -352,7 +352,7 @@ const translations = {
     activeHint: 'Você está compartilhando {provider} ({n} modelos). Outros peers rotearão requisições por você.',
   },
   'th-TH': {
-    navHome: 'หน้าหลัก', navLogs: 'บันทึก', navSettings: 'การตั้งค่า',
+    navHome: 'หน้าหลัก', navModels: 'โมเดล', navWallet: 'กระเป๋า', navLogs: 'บันทึก', navSettings: 'การตั้งค่า',
     pickHint: 'เลือกเพียร์ แล้วพร็อกซี HTTP ภายในจะเริ่มที่ http://127.0.0.1:{port}',
     noNodes: 'ยังไม่มีโหนด ขอให้อีกฝ่ายกด «เริ่มแชร์» ที่แท็บหน้าหลัก',
     proxyPortField: 'พอร์ตพร็อกซีภายใน',
@@ -374,7 +374,7 @@ const translations = {
     activeHint: 'คุณกำลังแชร์ {provider} ({n} โมเดล) เพียร์อื่นๆ จะส่งต่อคำขอผ่านคุณ',
   },
   'tr-TR': {
-    navHome: 'Ana sayfa', navLogs: 'Günlükler', navSettings: 'Ayarlar',
+    navHome: 'Ana sayfa', navModels: 'Modeller', navWallet: 'Cüzdan', navLogs: 'Günlükler', navSettings: 'Ayarlar',
     pickHint: 'Bir eş seç; yerel HTTP proxy http://127.0.0.1:{port} adresinde başlar.',
     noNodes: 'Henüz düğüm yok. Karşı taraftan Ana sayfa sekmesinde «Paylaşımı başlat»a tıklamasını iste.',
     proxyPortField: 'Yerel proxy portu',
@@ -396,7 +396,7 @@ const translations = {
     activeHint: '{provider} ({n} model) paylaşıyorsun. Diğer eşler istekleri senin üzerinden yönlendirecek.',
   },
   'uk-UA': {
-    navHome: 'Головна', navLogs: 'Журнали', navSettings: 'Параметри',
+    navHome: 'Головна', navModels: 'Моделі', navWallet: 'Гаманець', navLogs: 'Журнали', navSettings: 'Параметри',
     pickHint: 'Виберіть пір — локальний HTTP-проксі запуститься на http://127.0.0.1:{port}.',
     noNodes: 'Вузлів немає. Попросіть іншу сторону натиснути «Почати поширювати» на вкладці Головна.',
     proxyPortField: 'Порт локального проксі',
@@ -418,7 +418,7 @@ const translations = {
     activeHint: 'Ви поширюєте {provider} ({n} моделей). Інші піри маршрутизуватимуть запити через вас.',
   },
   'bn-BD': {
-    navHome: 'হোম', navLogs: 'লগ', navSettings: 'সেটিংস',
+    navHome: 'হোম', navModels: 'মডেল', navWallet: 'ওয়ালেট', navLogs: 'লগ', navSettings: 'সেটিংস',
     pickHint: 'একটি পিয়ার নির্বাচন করলে স্থানীয় HTTP প্রক্সি http://127.0.0.1:{port}-এ শুরু হবে।',
     noNodes: 'কোনো নোড নেই। অন্যপক্ষকে হোম ট্যাবে «শেয়ার শুরু» ক্লিক করতে বলুন।',
     proxyPortField: 'স্থানীয় প্রক্সি পোর্ট',
@@ -440,7 +440,7 @@ const translations = {
     activeHint: 'আপনি {provider} ({n} মডেল) শেয়ার করছেন। অন্যান্য পিয়ার আপনার মাধ্যমে অনুরোধ পাঠাবে।',
   },
   'el-GR': {
-    navHome: 'Αρχική', navLogs: 'Αρχεία', navSettings: 'Ρυθμίσεις',
+    navHome: 'Αρχική', navModels: 'Μοντέλα', navWallet: 'Πορτοφόλι', navLogs: 'Αρχεία', navSettings: 'Ρυθμίσεις',
     pickHint: 'Επιλέξτε ένα peer και ο τοπικός HTTP proxy θα ξεκινήσει στο http://127.0.0.1:{port}.',
     noNodes: 'Δεν υπάρχουν κόμβοι. Ζητήστε από την άλλη πλευρά να πατήσει «Έναρξη κοινής χρήσης» στην Αρχική.',
     proxyPortField: 'Τοπική θύρα proxy',
@@ -462,7 +462,7 @@ const translations = {
     activeHint: 'Παρέχετε {provider} ({n} μοντέλα). Άλλοι peer θα δρομολογούν αιτήματα μέσω εσάς.',
   },
   'vi-VN': {
-    navHome: 'Trang chính', navLogs: 'Nhật ký', navSettings: 'Cài đặt',
+    navHome: 'Trang chính', navModels: 'Mô hình', navWallet: 'Ví', navLogs: 'Nhật ký', navSettings: 'Cài đặt',
     pickHint: 'Chọn một peer; proxy HTTP cục bộ sẽ khởi động tại http://127.0.0.1:{port}.',
     noNodes: 'Chưa có nút nào. Nhờ phía bên kia bấm «Bắt đầu chia sẻ» ở tab Trang chính.',
     proxyPortField: 'Cổng proxy cục bộ',
@@ -490,7 +490,7 @@ async function run() {
     const file = path.join(i18nDir, `${lang}.ts`);
     const text = await fs.readFile(file, 'utf-8');
     // Replace nav block
-    const navBlock = `  nav: {\n    home: '${t.navHome}',\n    logs: '${t.navLogs}',\n    settings: '${t.navSettings}',\n  },`;
+    const navBlock = `  nav: {\n    home: '${t.navHome}',\n    models: '${t.navModels}',\n    wallet: '${t.navWallet}',\n    logs: '${t.navLogs}',\n    settings: '${t.navSettings}',\n  },`;
     const next = text.replace(/  nav:\s*\{[\s\S]*?\},/, navBlock);
 
     // Replace consume.pickHint + consume.noNodes
