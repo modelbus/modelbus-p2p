@@ -6,6 +6,7 @@ export const daDK: Dict = {
     tagline: 'Decentraliseret LLM-token-deling',
   },
 
+
   nav: {
     home: 'Home',
     models: 'Modeller',
@@ -141,6 +142,7 @@ export const daDK: Dict = {
     noConsumed: 'Ingen forbrugt trafik endnu.',
   },
 
+
   home: {
     nodeInfo: 'Nodeinfo',
     peerId: 'Peer-ID',
@@ -214,6 +216,11 @@ export const daDK: Dict = {
     colLatency: 'Latens',
     nodesShort: '{n} noder',
     more: 'mere',
+  },
+  system: {
+    menuLabel: 'System',
+    openDevTools: 'Åbn udviklerværktøjer',
+    openLogsFolder: 'Åbn log- / datamappe',
   },
 
 };
