@@ -6,6 +6,7 @@ export const viVN: Dict = {
     tagline: 'Chia sẻ token LLM phi tập trung',
   },
 
+
   nav: {
     home: 'Home',
     models: 'Mô hình',
@@ -141,6 +142,7 @@ export const viVN: Dict = {
     noConsumed: 'Chưa có lưu lượng tiêu thụ.',
   },
 
+
   home: {
     nodeInfo: 'Thông tin nút',
     peerId: 'Mã peer',
@@ -214,6 +216,11 @@ export const viVN: Dict = {
     colLatency: 'Độ trễ',
     nodesShort: '{n} nút',
     more: 'thêm',
+  },
+  system: {
+    menuLabel: 'Hệ thống',
+    openDevTools: 'Mở công cụ dành cho nhà phát triển',
+    openLogsFolder: 'Mở thư mục nhật ký / dữ liệu',
   },
 
 };
