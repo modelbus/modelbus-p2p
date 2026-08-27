@@ -6,10 +6,8 @@ export const arSA: Dict = {
     tagline: 'مشاركة رموز LLM لا مركزيًا',
   },
   nav: {
-    status: 'الحالة',
-    setup: 'الإعداد',
-    provision: 'المشاركة',
-    consume: 'الاستخدام',
+    home: 'الرئيسية',
+    logs: 'السجلات',
     settings: 'الإعدادات',
   },
   actions: {
@@ -63,7 +61,7 @@ export const arSA: Dict = {
   },
   provision: {
     title: 'المشاركة — شارك رمزك',
-    offlineHint: 'يرجى تشغيل عقدة P2P أولًا من تبويب الحالة.',
+    offlineHint: 'يرجى تشغيل عقدة P2P أولًا من تبويب الرئيسية.',
     activeHint: 'تشارك {provider} ({n} نماذج). سيقوم الآخرون بتوجيه الطلبات عبرك.',
     provider: 'الموفر',
     nickname: 'اللقب',
@@ -77,7 +75,7 @@ export const arSA: Dict = {
   consume: {
     title: 'الاستخدام — استخدم رمز نظير آخر',
     refreshHint: 'اضغط تحديث لجلب الكتالوج. كل عقدة تعلن عن موفرها ونماذجها.',
-    pickHint: 'اختر نظيرًا وسيبدأ وكيل HTTP المحلي على http://127.0.0.1:{port}. يعمل مع أي عميل متوافق مع OpenAI / Anthropic.',
+    pickHint: 'اختر نظيرًا وسيبدأ وكيل HTTP المحلي على http://127.0.0.1:{port}.',
     port: 'منفذ الوكيل المحلي',
     target: 'الهدف',
     proxyStatus: 'الوكيل',
@@ -86,7 +84,7 @@ export const arSA: Dict = {
     peerShort: 'نظير',
     addrCount: '{n} عناوين',
     modelCount: '{n} نماذج',
-    noNodes: 'لا توجد عقد. اطلب من الطرف الآخر النقر على «بدء المشاركة».',
+    noNodes: 'لا توجد عقد. اطلب من الطرف الآخر النقر على «بدء المشاركة» في تبويب الرئيسية.',
     stats: 'الإحصاءات',
     total: 'الإجمالي',
     success: 'نجح',
@@ -104,6 +102,24 @@ export const arSA: Dict = {
     tcpPort: 'منفذ استماع TCP',
     bootstrap: 'عقد التمهيد (واحد في كل سطر)',
     saveHint: 'أعد تشغيل عقدة P2P لتطبيق التغييرات.',
+
+    proxyPortField: 'منفذ الوكيل المحلي',
+    bootstrapHint: 'النظراء الذين يتصل بهم libp2p عند البدء',
+    tab: {
+      node: 'العقدة',
+      register: 'تسجيل',
+      provision: 'مشاركة الرمز',
+      service: 'خدمة API',
+    },
+    nodeHint: 'اضبط شبكة libp2p المحلية: عنوان السجل، منفذ استماع TCP، عقد التمهيد.',
+    registerHint: 'انشر معلومات عقدتك في عنوان السجل العالمي ليتمكن الآخرون من اكتشافك.',
+    registerHowto: 'عند بدء المشاركة، ترسل التطبيق announce إلى عنوان السجل. يمكنك أيضًا حفظ الإعدادات يدويًا ثم النقر على «بدء المشاركة» في تبويب الرئيسية.',
+    provisionHint: 'اضبط رمز LLM الذي ستشاركه: اختر الموفر، أدخل مفتاح API، حدد النماذج.',
+    serviceHint: 'اعرض خدمة API عامة بمفتاح API ثابت — يتم التحقق من كل طلب بهذا المفتاح.',
+    consumerApiKey: 'مفتاح API للمستهلك',
+    consumerApiKeyHint: 'يجب على المتصلين إرسال هذا المفتاح في ترويسة Authorization (Bearer <key>) عند استخدام الوكيل المحلي.',
+    localEndpoint: 'نقطة الوصول المحلية',
+    authHeader: 'ترويسة المصادقة',
   },
   days: {
     today: 'اليوم',
@@ -114,4 +130,12 @@ export const arSA: Dict = {
     if (n < 1024 * 1024) return `${(n / 1024).toFixed(1)} KB`;
     return `${(n / (1024 * 1024)).toFixed(1)} MB`;
   },
+  logs: {
+    title: 'السجلات',
+    supplied: 'حركة مقدمة (الطلبات التي خدمتها)',
+    consumed: 'حركة مستهلكة (الطلبات التي أرسلتها)',
+    noSupplied: 'لا توجد حركة مقدمة بعد.',
+    noConsumed: 'لا توجد حركة مستهلكة بعد.',
+  },
+
 };
