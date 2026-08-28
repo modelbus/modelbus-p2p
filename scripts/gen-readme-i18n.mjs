@@ -1471,9 +1471,42 @@ pnpm run dev
 
 // Concatenate the per-section body blocks into a full document,
 // framed by the fixed top matter.
+//
+// The TOC anchors are produced from a stable English slug per section
+// (what / features / screenshots / architecture / …) rather than from
+// the (possibly non-Latin) heading text, so the links always resolve
+// in the generated GitHub anchor whether the heading is Chinese,
+// Japanese, Arabic, etc.
 function renderDocument(lang, content, langLinks, logoSrc) {
   const s = content.sections;
   const b = content.body;
+
+  // sectionKey -> human label pulled from the localised heading.
+  const ORDER = [
+    ['what', s.what],
+    ['features', s.features],
+    ['screenshots', s.architectureScreenshots || s.screenshots],
+    ['architecture', s.architecture],
+    ['decentralised', s.decentralised],
+    ['schema', s.schema],
+    ['flow', s.flow],
+    ['download', s.download],
+    ['quickstart', s.quickstart],
+    ['roadmap', s.roadmap],
+  ];
+
+  // Build a tiny helper that injects an explicit anchor id on a section
+  // heading so the TOC link always resolves, whatever the locale text.
+  const headingWithId = (key, heading) =>
+    `## ${heading.replace(/^##\s+/, '')} <a id="${key}"></a>`;
+
+  const tocLines = ORDER
+    .map(([key, heading]) => {
+      const label = heading.replace(/^##\s+/, '');
+      return `- [${label}](#${key})`;
+    })
+    .join('\n');
+
   const top = topBlock({
     logoAlt: content.logoAlt,
     logoSrc,
@@ -1483,52 +1516,59 @@ function renderDocument(lang, content, langLinks, logoSrc) {
     langLinks,
     headerLine: '',
   });
+
+  // Screenshots block: embed the images from docs/image/ (the per-file
+  // path adjust happens later inside b.screenshots). For the section
+  // that carries the grid we also render the actual <img> tags.
+  const screenshotsBody = renderScreenshots(b.screenshots, s.screenshots, lang);
+
   return [
     `<!-- auto-generated README for ${lang}; do not edit by hand. Edit scripts/gen-readme-i18n.mjs and re-run. -->\n`,
     top,
     `${s.toc}\n\n`,
-    `- [${s.what.replace(/^## /, '')}](#${s.what.replace(/^## /, '').toLowerCase().replace(/[^a-z0-9 \-]/g, '').replace(/\s+/g, '-')})\n`,
-    `- [${s.features.replace(/^## /, '')}](#${s.features.replace(/^## /, '').toLowerCase().replace(/[^a-z0-9 \-]/g, '').replace(/\s+/g, '-')})\n`,
-    `- [${s.screenshots.replace(/^## /, '')}](#${s.screenshots.replace(/^## /, '').toLowerCase().replace(/[^a-z0-9 \-]/g, '').replace(/\s+/g, '-')})\n`,
-    `- [${s.architecture.replace(/^## /, '')}](#${s.architecture.replace(/^## /, '').toLowerCase().replace(/[^a-z0-9 \-]/g, '').replace(/\s+/g, '-')})\n`,
-    `- [${s.decentralised.replace(/^## /, '')}](#${s.decentralised.replace(/^## /, '').toLowerCase().replace(/[^a-z0-9 \-]/g, '').replace(/\s+/g, '-')})\n`,
-    `- [${s.schema.replace(/^## /, '')}](#${s.schema.replace(/^## /, '').toLowerCase().replace(/[^a-z0-9 \-]/g, '').replace(/\s+/g, '-')})\n`,
-    `- [${s.flow.replace(/^## /, '')}](#${s.flow.replace(/^## /, '').toLowerCase().replace(/[^a-z0-9 \-]/g, '').replace(/\s+/g, '-')})\n`,
-    `- [${s.download.replace(/^## /, '')}](#${s.download.replace(/^## /, '').toLowerCase().replace(/[^a-z0-9 \-]/g, '').replace(/\s+/g, '-')})\n`,
-    `- [${s.quickstart.replace(/^## /, '')}](#${s.quickstart.replace(/^## /, '').toLowerCase().replace(/[^a-z0-9 \-]/g, '').replace(/\s+/g, '-')})\n`,
-    `- [${s.roadmap.replace(/^## /, '')}](#${s.roadmap.replace(/^## /, '').toLowerCase().replace(/[^a-z0-9 \-]/g, '').replace(/\s+/g, '-')})\n\n`,
-
+    tocLines + '\n\n',
     `---\n\n`,
-
-    `${s.what}\n\n${b.what}\n\n---\n\n`,
-    `${s.features}\n\n${b.features}\n\n---\n\n`,
-    `${s.screenshots}\n\n${b.screenshots}\n\n---\n\n`,
-    `${s.architecture}\n\n${b.architecture}\n\n---\n\n`,
-    `${s.decentralised}\n\n${b.decentralised}\n\n---\n\n`,
-    `${s.schema}\n\n${b.schema}\n\n---\n\n`,
-    `${s.flow}\n\n${b.flow}\n\n---\n\n`,
-    `${s.download}\n\n${b.download}\n\n---\n\n`,
-    `${s.quickstart}\n\n${b.quickstart}\n\n---\n\n`,
-    `${s.roadmap}\n\n${b.roadmap}\n`,
+    `${headingWithId('what', s.what)}\n\n${b.what}\n\n---\n\n`,
+    `${headingWithId('features', s.features)}\n\n${b.features}\n\n---\n\n`,
+    `${headingWithId('screenshots', s.screenshots)}\n\n${screenshotsBody}\n\n---\n\n`,
+    `${headingWithId('architecture', s.architecture)}\n\n${b.architecture}\n\n---\n\n`,
+    `${headingWithId('decentralised', s.decentralised)}\n\n${b.decentralised}\n\n---\n\n`,
+    `${headingWithId('schema', s.schema)}\n\n${b.schema}\n\n---\n\n`,
+    `${headingWithId('flow', s.flow)}\n\n${b.flow}\n\n---\n\n`,
+    `${headingWithId('download', s.download)}\n\n${b.download}\n\n---\n\n`,
+    `${headingWithId('quickstart', s.quickstart)}\n\n${b.quickstart}\n\n---\n\n`,
+    `${headingWithId('roadmap', s.roadmap)}\n\n${b.roadmap}\n`,
   ].join('');
+}
+
+// The five screenshots live under docs/image/. For files under readme/
+// we prefix `../`; the repo-root README.md uses no prefix.
+function renderScreenshots(lead, heading, lang) {
+  const isRoot = !lang || lang === 'zh-CN';
+  const prefix = isRoot ? 'docs/image/' : '../docs/image/';
+  const imgs = [
+    ['home.png', 'Home / 首页'],
+    ['model.png', 'Models / 模型'],
+    ['wallet.png', 'Wallet / 钱包'],
+    ['log.png', 'Logs / 日志'],
+    ['setting.png', 'Settings / 设置'],
+  ];
+  return imgs
+    .map(
+      ([file, alt]) =>
+        `<p align="center"><img src="${prefix}${file}" alt="${alt}" width="640"/></p>\n`
+    )
+    .join('\n');
 }
 
 async function main() {
   await fs.mkdir(path.join(root, 'readme'), { recursive: true });
 
-  // Root README.md is the canonical Simplified-Chinese document. Its
-  // logo path is relative to the repo root (`docs/image/logo.png`).
-  // Every other locale lives under ./readme/ and references the logo
-  // via `../docs/image/logo.png`.
+  // Root README.md is hand-written (the richest Chinese document). The
+  // script only regenerates the per-locale copies under ./readme/ that
+  // link back to it. zh-CN is skipped here because it lives at the root.
   for (const [lang, content] of Object.entries(LOCALES)) {
-    if (lang === 'zh-CN') {
-      const href = 'README.md';
-      const langLinks = languageLinks(lang, href);
-      const doc = renderDocument(lang, content, langLinks, 'docs/image/logo.png');
-      await fs.writeFile(path.join(root, href), doc, 'utf-8');
-      console.log(`generated ${href} (zh-CN)`);
-      continue;
-    }
+    if (lang === 'zh-CN') continue;
     const href = `readme/README.${lang}.md`;
     const langLinks = languageLinks(lang, href);
     const doc = renderDocument(lang, content, langLinks, '../docs/image/logo.png');
