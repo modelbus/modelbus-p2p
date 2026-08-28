@@ -1,7 +1,7 @@
 <p align="center">
   <img src="docs/image/logo.png" alt="ModelBus" width="150px" height="auto"/>
 </p>
-<p align="center">
+<p align="center" style="font-weight: bold;">
   ModelBus-P2P
 </p>
 <p align="center">
