@@ -376,7 +376,6 @@ onBeforeUnmount(() => {
     <header class="topbar">
       <div class="brand">
         <img class="brand-logo" src="/logo.png" alt="ModelBus" draggable="false" />
-        <span class="brand-suffix">P2P</span>
       </div>
 
       <nav class="tabs">
