@@ -1,24 +1,111 @@
 [
-  {
+ {
+    "version": 2,
     "peerId": "12D3KooWBnM2JxV67R3sX8kHnYwYqGRkfKvFnhGPGFJ6mhYMwRkz",
     "nickname": "alpha-share",
-    "providerId": "openai",
-    "providerName": "OpenAI",
-    "modelIds": ["openai/gpt-5", "openai/gpt-5-mini"],
-    "multiaddrs": [
-      "/ip4/127.0.0.1/tcp/15001/p2p/12D3KooWBnM2JxV67R3sX8kHnYwYqGRkfKvFnhGPGFJ6mhYMwRkz"
+    "providers": [
+ {
+ "providerId": "openai",
+        "providerName": "OpenAI",
+        "models": [
+          { "id": "openai/gpt-5",       "name": "GPT-5" },
+          { "id": "openai/gpt-5-mini", "name": "GPT-5 mini" }
+        ]
+      },
+      {
+        "providerId": "anthropic",
+        "providerName": "Anthropic",
+        "models": [
+          { "id": "anthropic/claude-opus-4-7", "name": "Claude Opus 4.7" }
+        ]
+      }
     ],
-    "announcedAt": 1714000000000
+    "addr": {
+      "addr": "/ip4/127.0.0.1/tcp/15001/p2p/12D3KooWBnM2JxV67R3sX8kHnYwYqGRkfKvFnhGPGFJ6mhYMwRkz",
+      "kind": "direct",
+      "transport": "tcp",
+      "lastSeen": 1714000000000
+    },
+    "announcedAt": 1714000000000,
+    "expiresAt": 1714000864000
   },
   {
+    "version": 2,
     "peerId": "12D3KooWPdYJoS8darshV7KHrL6YhQfJvE1xMLQbR5mU2nXzKfX",
     "nickname": "beta-anthropic",
-    "providerId": "anthropic",
-    "providerName": "Anthropic",
-    "modelIds": ["anthropic/claude-opus-4-7", "anthropic/claude-sonnet-4-6"],
-    "multiaddrs": [
-      "/ip4/127.0.0.1/tcp/15003/p2p/12D3KooWPdYJoS8darshV7KHrL6YhQfJvE1xMLQbR5mU2nXzKfX"
+    "providers": [
+      {
+        "providerId": "anthropic",
+        "providerName": "Anthropic",
+        "models": [
+          { "id": "anthropic/claude-opus-4-7",   "name": "Claude Opus 4.7" },
+          { "id": "anthropic/claude-sonnet-4-6", "name": "Claude Sonnet 4.6" }
+        ]
+      }
     ],
-    "announcedAt": 1714000005000
+    "addr": {
+      "addr": "/ip4/127.0.0.1/tcp/15003/p2p/12D3KooWPdYJoS8darshV7KHrL6YhQfJvE1xMLQbR5mU2nXzKfX",
+      "kind": "direct",
+      "transport": "tcp",
+      "lastSeen": 1714000005000
+    },
+    "announcedAt": 1714000005000,
+    "expiresAt": 1714000869000
+  },
+ {
+    "version": 2,
+    "peerId": "12D3KooWTrustedRootAlphaaaaaaaaaaaaaa01",
+    "nickname": "modelbus-seed-01",
+    "providers": [],
+    "addr": {
+      "addr": "/ip4/127.0.0.1/tcp/16001/p2p/12D3KooWTrustedRootAlphaaaaaaaaaaaaaa01",
+      "kind": "direct",
+      "transport": "tcp",
+      "lastSeen": 1714000000000
+    },
+    "announcedAt": 1714000000000,
+    "expiresAt": 1742688000000
+  },
+  {
+    "version": 2,
+    "peerId": "12D3KooWTrustedRootBetaaaaaaaaaaaaaaaa02",
+    "nickname": "modelbus-seed-02",
+    "providers": [],
+    "addr": {
+      "addr": "/ip4/127.0.0.1/tcp/16002/p2p/12D3KooWTrustedRootBetaaaaaaaaaaaaaaaa02",
+      "kind": "direct",
+      "transport": "tcp",
+      "lastSeen": 1714000000000
+    },
+    "announcedAt": 1714000000000,
+    "expiresAt": 1742688000000
+  },
+  {
+    "version": 2,
+    "peerId": "12D3KooWTrustedRootGammaaaaaaaaaaaaaaa03",
+    "nickname": "modelbus-seed-03",
+    "providers": [],
+    "addr": {
+      "addr": "/ip4/127.0.0.1/tcp/16003/p2p/12D3KooWTrustedRootGammaaaaaaaaaaaaaaa03",
+      "kind": "direct",
+      "transport": "tcp",
+      "lastSeen": 1714000000000
+    },
+    "announcedAt": 1714000000000,
+    "expiresAt": 1742688000000
+  },
+  {
+    "version": 2,
+    "peerId": "12D3KooWTrustedRootDeltaaaaaaaaaaaaaa04",
+    "nickname": "modelbus-seed-04",
+    "providers": [],
+    "addr": {
+      "addr": "/ip4/127.0.0.1/tcp/16004/p2p/12D3KooWTrustedRootDeltaaaaaaaaaaaaaa04",
+      "kind": "direct",
+      "transport": "tcp",
+      "lastSeen": 1714000000000
+    },
+    "announcedAt": 1714000000000,
+    "expiresAt": 1742688000000
   }
 ]
