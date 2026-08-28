@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="docs/image/logo.png" alt="ModelBus" width="auto" height="150"/>
+  <img src="docs/image/logo.png" alt="ModelBus" width="150px" height="auto"/>
 </p>
 <p align="center">
   ModelBus-P2P
@@ -7,7 +7,6 @@
 <p align="center">
 一个去中心化的 LLM Token 共享平台。任何人都可以把自己的 AI 订阅挂上 P2P 网络，也可以调用网络上其他节点共享的 Token。无需中心服务器、无需注册账号。
 </p>
-***
 
 ---
 
