@@ -7,6 +7,7 @@ import { RegistryService } from './services/registry.js';
 import { P2PService } from './services/p2p.js';
 import { ProvisionerService } from './services/provisioner.js';
 import { ConsumerProxy } from './services/proxy-server.js';
+import { BootstrapCache } from './services/bootstrap-cache.js';
 import { registerIpc } from './ipc.js';
 
 const isDev = !app.isPackaged;
@@ -67,6 +68,7 @@ async function bootstrap() {
   const p2p = new P2PService(bus);
   const provisioner = new ProvisionerService(() => p2p.getNode(), providers, bus);
   const proxy = new ConsumerProxy(() => p2p.getNode(), bus);
+  const bootstrapCache = new BootstrapCache();
 
   const deps = {
     store,
@@ -75,6 +77,7 @@ async function bootstrap() {
     p2p,
     provisioner,
     proxy,
+    bootstrapCache,
     getMainWindow: () => mainWindow,
   };
   registerIpc(deps);

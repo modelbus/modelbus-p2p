@@ -1,11 +1,12 @@
 import { app, BrowserWindow, ipcMain, shell } from 'electron';
-import type { BootstrapConfig, NodeAnnouncement, ProvisionConfig, WalletScore, ModelEntry, LeaderboardEntry, ModelQualityNode } from '@shared/types';
+import type { BootstrapConfig, NodeAnnouncementFlat, ProvisionConfig, WalletScore, ModelEntry, LeaderboardEntry, ModelQualityNode } from '@shared/types';
 import type { Store } from './services/store.js';
 import type { ProviderService } from './services/providers.js';
 import type { RegistryService } from './services/registry.js';
 import type { P2PService } from './services/p2p.js';
 import type { ProvisionerService } from './services/provisioner.js';
 import type { ConsumerProxy } from './services/proxy-server.js';
+import type { BootstrapCache } from './services/bootstrap-cache.js';
 import { computeWallet } from './services/wallet.js';
 import { buildModelViews } from './services/models.js';
 
@@ -16,11 +17,12 @@ export interface Deps {
   p2p: P2PService;
   provisioner: ProvisionerService;
   proxy: ConsumerProxy;
+  bootstrapCache: BootstrapCache;
   getMainWindow: () => BrowserWindow | null;
 }
 
 export function registerIpc(deps: Deps): void {
-  const { store, providers, registry, p2p, provisioner, proxy, getMainWindow } = deps;
+  const { store, providers, registry, p2p, provisioner, proxy, bootstrapCache, getMainWindow } = deps;
 
   ipcMain.handle('bootstrap:getConfig', async () => store.getBootstrap());
   ipcMain.handle('bootstrap:setConfig', async (_e, patch: Partial<BootstrapConfig>) =>
@@ -32,22 +34,48 @@ export function registerIpc(deps: Deps): void {
 
   ipcMain.handle('registry:fetch', async () => {
     const cfg = store.getBootstrap();
-    const items: NodeAnnouncement[] = await registry.fetch(cfg.registryUrl);
+    let items: NodeAnnouncementFlat[] = await registry.fetch(cfg.registryUrl);
+    // Cold start fallback: if the official endpoint was unreachable
+    // (e.g. offline install), serve from the on-disk cache.
+    if (items.length === 0) {
+      items = await bootstrapCache.load();
+    }
     // Merge live data: also include the locally registered provider (if any)
     if (provisioner.isActive()) {
       const cfg2 = provisioner.config()!;
-      const local: NodeAnnouncement = {
+      const primaryAddr = p2p.multiaddrs()[0] ?? '';
+      const modelIds = cfg2.modelIds;
+      const local: NodeAnnouncementFlat = {
         peerId: cfg2.peerId,
         nickname: cfg2.nickname,
         providerId: cfg2.providerId,
         providerName: cfg2.providerName,
-        modelIds: cfg2.modelIds,
-        multiaddrs: p2p.multiaddrs(),
+        modelIds,
+        primaryAddr,
         announcedAt: Date.now(),
+        trusted: true,
       };
       if (!items.find((it) => it.peerId === local.peerId)) items.unshift(local);
     }
+    // Persist the validated/trusted subset so the next launch has a
+    // warm cache even if the official endpoint is unreachable.
+    try {
+      await bootstrapCache.save(items.filter((it) => it.trusted));
+    } catch {
+      // cache failure is non-fatal
+    }
     return items;
+  });
+
+  // Returns the on-disk bootstrap cache as-is, no network call. Used
+  // by the Settings → Register tab to show what nodes are currently
+  // remembered even when the user is offline.
+  ipcMain.handle('registry:cache', async (): Promise<NodeAnnouncementFlat[]> => {
+    return bootstrapCache.load();
+  });
+
+  ipcMain.handle('registry:cacheClear', async () => {
+    await bootstrapCache.clear();
   });
 
   ipcMain.handle('p2p:status', async () => ({
@@ -113,19 +141,21 @@ export function registerIpc(deps: Deps): void {
     };
   });
   ipcMain.handle('proxy:setTarget', async (_e, peerId: string) => {
-    const items: NodeAnnouncement[] = await registry.fetch(store.getBootstrap().registryUrl);
+    const items: NodeAnnouncementFlat[] = await registry.fetch(store.getBootstrap().registryUrl);
     let found = items.find((it) => it.peerId === peerId);
     if (!found && p2p.peerIdString() === peerId) {
       const local = store.getProvision();
       if (local) {
+        const primaryAddr = p2p.multiaddrs()[0] ?? '';
         found = {
           peerId: local.peerId,
           nickname: local.nickname,
           providerId: local.providerId,
           providerName: local.providerName,
           modelIds: local.modelIds,
-          multiaddrs: p2p.multiaddrs(),
+          primaryAddr,
           announcedAt: Date.now(),
+          trusted: true,
         };
       }
     }
@@ -184,14 +214,16 @@ export function registerIpc(deps: Deps): void {
     // Always include the local node if it is provisioned.
     if (provisioner.isActive()) {
       const local = provisioner.config()!;
-      const localEntry: NodeAnnouncement = {
+      const primaryAddr = p2p.multiaddrs()[0] ?? '';
+      const localEntry: NodeAnnouncementFlat = {
         peerId: local.peerId,
         nickname: local.nickname,
         providerId: local.providerId,
         providerName: local.providerName,
         modelIds: local.modelIds,
-        multiaddrs: p2p.multiaddrs(),
+        primaryAddr,
         announcedAt: Date.now(),
+        trusted: true,
       };
       if (!items.find((it) => it.peerId === localEntry.peerId)) items.unshift(localEntry);
     }

@@ -4,6 +4,7 @@ import type {
   ProviderSummary,
   ProvisionConfig,
   NodeAnnouncement,
+  NodeAnnouncementFlat,
   ProxyStats,
   NodeRole,
   BootstrapConfig,
@@ -26,7 +27,9 @@ const api = {
       ipcRenderer.invoke('providers:get', id),
   },
   registry: {
-    fetch: (): Promise<NodeAnnouncement[]> => ipcRenderer.invoke('registry:fetch'),
+    fetch: (): Promise<NodeAnnouncementFlat[]> => ipcRenderer.invoke('registry:fetch'),
+    cache: (): Promise<NodeAnnouncementFlat[]> => ipcRenderer.invoke('registry:cache'),
+    cacheClear: (): Promise<void> => ipcRenderer.invoke('registry:cacheClear'),
   },
   p2p: {
     status: (): Promise<{
