@@ -301,12 +301,12 @@ function onDocClick(e: MouseEvent) {
   }
 }
 
-const tabs = computed<Array<{ id: Tab; label: string; icon: string }>>(() => [
-  { id: 'home', label: t('nav.home'), icon: '🏠' },
-  { id: 'models', label: t('nav.models'), icon: '🧠' },
-  { id: 'wallet', label: t('nav.wallet'), icon: '💰' },
-  { id: 'logs', label: t('nav.logs'), icon: '📋' },
-  { id: 'settings', label: t('nav.settings'), icon: '⚙' },
+const tabs = computed<Array<{ id: Tab; label: string }>>(() => [
+  { id: 'home', label: t('nav.home') },
+  { id: 'models', label: t('nav.models') },
+  { id: 'wallet', label: t('nav.wallet') },
+  { id: 'logs', label: t('nav.logs') },
+  { id: 'settings', label: t('nav.settings') },
 ]);
 
 const refs: AppRefs = {
@@ -386,7 +386,6 @@ onBeforeUnmount(() => {
           :class="{ active: tab === tb.id }"
           @click="tab = tb.id"
         >
-          <span class="tab-icon">{{ tb.icon }}</span>
           <span>{{ tb.label }}</span>
         </button>
       </nav>

@@ -250,10 +250,6 @@ hr {
   color: var(--accent);
   background: var(--accent-soft);
 }
-.tabs button .tab-icon {
-  font-size: 16px;
-  line-height: 1;
-}
 
 .toolbar {
   display: flex;
