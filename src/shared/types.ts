@@ -35,14 +35,89 @@ export interface ProvisionConfig {
   modelIds: string[];
 }
 
+/**
+ * Model offered by a Provider. `id is the canonical model id used when
+ * forwarding requests (e.g. "openai/gpt-5"); `name is the human-friendly
+ * label shown in the UI (e.g. "GPT-5").
+ */
+export interface ModelOffer {
+  id: string;
+  name: string;
+}
+
+/**
+ * One LLM provider attached to a node. A node may carry multiple
+ * providers — each one is a different upstream API the node is willing
+ * to relay. The apiBase is intentionally NOT included here: it is
+ * reconstructed client-side via the NAT proxy + models.dev mapping
+ * (`buildUpstreamCall`), keeping the wire format free of endpoints that
+ * could go stale.
+ */
+export interface ProviderOffer {
+  providerId: string;
+  providerName: string;
+  models: ModelOffer[];
+}
+
+/**
+ * Structured form of a single reachable multiaddr. A node exposes one
+ * primary address (`kind: "direct"` is preferred). `kind: "relay"` is
+ * for nodes that only reach others via a circuit relay.
+ */
+export interface StructuredAddr {
+  /** The libp2p multiaddr string (e.g. "/ip4/.../tcp/.../p2p/..."). */
+  addr: string;
+  /** "direct" | "relay" | "unknown" */
+  kind: 'direct' | 'relay' | 'unknown';
+  /** Transport hint: "tcp" | "ws" | "quic" | "webtransport" | "webrtc" | ... */
+  transport?: string;
+  /** Last time we observed this address reachable. */
+  lastSeen?: number;
+}
+
+/**
+ * A peer's announcement on the network. Schema version 2.
+ *
+ * The mock file and the official HTTPS endpoint share this exact
+ * shape so that a static JSON file can stand in for the registry
+ * when the central server is unreachable. Trust-chain / signature
+ * fields are deliberately absent from the public format — the
+ * client validates trust locally against a hardcoded set of
+ * `trustedRoot peerIds (see config/trusted-roots.ts).
+ */
 export interface NodeAnnouncement {
+  /** Schema version. Bump on breaking changes. */
+  version: 2;
+  peerId: string;
+  nickname: string;
+  providers: ProviderOffer[];
+  /** The single primary reachable address of this node. */
+  addr: StructuredAddr;
+  /** Unix ms when the node last refreshed its entry. */
+  announcedAt: number;
+  /** Unix ms after which the entry is considered stale; clients may
+   * still keep stale entries but should weight them lower. */
+  expiresAt?: number;
+}
+
+/**
+ * Lightweight summary derived from NodeAnnouncement for backwards
+ * compatibility with views that previously consumed the flat
+ * single-provider schema. The registry service flattens every new
+ * entry into this shape so consume / leaderboard views don't need to
+ * be rewritten in this round.
+ */
+export interface NodeAnnouncementFlat {
   peerId: string;
   nickname: string;
   providerId: string;
   providerName: string;
   modelIds: string[];
-  multiaddrs: string[];
+  /** Best libp2p multiaddr string from the structured addr. */
+  primaryAddr: string;
   announcedAt: number;
+  /** Whether the local trust check has accepted this peer. */
+  trusted: boolean;
 }
 
 export interface InferenceRequest {
