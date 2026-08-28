@@ -2,11 +2,19 @@
   <img src="docs/image/logo.png" alt="ModelBus" width="150px" height="auto"/>
 </p>
 <p align="center" style="font-weight: bold;">
-  ModelBus-P2P
+  ModelBus-P2P : 一个去中心化的LLM Token共享平台
 </p>
 <p align="center">
-一个去中心化的 LLM Token 共享平台。任何人都可以把自己的Token挂上P2P网络，也可以因此调用网络上更多其他节点共享的Token。无需中心服务器、无需注册账号、不会丢失任何API Key。
+或许是全球首个，任何人都可以把自己的Token挂上P2P网络，也可以因此调用网络上更多其他节点共享的Token。无需中心服务器、无需注册账号、不会丢失任何API Key。
 </p>
+
+> ⚠️ **项目状态（v1 测试版）**：ModelBus-P2P 仍处于开发与公开测试阶段。协议格式（`/modelbus/inference/1.0.0`、节点公告 v2 schema、信任根清单）可能在未来出现不向后兼容的升级；早期 announce 的节点可能在新版本上线后需要重新注册。在生产环境使用前，请做好以下准备：
+>
+> - **不要在生产环境中依赖当前协议版本**，尤其是被调方
+> - **API Key 仅保存在本地 userData 目录**；升级或重装会触发重新配置
+> - **离线可用但首启需联网**：当前依赖 4 个硬编码信任根 + 官网冷启动endpoint
+>
+> 详见文末 [路线图](#路线图)。
 
 ---
 
@@ -19,22 +27,38 @@
 - [去中心化设计](#去中心化设计)
 - [节点公告格式（v2）](#节点公告格式v2)
 - [调用流程详解](#调用流程详解)
+- [下载使用（即将开通）](#下载使用即将开通)
 - [目录结构](#目录结构)
 - [快速开始](#快速开始)
 - [配置说明](#配置说明)
 - [开发与调试](#开发与调试)
-- [多语言](#多语言)
+- [其他语言的 README](#其他语言的 README)
 - [路线图](#路线图)
 - [许可](#许可)
+
+## 其他语言的 README
+
+本仓库的 README 已翻译为 22 种语言，详见下方。当前文档语言：`zh-CN`。
+
+- [English](README.en-US.md) · [繁體中文](README.zh-TW.md) · [日本語](README.ja-JP.md) · [한국어](README.ko-KR.md)
+- [Deutsch](README.de-DE.md) · [Español](README.es-ES.md) · [Français](README.fr-FR.md) · [Italiano](README.it-IT.md) · [Dansk](README.da-DK.md)
+- [Polski](README.pl-PL.md) · [Русский](README.ru-RU.md) · [Bosanski](README.bs-BA.md) · [العربية](README.ar-SA.md) · [Norsk](README.nb-NO.md)
+- [Português (Brasil)](README.pt-BR.md) · [ไทย](README.th-TH.md) · [Türkçe](README.tr-TR.md) · [Українська](README.uk-UA.md) · [বাংলা](README.bn-BD.md)
+- [Ελληνικά](README.el-GR.md) · [Tiếng Việt](README.vi-VN.md)
+
+应用内可点击顶栏 🌐 国旗按钮即时切换。
 
 ***
 
 ## 这是什么
 
-ModelBus-P2P 是一个基于 [js-libp2p](https://github.com/libp2p/js-libp2p) + Electron 的桌面客户端。它解决了一个简单但普遍的问题：**我和朋友都有 OpenAI/Claude 的订阅或Token，但用不完**。
+ModelBus-P2P 是一个基于 [js-libp2p](https://github.com/libp2p/js-libp2p) + Electron 的桌面客户端。它解决的是一个非常普遍的问题：**这个月我用不完，下个月我又不够用**。
+
+> 场景：你订阅了 OpenAI 或 Claude，本月额度没用完。与其让它月底清零，不如把它挂上 P2P 网络，本月用出去的每一笔请求都会按规则折算成 **MBP 积分**（在线时长 × 0.05 + 共享 Token 数 × 2 + 服务请求数 × 0.1 + 响应速度 × 0.5）。下个月当你的订阅不够用时，你可以用积分去调用其他节点共享的 Token。整个过程不经过任何中心服务器，API Key 始终留在你自己的机器上。
 
 - **上线（Provision / Share）**：把你订阅的 API Key + 想共享的模型挂到 P2P 网络，告诉大家你的 peerId。
 - **调用（Consume / Drive）**：在本机启一个 OpenAI 兼容的 HTTP 代理，配置 `http://127.0.0.1:18100` 作为 base\_url，所有请求都会经 P2P 转发到真实持有 Token 的节点去执行。
+- **钱包（Wallet）**：你每次共享 / 调用，都会按规则折算为 MBP 积分。首页和「钱包」页实时展示余额、积分构成与计算公式。积分当前为记账，未来可用于节点信誉、激励、付费路由等用途。
 - **不需要任何人审批**：首次启动通过官方 endpoint（或本地 mock）拿到种子节点，之后完全 P2P 运行。
 
 ***
@@ -342,6 +366,38 @@ request.model = "openai/gpt-5"
 **关键设计**：consumer 不知道被叫节点挂载了哪些 provider / model，请求里只带 `model` 字段。被叫节点按 `resolveProvider(modelId)` 自动分发。同节点挂多 provider 时，同 model id 不会重复（每个 provider 的 `config.modelIds` 由用户自己勾选，不重叠）。
 
 ***
+
+## 下载使用（即将开通）
+
+> 📦 正式发行版（包括 Windows / macOS / Linux 安装包，以及后续移动端、Web SDK）正在筹备中，敬请期待。
+
+### 现阶段如何获取可运行的客户端？
+
+本仓库当前是 v1 测试版（详见顶部项目状态说明），正式发布渠道尚未上线。如果你希望**立即试用**，可以按下面的「快速开始」自行构建：
+
+```bash
+pnpm install
+pnpm run dev          # 启动开发模式（Electron + Vite HMR）
+pnpm run package:mac  # 在 macOS 上打包 dmg
+pnpm run package:win  # 在 Windows 上打包 nsis
+pnpm run package:linux # 在 Linux 上打包 AppImage
+```
+
+构建产物在 `release/` 目录。
+
+### 发布渠道（敬请期待）
+
+| 渠道 | 状态 |
+|---|---|
+| [官方网站 https://modelbus.cc](https://modelbus.cc) 下载页 | 即将开放 |
+| GitHub Releases | 随 `v1.0` tag 开放 |
+| macOS App Store | 暂未规划 |
+| Windows Store | 暂未规划 |
+| Snap / apt / Homebrew | 暂未规划 |
+
+> 任何**带签名的二进制分发**都会先在 GitHub Releases 上发布，并附 SHA-256 校验和。**官方域名永远是保底救援通道**：冷启动包、签名校验与新版本发布都会放在 `https://modelbus.cc/download/`。
+
+---
 
 ## 目录结构
 
