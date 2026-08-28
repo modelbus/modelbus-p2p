@@ -1,6 +1,6 @@
 <!-- auto-generated README for zh-CN; do not edit by hand. Edit scripts/gen-readme-i18n.mjs and re-run. -->
 <p align="center">
-  <img src="../docs/image/logo.png" alt="ModelBus" width="150px" height="auto"/>
+  <img src="docs/image/logo.png" alt="ModelBus" width="150px" height="auto"/>
 </p>
 <h1 align="center" style="font-weight: bold;">
   ModelBus-P2P : 一个去中心化的 LLM Token 共享平台
@@ -19,7 +19,7 @@
 
 
 
-[简体中文](readme/README.zh-CN.md) · [English](README.md) · [繁體中文](readme/README.zh-TW.md) · [日本語](readme/README.ja-JP.md) · [한국어](readme/README.ko-KR.md) · [Deutsch](readme/README.de-DE.md) · [Español](readme/README.es-ES.md) · [Français](readme/README.fr-FR.md) · [Italiano](readme/README.it-IT.md) · [Dansk](readme/README.da-DK.md) · [Polski](readme/README.pl-PL.md) · [Русский](readme/README.ru-RU.md) · [Bosanski](readme/README.bs-BA.md) · [العربية](readme/README.ar-SA.md) · [Norsk](readme/README.nb-NO.md) · [Português (Brasil)](readme/README.pt-BR.md) · [ไทย](readme/README.th-TH.md) · [Türkçe](readme/README.tr-TR.md) · [Українська](readme/README.uk-UA.md) · [বাংলা](readme/README.bn-BD.md) · [Ελληνικά](readme/README.el-GR.md) · [Tiếng Việt](readme/README.vi-VN.md)
+[English](readme/README.en-US.md) · [繁體中文](readme/README.zh-TW.md) · [日本語](readme/README.ja-JP.md) · [한국어](readme/README.ko-KR.md) · [Deutsch](readme/README.de-DE.md) · [Español](readme/README.es-ES.md) · [Français](readme/README.fr-FR.md) · [Italiano](readme/README.it-IT.md) · [Dansk](readme/README.da-DK.md) · [Polski](readme/README.pl-PL.md) · [Русский](readme/README.ru-RU.md) · [Bosanski](readme/README.bs-BA.md) · [العربية](readme/README.ar-SA.md) · [Norsk](readme/README.nb-NO.md) · [Português (Brasil)](readme/README.pt-BR.md) · [ไทย](readme/README.th-TH.md) · [Türkçe](readme/README.tr-TR.md) · [Українська](readme/README.uk-UA.md) · [বাংলা](readme/README.bn-BD.md) · [Ελληνικά](readme/README.el-GR.md) · [Tiếng Việt](readme/README.vi-VN.md)
 
 </div>
 
@@ -70,7 +70,7 @@ ModelBus-P2P 是一个基于 [js-libp2p](https://github.com/libp2p/js-libp2p) + 
 
 ## 界面一览
 
-首页、模型、钱包、日志、设置 共 5 个视图。详细截图请查看 [docs/image/](../docs/image/) 目录。
+首页、模型、钱包、日志、设置 共 5 个视图。详细截图请查看 [docs/image/](docs/image/) 目录。
 
 ---
 
@@ -238,7 +238,7 @@ pnpm install
 pnpm run dev
 ```
 
-应用启动后默认指向 `mock/nodes.json`，无需网络即可体验完整流程。更多细节见主 [README.md](../README.md) 与 [docs/](../docs/) 目录。
+应用启动后默认指向 `mock/nodes.json`，无需网络即可体验完整流程。更多细节见 [docs/](docs/) 目录。
 
 ---
 

@@ -18,54 +18,67 @@ const root = path.resolve(__dirname, '..');
 const HEADER_BADGES = '[![Platform](https://img.shields.io/badge/platform-Electron-47848F.svg?logo=electron&logoColor=white)](https://www.electronjs.org/) [![P2P](https://img.shields.io/badge/p2p-libp2p-5A0FA8.svg?logo=libp2p&logoColor=white)](https://github.com/libp2p/js-libp2p) [![Language](https://img.shields.io/badge/language-TypeScript-3178C6.svg?logo=typescript&logoColor=white)](https://www.typescriptlang.org/) [![UI](https://img.shields.io/badge/UI-Vue_3-42B883.svg?logo=vuedotjs&logoColor=white)](https://vuejs.org/)';
 
 // Build the single-line language picker from each locale's table row.
-// `selfLang` is excluded (the file we're writing); `selfHref` points
-// back at the per-locale file under readme/.
+//
+// Canonical (repo-root-relative) hrefs:
+//   - 简体中文 (zh-CN)  is the ROOT README.md  — the canonical Chinese doc
+//   - English (en-US)   lives in readme/README.en-US.md
+//   - every other locale lives in readme/README.{lang}.md
+//
+// For the file being generated, each canonical href is converted into a
+// proper relative link from that file's own directory so links resolve
+// both from the repo root and from GitHub's /tree /blob view.
 function languageLinks(selfLang, selfHref) {
-  // Canonical hrefs as seen from the repo root.
   const ROWS = [
-    ['English',         'README.md',              'en-US'],
-    ['简体中文',         'readme/README.zh-CN.md', 'zh-CN'],
-    ['繁體中文',         'readme/README.zh-TW.md', 'zh-TW'],
-    ['日本語',           'readme/README.ja-JP.md', 'ja-JP'],
-    ['한국어',           'readme/README.ko-KR.md', 'ko-KR'],
-    ['Deutsch',         'readme/README.de-DE.md', 'de-DE'],
-    ['Español',         'readme/README.es-ES.md', 'es-ES'],
-    ['Français',        'readme/README.fr-FR.md', 'fr-FR'],
-    ['Italiano',        'readme/README.it-IT.md', 'it-IT'],
-    ['Dansk',           'readme/README.da-DK.md', 'da-DK'],
-    ['Polski',          'readme/README.pl-PL.md', 'pl-PL'],
-    ['Русский',          'readme/README.ru-RU.md', 'ru-RU'],
-    ['Bosanski',        'readme/README.bs-BA.md', 'bs-BA'],
-    ['العربية',           'readme/README.ar-SA.md', 'ar-SA'],
-    ['Norsk',           'readme/README.nb-NO.md', 'nb-NO'],
+    ['English',      'readme/README.en-US.md', 'en-US'],
+    ['简体中文',       'README.md',            'zh-CN'],
+    ['繁體中文',       'readme/README.zh-TW.md', 'zh-TW'],
+    ['日本語',         'readme/README.ja-JP.md', 'ja-JP'],
+    ['한국어',         'readme/README.ko-KR.md', 'ko-KR'],
+    ['Deutsch',      'readme/README.de-DE.md', 'de-DE'],
+    ['Español',      'readme/README.es-ES.md', 'es-ES'],
+    ['Français',     'readme/README.fr-FR.md', 'fr-FR'],
+    ['Italiano',     'readme/README.it-IT.md', 'it-IT'],
+    ['Dansk',        'readme/README.da-DK.md', 'da-DK'],
+    ['Polski',       'readme/README.pl-PL.md', 'pl-PL'],
+    ['Русский',       'readme/README.ru-RU.md', 'ru-RU'],
+    ['Bosanski',     'readme/README.bs-BA.md', 'bs-BA'],
+    ['العربية',        'readme/README.ar-SA.md', 'ar-SA'],
+    ['Norsk',        'readme/README.nb-NO.md', 'nb-NO'],
     ['Português (Brasil)', 'readme/README.pt-BR.md', 'pt-BR'],
-    ['ไทย',              'readme/README.th-TH.md', 'th-TH'],
-    ['Türkçe',          'readme/README.tr-TR.md', 'tr-TR'],
-    ['Українська',      'readme/README.uk-UA.md', 'uk-UA'],
-    ['বাংলা',            'readme/README.bn-BD.md', 'bn-BD'],
-    ['Ελληνικά',        'readme/README.el-GR.md', 'el-GR'],
-    ['Tiếng Việt',      'readme/README.vi-VN.md', 'vi-VN'],
+    ['ไทย',           'readme/README.th-TH.md', 'th-TH'],
+    ['Türkçe',       'readme/README.tr-TR.md', 'tr-TR'],
+    ['Українська',   'readme/README.uk-UA.md', 'uk-UA'],
+    ['বাংলা',         'readme/README.bn-BD.md', 'bn-BD'],
+    ['Ελληνικά',     'readme/README.el-GR.md', 'el-GR'],
+    ['Tiếng Việt',   'readme/README.vi-VN.md', 'vi-VN'],
   ];
 
-  // Convert a repo-root href into a proper relative link for the file
-  // being generated. Files inside ./readme/ reference siblings without
-  // the readme/ prefix; README.md at the repo root uses the full path.
-  const inReadme = selfHref.startsWith('readme/');
+  // The directory (as a repo-root path, with a leading slash) that the
+  // file being generated lives in. `README.md` -> '' ; `readme/x.md` -> 'readme'.
+  const selfDir = selfHref.includes('/') ? selfHref.slice(0, selfHref.lastIndexOf('/')) : '';
+  const selfBase = selfDir ? selfDir + '/' : '';
+
   return ROWS
     .filter(([, , id]) => id !== selfLang)
-    .map(([label, href]) => {
-      const rel = inReadme ? href.replace(/^readme\//, '') : href;
+    .map(([label, goal]) => {
+      const goalDir = goal.includes('/') ? goal.slice(0, goal.lastIndexOf('/')) : '';
+      const goalFile = goal.slice(goal.lastIndexOf('/') + 1);
+      // Relative path from selfBase to goalDir.
+      const rel = goalDir === selfDir
+        ? goalFile
+        : (selfDir ? '../' : '') + (goalDir ? goalDir + '/' : '') + goalFile;
       return `[${label}](${rel})`;
     })
     .join(' · ');
 }
 
 // Render the fixed top section (logo, title, tagline, status, badges,
-// language picker). `titleTagline` is the bolded one-liner under the
-// title; `statusSentence` is the single-sentence status banner.
-function topBlock({ logoAlt, titleLine, tagline, statusSentence, langLinks, headerLine }) {
+// language picker). `logoSrc` is the image path relative to the file
+// being written (repo-root README uses `docs/image/logo.png`, files in
+// readme/ use `../docs/image/logo.png`).
+function topBlock({ logoAlt, logoSrc, titleLine, tagline, statusSentence, langLinks, headerLine }) {
   return `<p align="center">
-  <img src="../docs/image/logo.png" alt="${logoAlt}" width="150px" height="auto"/>
+  <img src="${logoSrc}" alt="${logoAlt}" width="150px" height="auto"/>
 </p>
 <h1 align="center" style="font-weight: bold;">
   ${titleLine}
@@ -140,7 +153,7 @@ const LOCALES = {
 | **22 种语言** | 默认中文（zh-CN），含 RTL 阿拉伯语支持 |
 | **现代浅色默认主题** | 白天模式默认，可切换深色 / 跟随系统 |`,
 
-      screenshots: `首页、模型、钱包、日志、设置 共 5 个视图。详细截图请查看 [docs/image/](../docs/image/) 目录。`,
+      screenshots: `首页、模型、钱包、日志、设置 共 5 个视图。详细截图请查看 [docs/image/](docs/image/) 目录。`,
 
       architecture: `\`\`\`
 ┌─────────────────────────────────────────────────────────────────┐
@@ -284,7 +297,7 @@ pnpm install
 pnpm run dev
 \`\`\`
 
-应用启动后默认指向 \`mock/nodes.json\`，无需网络即可体验完整流程。更多细节见主 [README.md](../README.md) 与 [docs/](../docs/) 目录。`,
+应用启动后默认指向 \`mock/nodes.json\`，无需网络即可体验完整流程。更多细节见 [docs/](docs/) 目录。`,
 
       roadmap: `- ✅ v1：多 provider、官网冷启动、信任根、P2P 转发、22 语言、钱包雏形
 - 🔜 v2：信任链（trustChain）— 基于 Ed25519 签名的链式邀请账本
@@ -1458,11 +1471,12 @@ pnpm run dev
 
 // Concatenate the per-section body blocks into a full document,
 // framed by the fixed top matter.
-function renderDocument(lang, content, langLinks) {
+function renderDocument(lang, content, langLinks, logoSrc) {
   const s = content.sections;
   const b = content.body;
   const top = topBlock({
     logoAlt: content.logoAlt,
+    logoSrc,
     titleLine: content.titleLine,
     tagline: content.tagline,
     statusSentence: content.statusSentence,
@@ -1502,12 +1516,23 @@ function renderDocument(lang, content, langLinks) {
 async function main() {
   await fs.mkdir(path.join(root, 'readme'), { recursive: true });
 
+  // Root README.md is the canonical Simplified-Chinese document. Its
+  // logo path is relative to the repo root (`docs/image/logo.png`).
+  // Every other locale lives under ./readme/ and references the logo
+  // via `../docs/image/logo.png`.
   for (const [lang, content] of Object.entries(LOCALES)) {
+    if (lang === 'zh-CN') {
+      const href = 'README.md';
+      const langLinks = languageLinks(lang, href);
+      const doc = renderDocument(lang, content, langLinks, 'docs/image/logo.png');
+      await fs.writeFile(path.join(root, href), doc, 'utf-8');
+      console.log(`generated ${href} (zh-CN)`);
+      continue;
+    }
     const href = `readme/README.${lang}.md`;
     const langLinks = languageLinks(lang, href);
-    const doc = renderDocument(lang, content, langLinks);
-    const out = path.join(root, href);
-    await fs.writeFile(out, doc, 'utf-8');
+    const doc = renderDocument(lang, content, langLinks, '../docs/image/logo.png');
+    await fs.writeFile(path.join(root, href), doc, 'utf-8');
     console.log(`generated ${href}`);
   }
 }
