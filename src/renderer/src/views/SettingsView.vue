@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, computed } from 'vue';
 import type { AppRefs, AppActions, AppHelpers } from './types';
 import { t } from '../i18n';
 
@@ -46,6 +46,16 @@ function openLogsFolder() {
     console.error('[system] openLogsFolder failed:', err);
   });
 }
+
+const trustedNodes = computed(() =>
+  props.refs.nodes.value.map((n) => ({
+    peerId: n.peerId,
+    nickname: n.nickname,
+    providerName: n.providerName,
+    modelIds: n.modelIds,
+    trusted: n.trusted,
+  }))
+);
 </script>
 
 <template>
@@ -145,6 +155,41 @@ function openLogsFolder() {
         <span class="muted">
           {{ refs.nodes.value.length }} {{ t('consume.modelCount', { n: '' }).trim() }}
         </span>
+      </div>
+      <p class="muted" style="font-size: 11px; margin-top: 12px;">
+        {{ t('settings.trustHint') }}
+      </p>
+      <div class="logs-table-wrap" style="margin-top: 8px;">
+        <table class="log-table">
+          <thead>
+            <tr>
+              <th style="width: 70px;">{{ t('settings.trustBadge') }}</th>
+              <th>{{ t('home.lbNickname') }}</th>
+              <th style="width: 100px;">{{ t('settings.peerShort') }}</th>
+              <th>{{ t('settings.providers') }}</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-for="n in trustedNodes" :key="n.peerId">
+              <td>
+                <span v-if="n.trusted" class="tag success" style="font-size: 10px;">
+                  {{ t('settings.trustTrusted') }}
+                </span>
+                <span v-else class="tag" style="font-size: 10px;">
+                  {{ t('settings.trustQuarantine') }}
+                </span>
+              </td>
+              <td>{{ n.nickname }}</td>
+              <td class="muted" style="font-size: 11px;">{{ helpers.peerShort(n.peerId) }}</td>
+              <td class="muted" style="font-size: 11px;">
+                {{ n.providerName }} · {{ n.modelIds.length }} {{ t('home.models') }}
+              </td>
+            </tr>
+            <tr v-if="!trustedNodes.length">
+              <td colspan="4" class="muted">{{ t('settings.trustEmpty') }}</td>
+            </tr>
+          </tbody>
+        </table>
       </div>
       <p class="muted" style="font-size: 11px; margin-top: 12px;">
         {{ t('settings.registerHowto') }}
