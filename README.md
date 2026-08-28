@@ -1,10 +1,13 @@
-# ModelBus · P2P
-
 <p align="center">
-  <img src="docs/image/logo.png" alt="ModelBus" width="320" />
+  <img src="docs/image/logo.png" alt="ModelBus" width="auto" height="150"/>
 </p>
-
-> 一个去中心化的 LLM Token 共享平台。任何人都可以把自己的 AI 订阅挂上 P2P 网络，也可以调用网络上其他节点共享的 Token。无需中心服务器、无需注册账号。
+<p align="center">
+  ModelBus-P2P
+</p>
+<p align="center">
+一个去中心化的 LLM Token 共享平台。任何人都可以把自己的 AI 订阅挂上 P2P 网络，也可以调用网络上其他节点共享的 Token。无需中心服务器、无需注册账号。
+</p>
+***
 
 ---
 
@@ -25,42 +28,42 @@
 - [路线图](#路线图)
 - [许可](#许可)
 
----
+***
 
 ## 这是什么
 
 ModelBus · P2P 是一个基于 [js-libp2p](https://github.com/libp2p/js-libp2p) + Electron 的桌面客户端。它解决了一个简单但普遍的问题：**我和朋友都有 OpenAI/Claude 的订阅，但用不完**。
 
 - **上线（Provision / Share）**：把你订阅的 API Key + 想共享的模型挂到 P2P 网络，告诉大家你的 peerId。
-- **调用（Consume / Drive）**：在本机启一个 OpenAI 兼容的 HTTP 代理，配置 `http://127.0.0.1:18100` 作为 base_url，所有请求都会经 P2P 转发到真实持有 Token 的节点去执行。
+- **调用（Consume / Drive）**：在本机启一个 OpenAI 兼容的 HTTP 代理，配置 `http://127.0.0.1:18100` 作为 base\_url，所有请求都会经 P2P 转发到真实持有 Token 的节点去执行。
 - **不需要任何人审批**：首次启动通过官方 endpoint（或本地 mock）拿到种子节点，之后完全 P2P 运行。
 
----
+***
 
 ## 核心特性
 
-| 特性 | 说明 |
-|---|---|
-| **P2P 传输栈** | TCP + WebSocket + Circuit Relay v2 + UPnP/NAT 穿透 + Kademlia DHT + AutoNAT |
-| **去中心化信任** | 4 个硬编码的种子节点作为信任根；新节点通过信任链（下一阶段）扩展网络 |
-| **冷启动保底** | 首次启动从官方 HTTPS endpoint（或本地 mock）获取节点；之后所有内容在 `<userData>/bootstrap-cache.json` 中缓存 |
-| **多 Provider 路由** | 同一个节点可同时挂 OpenAI + Anthropic + Google 的 Key；调用方按 `model.id` 自动路由 |
-| **OpenAI 兼容代理** | 消费端本地启 OpenAI 兼容的 HTTP 代理（默认 `:18100`），任何 OpenAI/Anthropic 兼容客户端都能直连 |
-| **API Key 鉴权**（可选） | 消费端可设置固定 API Key，调用方必须在 `Authorization: Bearer <key>` 头携带 |
-| **22 种语言** | 默认中文（zh-CN），含 RTL 阿拉伯语支持 |
-| **现代浅色默认主题** | 白天模式默认，可切换深色 / 跟随系统 |
+| 特性                 | 说明                                                                                 |
+| ------------------ | ---------------------------------------------------------------------------------- |
+| **P2P 传输栈**        | TCP + WebSocket + Circuit Relay v2 + UPnP/NAT 穿透 + Kademlia DHT + AutoNAT          |
+| **去中心化信任**         | 4 个硬编码的种子节点作为信任根；新节点通过信任链（下一阶段）扩展网络                                                |
+| **冷启动保底**          | 首次启动从官方 HTTPS endpoint（或本地 mock）获取节点；之后所有内容在 `<userData>/bootstrap-cache.json` 中缓存 |
+| **多 Provider 路由**  | 同一个节点可同时挂 OpenAI + Anthropic + Google 的 Key；调用方按 `model.id` 自动路由                   |
+| **OpenAI 兼容代理**    | 消费端本地启 OpenAI 兼容的 HTTP 代理（默认 `:18100`），任何 OpenAI/Anthropic 兼容客户端都能直连               |
+| **API Key 鉴权**（可选） | 消费端可设置固定 API Key，调用方必须在 `Authorization: Bearer <key>` 头携带                          |
+| **22 种语言**         | 默认中文（zh-CN），含 RTL 阿拉伯语支持                                                           |
+| **现代浅色默认主题**       | 白天模式默认，可切换深色 / 跟随系统                                                                |
 
----
+***
 
 ## 界面一览
 
-| | |
-|---|---|
-| **首页（Home）** | 节点信息 · 我共享/使用的 Token · 上线引导 · API 服务说明 · 节点排行榜 |
-| **模型（Models）** | 合并所有节点公告的可用模型 + 节点质量列表（速度、模型、稳定时长） |
-| **钱包（Wallet）** | MBP Token 余额 · 积分构成 · 公式说明 |
-| **日志（Logs）** | 事件日志 + 供应流量（我服务的请求）+ 调用流量（我发出的请求） |
-| **设置（Settings）** | 节点 · 注册 · Token 上线 · 调用服务（API Key） |
+| <br />           | <br />                                         |
+| ---------------- | ---------------------------------------------- |
+| **首页（Home）**     | 节点信息 · 我共享/使用的 Token · 上线引导 · API 服务说明 · 节点排行榜 |
+| **模型（Models）**   | 合并所有节点公告的可用模型 + 节点质量列表（速度、模型、稳定时长）             |
+| **钱包（Wallet）**   | MBP Token 余额 · 积分构成 · 公式说明                     |
+| **日志（Logs）**     | 事件日志 + 供应流量（我服务的请求）+ 调用流量（我发出的请求）              |
+| **设置（Settings）** | 节点 · 注册 · Token 上线 · 调用服务（API Key）             |
 
 ### 首页
 
@@ -102,12 +105,13 @@ ModelBus · P2P 是一个基于 [js-libp2p](https://github.com/libp2p/js-libp2p)
 ![Settings](docs/image/setting.png)
 
 四个子标签：
+
 - **节点**：registry URL、TCP 监听端口、本代理端口、引导 multiaddr
 - **注册**：信任节点列表（来自官方 endpoint + 本地缓存），按 hard-coded trust root 校验
 - **Token 上线**：选择 provider / 输入 API Key / 勾选要共享的模型
 - **调用服务**：设置固定 API Key 用于鉴权
 
----
+***
 
 ## 架构总览
 
@@ -149,22 +153,22 @@ ModelBus · P2P 是一个基于 [js-libp2p](https://github.com/libp2p/js-libp2p)
 
 ### 关键文件
 
-| 层 | 文件 | 作用 |
-|---|---|---|
-| 类型 | `src/shared/types.ts` | 跨进程共享类型（v2 NodeAnnouncement 等） |
-| 协议 | `src/main/proto/inference.ts` | 自定义 libp2p 协议 `/modelbus/inference/1.0.0` |
-| P2P | `src/main/services/p2p.ts` | libp2p 节点生命周期 |
-| 信任 | `src/main/services/registry.ts` | 双源 bootstrap（官网 + 本地缓存） + 信任校验 |
-| 缓存 | `src/main/services/bootstrap-cache.ts` | `<userData>/bootstrap-cache.json` |
-| 上线 | `src/main/services/provisioner.ts` | 按 model.id 多 provider 路由 |
-| 消费 | `src/main/services/proxy-server.ts` | OpenAI 兼容本地 HTTP 代理 |
-| 上游 | `src/main/services/upstream.ts` | 真实 LLM provider API 调用 |
-| 钱包 | `src/main/services/wallet.ts` | MBP 积分计算 |
-| 模型 | `src/main/services/models.ts` | 模型/节点目录聚合 |
-| UI | `src/renderer/src/views/*.vue` | 5 个视图（Home/Models/Wallet/Logs/Settings） |
-| 桥 | `src/preload/index.ts` | contextBridge 类型化桥 |
+| 层   | 文件                                     | 作用                                        |
+| --- | -------------------------------------- | ----------------------------------------- |
+| 类型  | `src/shared/types.ts`                  | 跨进程共享类型（v2 NodeAnnouncement 等）            |
+| 协议  | `src/main/proto/inference.ts`          | 自定义 libp2p 协议 `/modelbus/inference/1.0.0` |
+| P2P | `src/main/services/p2p.ts`             | libp2p 节点生命周期                             |
+| 信任  | `src/main/services/registry.ts`        | 双源 bootstrap（官网 + 本地缓存） + 信任校验            |
+| 缓存  | `src/main/services/bootstrap-cache.ts` | `<userData>/bootstrap-cache.json`         |
+| 上线  | `src/main/services/provisioner.ts`     | 按 model.id 多 provider 路由                  |
+| 消费  | `src/main/services/proxy-server.ts`    | OpenAI 兼容本地 HTTP 代理                       |
+| 上游  | `src/main/services/upstream.ts`        | 真实 LLM provider API 调用                    |
+| 钱包  | `src/main/services/wallet.ts`          | MBP 积分计算                                  |
+| 模型  | `src/main/services/models.ts`          | 模型/节点目录聚合                                 |
+| UI  | `src/renderer/src/views/*.vue`         | 5 个视图（Home/Models/Wallet/Logs/Settings）   |
+| 桥   | `src/preload/index.ts`                 | contextBridge 类型化桥                        |
 
----
+***
 
 ## 去中心化设计
 
@@ -208,7 +212,7 @@ ModelBus · P2P 是一个基于 [js-libp2p](https://github.com/libp2p/js-libp2p)
 
 **官网永远保留**，作为冷启动救援通道。即使整个 P2P 网络瘫痪，新用户仍能通过官网加入。
 
----
+***
 
 ## 节点公告格式（v2）
 
@@ -251,28 +255,28 @@ ModelBus · P2P 是一个基于 [js-libp2p](https://github.com/libp2p/js-libp2p)
 
 字段含义：
 
-| 字段 | 类型 | 说明 |
-|---|---|---|
-| `version` | `2` | schema 版本，破坏性变更时 +1 |
-| `peerId` | string | libp2p PeerId，唯一身份 |
-| `nickname` | string | 用户可读昵称 |
-| `providers[]` | array | 该节点挂载的 LLM 供应商列表 |
-| `providers[].providerId` | string | models.dev 里的 provider id（如 `openai`） |
-| `providers[].providerName` | string | 可读显示名 |
-| `providers[].models[]` | array | 该 provider 下愿意共享的模型 |
-| `providers[].models[].id` | string | 模型 id（**真实发送给上游的标识**） |
-| `providers[].models[].name` | string | UI 展示用 |
-| `addr` | object | 单个主要可达地址（不复数；一节点一地址） |
-| `addr.addr` | string | libp2p multiaddr 字符串 |
-| `addr.kind` | string | `direct` / `relay` / `unknown` |
-| `addr.transport` | string | `tcp` / `ws` / `quic` / `webtransport` / `webrtc` |
-| `addr.lastSeen` | number | 最后一次观察到该地址可达的 Unix ms |
-| `announcedAt` | number | 该条目最近一次刷新 |
-| `expiresAt` | number | 软过期；客户端仍可消费过期条目，但应降低权重 |
+| 字段                          | 类型     | 说明                                                |
+| --------------------------- | ------ | ------------------------------------------------- |
+| `version`                   | `2`    | schema 版本，破坏性变更时 +1                               |
+| `peerId`                    | string | libp2p PeerId，唯一身份                                |
+| `nickname`                  | string | 用户可读昵称                                            |
+| `providers[]`               | array  | 该节点挂载的 LLM 供应商列表                                  |
+| `providers[].providerId`    | string | models.dev 里的 provider id（如 `openai`）             |
+| `providers[].providerName`  | string | 可读显示名                                             |
+| `providers[].models[]`      | array  | 该 provider 下愿意共享的模型                               |
+| `providers[].models[].id`   | string | 模型 id（**真实发送给上游的标识**）                             |
+| `providers[].models[].name` | string | UI 展示用                                            |
+| `addr`                      | object | 单个主要可达地址（不复数；一节点一地址）                              |
+| `addr.addr`                 | string | libp2p multiaddr 字符串                              |
+| `addr.kind`                 | string | `direct` / `relay` / `unknown`                    |
+| `addr.transport`            | string | `tcp` / `ws` / `quic` / `webtransport` / `webrtc` |
+| `addr.lastSeen`             | number | 最后一次观察到该地址可达的 Unix ms                             |
+| `announcedAt`               | number | 该条目最近一次刷新                                         |
+| `expiresAt`                 | number | 软过期；客户端仍可消费过期条目，但应降低权重                            |
 
 **mock 末尾预填了 4 个 trusted seed 节点**，与 `trusted-roots.ts` 中的 peerId 对齐，保证 `pnpm run dev` 无需联网即可启动。
 
----
+***
 
 ## 调用流程详解
 
@@ -338,7 +342,7 @@ request.model = "openai/gpt-5"
 
 **关键设计**：consumer 不知道被叫节点挂载了哪些 provider / model，请求里只带 `model` 字段。被叫节点按 `resolveProvider(modelId)` 自动分发。同节点挂多 provider 时，同 model id 不会重复（每个 provider 的 `config.modelIds` 由用户自己勾选，不重叠）。
 
----
+***
 
 ## 目录结构
 
@@ -391,7 +395,7 @@ modelbus-p2p/
 └── tsconfig.{node,web}.json
 ```
 
----
+***
 
 ## 快速开始
 
@@ -438,18 +442,18 @@ pnpm run package:linux
 pnpm run typecheck   # 双侧（主进程 + 渲染进程）零错误检查
 ```
 
----
+***
 
 ## 配置说明
 
 ### `BootstrapConfig`（持久化在 `<userData>/modelbus-store.json`）
 
-| 字段 | 默认 | 说明 |
-|---|---|---|
-| `registryUrl` | `http://localhost:8089/nodes.json` | 节点列表拉取地址。开发期可改为 `file://./mock/nodes.json` 走本地 |
-| `bootstrapMultiaddrs` | `[]` | 启动时连接的额外种子 multiaddr 列表 |
-| `tcpPort` | `15001` | 本节点 libp2p TCP 监听端口 |
-| `proxyPort` | `18100` | 消费端 OpenAI 兼容代理端口 |
+| 字段                    | 默认                                 | 说明                                             |
+| --------------------- | ---------------------------------- | ---------------------------------------------- |
+| `registryUrl`         | `http://localhost:8089/nodes.json` | 节点列表拉取地址。开发期可改为 `file://./mock/nodes.json` 走本地 |
+| `bootstrapMultiaddrs` | `[]`                               | 启动时连接的额外种子 multiaddr 列表                        |
+| `tcpPort`             | `15001`                            | 本节点 libp2p TCP 监听端口                            |
+| `proxyPort`           | `18100`                            | 消费端 OpenAI 兼容代理端口                              |
 
 修改任一项后**重启 P2P 节点**生效。
 
@@ -472,7 +476,7 @@ curl http://127.0.0.1:18100/v1/chat/completions \
 - 任何 peerId 在此列表 → `trusted = true`
 - 否则 → `trusted = false`（UI 标"待验证"）
 
----
+***
 
 ## 开发与调试
 
@@ -503,41 +507,41 @@ DEBUG="libp2p:connection-manager:*,libp2p:kad-dht:*" pnpm run dev
 
 `mock/nodes.json` 是 v2 schema 的实例。改完后只需重启 dev。`pnpm run dev` 启动时会自动 fetch 一次并显示在 Settings → Register。
 
----
+***
 
 ## 多语言
 
 内置 **22 种语言**，默认 `zh-CN`：
 
-| 语言 | 语言 | 语言 |
-|---|---|---|
-| 简体中文 | 繁體中文 | English |
-| 한국어 | Deutsch | Español |
-| Français | Italiano | Dansk |
-| 日本語 | Polski | Русский |
-| Bosanski | العربية | Norsk |
-| Português (Brasil) | ไทย | Türkçe |
-| Українська | বাংলা | Ελληνικά |
-| Tiếng Việt | | |
+| 语言                 | 语言       | 语言       |
+| ------------------ | -------- | -------- |
+| 简体中文               | 繁體中文     | English  |
+| 한국어                | Deutsch  | Español  |
+| Français           | Italiano | Dansk    |
+| 日本語                | Polski   | Русский  |
+| Bosanski           | العربية  | Norsk    |
+| Português (Brasil) | ไทย      | Türkçe   |
+| Українська         | বাংলা    | Ελληνικά |
+| Tiếng Việt         | <br />   | <br />   |
 
 切换：顶栏右侧第一个按钮（🌐 国旗图标）。语言选择持久化到 localStorage。
 
 新增语言：在 `src/renderer/src/i18n/` 下新建 `xx-XX.ts`，按 `Dict` 类型补全条目，并在 `src/renderer/src/i18n/index.ts` 的 `availableLocales` 与 `dictionaries` 注册。
 
----
+***
 
 ## 路线图
 
-| 阶段 | 目标 |
-|---|---|
-| **v1** ✅ | 多 provider、官网冷启动、信任根、P2P 转发、22 语言、钱包雏形 |
-| **v2** | 信任链（trustChain）— 基于 Ed25519 签名的链式邀请账本，新节点通过被引荐人入网 |
-| **v3** | 节点质量评估接入真实指标（上传延迟、错误率、运行稳定性），淘汰低质量节点 |
-| **v4** | Token 经济学闭环 — MBP 用于：优先路由、加速新节点冷启动、付费节点发现 |
-| **v5** | 移动端（P2P 节点） — 让手机也能上线 |
-| **v6** | Web 端 — 浏览器内 `<modelbus>` JS SDK |
+| 阶段       | 目标                                                |
+| -------- | ------------------------------------------------- |
+| **v1** ✅ | 多 provider、官网冷启动、信任根、P2P 转发、22 语言、钱包雏形            |
+| **v2**   | 信任链（trustChain）— 基于 Ed25519 签名的链式邀请账本，新节点通过被引荐人入网 |
+| **v3**   | 节点质量评估接入真实指标（上传延迟、错误率、运行稳定性），淘汰低质量节点              |
+| **v4**   | Token 经济学闭环 — MBP 用于：优先路由、加速新节点冷启动、付费节点发现         |
+| **v5**   | 移动端（P2P 节点） — 让手机也能上线                             |
+| **v6**   | Web 端 — 浏览器内 `<modelbus>` JS SDK                  |
 
----
+***
 
 ## 许可
 
