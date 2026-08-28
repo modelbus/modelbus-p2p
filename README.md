@@ -5,7 +5,7 @@
   ModelBus-P2P
 </p>
 <p align="center">
-一个去中心化的 LLM Token 共享平台。任何人都可以把自己的 AI 订阅挂上 P2P 网络，也可以调用网络上其他节点共享的 Token。无需中心服务器、无需注册账号。
+一个去中心化的 LLM Token 共享平台。任何人都可以把自己的Token挂上P2P网络，也可以因此调用网络上更多其他节点共享的Token。无需中心服务器、无需注册账号、不会丢失任何API Key。
 </p>
 
 ---
@@ -31,7 +31,7 @@
 
 ## 这是什么
 
-ModelBus · P2P 是一个基于 [js-libp2p](https://github.com/libp2p/js-libp2p) + Electron 的桌面客户端。它解决了一个简单但普遍的问题：**我和朋友都有 OpenAI/Claude 的订阅，但用不完**。
+ModelBus-P2P 是一个基于 [js-libp2p](https://github.com/libp2p/js-libp2p) + Electron 的桌面客户端。它解决了一个简单但普遍的问题：**我和朋友都有 OpenAI/Claude 的订阅或Token，但用不完**。
 
 - **上线（Provision / Share）**：把你订阅的 API Key + 想共享的模型挂到 P2P 网络，告诉大家你的 peerId。
 - **调用（Consume / Drive）**：在本机启一个 OpenAI 兼容的 HTTP 代理，配置 `http://127.0.0.1:18100` 作为 base\_url，所有请求都会经 P2P 转发到真实持有 Token 的节点去执行。
