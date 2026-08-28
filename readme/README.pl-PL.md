@@ -27,20 +27,20 @@
 
 ## Spis treści
 
-- [Co to jest](#co-to-jest)
-- [Główne funkcje](#gwne-funkcje)
-- [Zrzuty ekranu](#zrzuty-ekranu)
-- [Architektura](#architektura)
-- [Projekt zdecentralizowany](#projekt-zdecentralizowany)
-- [Format ogłoszenia węzła (v2)](#format-ogoszenia-wza-v2)
-- [Przebieg zapytania](#przebieg-zapytania)
-- [Pobierz i używaj (wkrótce)](#pobierz-i-uywaj-wkrtce)
-- [Szybki start](#szybki-start)
-- [Mapa drogowa](#mapa-drogowa)
+- [Co to jest](#what)
+- [Główne funkcje](#features)
+- [Zrzuty ekranu](#screenshots)
+- [Architektura](#architecture)
+- [Projekt zdecentralizowany](#decentralised)
+- [Format ogłoszenia węzła (v2)](#schema)
+- [Przebieg zapytania](#flow)
+- [Pobierz i używaj (wkrótce)](#download)
+- [Szybki start](#quickstart)
+- [Mapa drogowa](#roadmap)
 
 ---
 
-## Co to jest
+## Co to jest <a id="what"></a>
 
 ModelBus-P2P to klient desktopowy oparty na [js-libp2p](https://github.com/libp2p/js-libp2p) i Electronie. Rozwiązuje problem, który ma niemal każdy: **w tym miesiącu nadmiar, w następnym brak.**
 
@@ -53,7 +53,7 @@ ModelBus-P2P to klient desktopowy oparty na [js-libp2p](https://github.com/libp2
 
 ---
 
-## Główne funkcje
+## Główne funkcje <a id="features"></a>
 
 | Funkcja | Uwagi |
 |---|---|
@@ -68,13 +68,22 @@ ModelBus-P2P to klient desktopowy oparty na [js-libp2p](https://github.com/libp2
 
 ---
 
-## Zrzuty ekranu
+## Zrzuty ekranu <a id="screenshots"></a>
 
-Strona główna, Modele, Wallet, Logi, Ustawienia — łącznie pięć widoków. Zrzuty w pełnej rozdzielczości znajdują się w [docs/image/](../docs/image/).
+<p align="center"><img src="../docs/image/home.png" alt="Home / 首页" width="640"/></p>
+
+<p align="center"><img src="../docs/image/model.png" alt="Models / 模型" width="640"/></p>
+
+<p align="center"><img src="../docs/image/wallet.png" alt="Wallet / 钱包" width="640"/></p>
+
+<p align="center"><img src="../docs/image/log.png" alt="Logs / 日志" width="640"/></p>
+
+<p align="center"><img src="../docs/image/setting.png" alt="Settings / 设置" width="640"/></p>
+
 
 ---
 
-## Architektura
+## Architektura <a id="architecture"></a>
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -120,7 +129,7 @@ curl http://127.0.0.1:18100/v1/chat/completions \
 
 ---
 
-## Projekt zdecentralizowany
+## Projekt zdecentralizowany <a id="decentralised"></a>
 
 Cztery ID węzłów nasiennych są wbudowane w plik binarny (`src/main/config/trusted-roots.ts`). Przebieg cold-startu:
 
@@ -142,7 +151,7 @@ Oficjalny punkt końcowy jest zachowany **na zawsze** jako kanał ratunkowy, naw
 
 ---
 
-## Format ogłoszenia węzła (v2)
+## Format ogłoszenia węzła (v2) <a id="schema"></a>
 
 Żądanie: `<https://modelbus.cc/api/v1/nodes>` zwraca `Array<NodeAnnouncement>`:
 
@@ -191,7 +200,7 @@ Ostatnie 4 wpisy w `mock/nodes.json` to zaufane węzły nasienne; ich peerId odp
 
 ---
 
-## Przebieg zapytania
+## Przebieg zapytania <a id="flow"></a>
 
 **Provision** (Ty = posiadacz Tokenu): Ustawienia → Udostępnij Token → wybierz dostawcę, wklej klucz API, zaznacz modele → `provision:set` → `ProvisionerService.register(config)` → `node.handle('/modelbus/inference/1.0.0', …)` → `events: 'provision:registered'`.
 
@@ -211,7 +220,7 @@ request.model = "openai/gpt-5"
 
 ---
 
-## Pobierz i używaj (wkrótce)
+## Pobierz i używaj (wkrótce) <a id="download"></a>
 
 > 📦 Oficjalne instalatory (pakiety Windows / macOS / Linux, a później mobilne i Web SDK) są obecnie przygotowywane.
 
@@ -231,7 +240,7 @@ Artefakty lądują w `release/`.
 
 ---
 
-## Szybki start
+## Szybki start <a id="quickstart"></a>
 
 ```bash
 git clone https://github.com/your-org/modelbus-p2p.git
@@ -244,7 +253,7 @@ Przy pierwszym uruchomieniu aplikacja domyślnie wskazuje `mock/nodes.json`, wi�
 
 ---
 
-## Mapa drogowa
+## Mapa drogowa <a id="roadmap"></a>
 
 - ✅ v1: multi-provider, oficjalny cold-start, kotwice zaufania, przekazywanie P2P, 22 języki, szkielet Wallet
 - 🔜 v2: łańcuch zaufania (trustChain) — księga zaproszeń podpisana Ed25519

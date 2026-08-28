@@ -27,20 +27,20 @@
 
 ## 目次
 
-- [これは何ですか](#)
-- [主な特徴](#)
-- [画面プレビュー](#)
-- [アーキテクチャ](#)
-- [分散型設計](#)
-- [ノード公告フォーマット（v2）](#v2)
-- [リクエストの流れ](#)
-- [ダウンロードと利用（近日公開）](#)
-- [クイックスタート](#)
-- [ロードマップ](#)
+- [これは何ですか](#what)
+- [主な特徴](#features)
+- [画面プレビュー](#screenshots)
+- [アーキテクチャ](#architecture)
+- [分散型設計](#decentralised)
+- [ノード公告フォーマット（v2）](#schema)
+- [リクエストの流れ](#flow)
+- [ダウンロードと利用（近日公開）](#download)
+- [クイックスタート](#quickstart)
+- [ロードマップ](#roadmap)
 
 ---
 
-## これは何ですか
+## これは何ですか <a id="what"></a>
 
 ModelBus-P2P は [js-libp2p](https://github.com/libp2p/js-libp2p) と Electron を基盤にしたデスクトップクライアントで、誰もが一度は経験する「**今月は余るのに来月は足りない**」という悩みを解決します。
 
@@ -53,7 +53,7 @@ ModelBus-P2P は [js-libp2p](https://github.com/libp2p/js-libp2p) と Electron �
 
 ---
 
-## 主な特徴
+## 主な特徴 <a id="features"></a>
 
 | 機能 | 説明 |
 |---|---|
@@ -68,13 +68,22 @@ ModelBus-P2P は [js-libp2p](https://github.com/libp2p/js-libp2p) と Electron �
 
 ---
 
-## 画面プレビュー
+## 画面プレビュー <a id="screenshots"></a>
 
-ホーム、モデル、ウォレット、ログ、設定の 5 ビュー。フル解像度のスクショは [docs/image/](../docs/image/) にあります。
+<p align="center"><img src="../docs/image/home.png" alt="Home / 首页" width="640"/></p>
+
+<p align="center"><img src="../docs/image/model.png" alt="Models / 模型" width="640"/></p>
+
+<p align="center"><img src="../docs/image/wallet.png" alt="Wallet / 钱包" width="640"/></p>
+
+<p align="center"><img src="../docs/image/log.png" alt="Logs / 日志" width="640"/></p>
+
+<p align="center"><img src="../docs/image/setting.png" alt="Settings / 设置" width="640"/></p>
+
 
 ---
 
-## アーキテクチャ
+## アーキテクチャ <a id="architecture"></a>
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -120,7 +129,7 @@ curl http://127.0.0.1:18100/v1/chat/completions \
 
 ---
 
-## 分散型設計
+## 分散型設計 <a id="decentralised"></a>
 
 シードピア ID 4 個をバイナリにハードコードしています（`src/main/config/trusted-roots.ts`）。コールドスタートのフロー：
 
@@ -142,7 +151,7 @@ curl http://127.0.0.1:18100/v1/chat/completions \
 
 ---
 
-## ノード公告フォーマット（v2）
+## ノード公告フォーマット（v2） <a id="schema"></a>
 
 リクエスト：`<https://modelbus.cc/api/v1/nodes>` は `Array<NodeAnnouncement>` を返します：
 
@@ -189,7 +198,7 @@ curl http://127.0.0.1:18100/v1/chat/completions \
 
 ---
 
-## リクエストの流れ
+## リクエストの流れ <a id="flow"></a>
 
 **Provision**（あなた = Token 保有者）：設定 → Token 上線 → プロバイダ選択 → API キー貼付 → モデル選択 → `provision:set` → `ProvisionerService.register(config)` → `node.handle('/modelbus/inference/1.0.0', …)` → `events: 'provision:registered'`。
 
@@ -209,7 +218,7 @@ request.model = "openai/gpt-5"
 
 ---
 
-## ダウンロードと利用（近日公開）
+## ダウンロードと利用（近日公開） <a id="download"></a>
 
 > 📦 公式インストーラ（Windows / macOS / Linux パッケージ、将来的にモバイルと Web SDK）は現在準備中です。
 
@@ -229,7 +238,7 @@ pnpm run package:linux # Linux AppImage
 
 ---
 
-## クイックスタート
+## クイックスタート <a id="quickstart"></a>
 
 ```bash
 git clone https://github.com/your-org/modelbus-p2p.git
@@ -242,7 +251,7 @@ pnpm run dev
 
 ---
 
-## ロードマップ
+## ロードマップ <a id="roadmap"></a>
 
 - ✅ v1：マルチ Provider、公式コールドスタート、トラストアンカー、P2P 転送、22 言語、ウォレットの原型
 - 🔜 v2：トラストチェーン（trustChain）— Ed25519 署名による招待台帳

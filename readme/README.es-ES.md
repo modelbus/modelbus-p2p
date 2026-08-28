@@ -27,20 +27,20 @@
 
 ## Índice
 
-- [¿Qué es?](#qu-es)
-- [Características principales](#caractersticas-principales)
-- [Capturas](#capturas)
-- [Arquitectura](#arquitectura)
-- [Diseño descentralizado](#diseo-descentralizado)
-- [Esquema de anuncio de nodo (v2)](#esquema-de-anuncio-de-nodo-v2)
-- [Flujo de petición](#flujo-de-peticin)
-- [Descarga y uso (próximamente)](#descarga-y-uso-prximamente)
-- [Inicio rápido](#inicio-rpido)
-- [Hoja de ruta](#hoja-de-ruta)
+- [¿Qué es?](#what)
+- [Características principales](#features)
+- [Capturas](#screenshots)
+- [Arquitectura](#architecture)
+- [Diseño descentralizado](#decentralised)
+- [Esquema de anuncio de nodo (v2)](#schema)
+- [Flujo de petición](#flow)
+- [Descarga y uso (próximamente)](#download)
+- [Inicio rápido](#quickstart)
+- [Hoja de ruta](#roadmap)
 
 ---
 
-## ¿Qué es?
+## ¿Qué es? <a id="what"></a>
 
 ModelBus-P2P es un cliente de escritorio construido sobre [js-libp2p](https://github.com/libp2p/js-libp2p) y Electron. Resuelve un problema que casi todos tenemos: **este mes me sobra, el que viene me falta**.
 
@@ -53,7 +53,7 @@ ModelBus-P2P es un cliente de escritorio construido sobre [js-libp2p](https://gi
 
 ---
 
-## Características principales
+## Características principales <a id="features"></a>
 
 | Característica | Notas |
 |---|---|
@@ -68,13 +68,22 @@ ModelBus-P2P es un cliente de escritorio construido sobre [js-libp2p](https://gi
 
 ---
 
-## Capturas
+## Capturas <a id="screenshots"></a>
 
-Inicio, Modelos, Wallet, Registros, Ajustes: cinco vistas en total. Las capturas a resolución completa están en [docs/image/](../docs/image/).
+<p align="center"><img src="../docs/image/home.png" alt="Home / 首页" width="640"/></p>
+
+<p align="center"><img src="../docs/image/model.png" alt="Models / 模型" width="640"/></p>
+
+<p align="center"><img src="../docs/image/wallet.png" alt="Wallet / 钱包" width="640"/></p>
+
+<p align="center"><img src="../docs/image/log.png" alt="Logs / 日志" width="640"/></p>
+
+<p align="center"><img src="../docs/image/setting.png" alt="Settings / 设置" width="640"/></p>
+
 
 ---
 
-## Arquitectura
+## Arquitectura <a id="architecture"></a>
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -120,7 +129,7 @@ curl http://127.0.0.1:18100/v1/chat/completions \
 
 ---
 
-## Diseño descentralizado
+## Diseño descentralizado <a id="decentralised"></a>
 
 Hay 4 peerIds semilla grabados en el binario (`src/main/config/trusted-roots.ts`). Flujo de arranque en frío:
 
@@ -142,7 +151,7 @@ El endpoint oficial se conserva **siempre** como canal de rescate, incluso cuand
 
 ---
 
-## Esquema de anuncio de nodo (v2)
+## Esquema de anuncio de nodo (v2) <a id="schema"></a>
 
 Petición: `<https://modelbus.cc/api/v1/nodes>` devuelve `Array<NodeAnnouncement>`:
 
@@ -191,7 +200,7 @@ Los 4 últimos elementos de `mock/nodes.json` son los pares semilla de confianza
 
 ---
 
-## Flujo de petición
+## Flujo de petición <a id="flow"></a>
 
 **Provision** (tú = poseedor del Token): Ajustes → Compartir Token → elige proveedor, pega la clave API, marca modelos → `provision:set` → `ProvisionerService.register(config)` → `node.handle('/modelbus/inference/1.0.0', …)` → `events: 'provision:registered'`.
 
@@ -211,7 +220,7 @@ request.model = "openai/gpt-5"
 
 ---
 
-## Descarga y uso (próximamente)
+## Descarga y uso (próximamente) <a id="download"></a>
 
 > 📦 Los instaladores oficiales (paquetes Windows / macOS / Linux, y más adelante mobile y Web SDK) están en preparación.
 
@@ -231,7 +240,7 @@ Los artefactos quedan en `release/`.
 
 ---
 
-## Inicio rápido
+## Inicio rápido <a id="quickstart"></a>
 
 ```bash
 git clone https://github.com/your-org/modelbus-p2p.git
@@ -244,7 +253,7 @@ Al arrancar por primera vez la app apunta por defecto a `mock/nodes.json`, de mo
 
 ---
 
-## Hoja de ruta
+## Hoja de ruta <a id="roadmap"></a>
 
 - ✅ v1: multi-proveedor, arranque en frío oficial, raíces de confianza, reenvío P2P, 22 idiomas, andamiaje de Wallet
 - 🔜 v2: cadena de confianza (trustChain) — libro de invitaciones firmado con Ed25519

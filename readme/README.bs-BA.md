@@ -27,20 +27,20 @@
 
 ## Sadržaj
 
-- [Šta je ovo](#ta-je-ovo)
-- [Ključne funkcije](#kljune-funkcije)
-- [Snimci ekrana](#snimci-ekrana)
-- [Arhitektura](#arhitektura)
-- [Decentralni dizajn](#decentralni-dizajn)
-- [Format objave čvora (v2)](#format-objave-vora-v2)
-- [Tok zahtjeva](#tok-zahtjeva)
-- [Preuzimanje i korištenje (uskoro)](#preuzimanje-i-koritenje-uskoro)
-- [Brzi start](#brzi-start)
-- [Mapa puta](#mapa-puta)
+- [Šta je ovo](#what)
+- [Ključne funkcije](#features)
+- [Snimci ekrana](#screenshots)
+- [Arhitektura](#architecture)
+- [Decentralni dizajn](#decentralised)
+- [Format objave čvora (v2)](#schema)
+- [Tok zahtjeva](#flow)
+- [Preuzimanje i korištenje (uskoro)](#download)
+- [Brzi start](#quickstart)
+- [Mapa puta](#roadmap)
 
 ---
 
-## Šta je ovo
+## Šta je ovo <a id="what"></a>
 
 ModelBus-P2P je desktop klijent izgrađen na [js-libp2p](https://github.com/libp2p/js-libp2p) i Electronu. Rješava problem koji gotovo svi znaju: **ovaj mjesec višak, sljedeći mjesec manjak.**
 
@@ -53,7 +53,7 @@ ModelBus-P2P je desktop klijent izgrađen na [js-libp2p](https://github.com/libp
 
 ---
 
-## Ključne funkcije
+## Ključne funkcije <a id="features"></a>
 
 | Funkcija | Napomene |
 |---|---|
@@ -68,13 +68,22 @@ ModelBus-P2P je desktop klijent izgrađen na [js-libp2p](https://github.com/libp
 
 ---
 
-## Snimci ekrana
+## Snimci ekrana <a id="screenshots"></a>
 
-Početna, Modeli, Novčanik, Dnevnik, Postavke — ukupno pet pogleda. Snimci u punoj rezoluciji su u [docs/image/](../docs/image/).
+<p align="center"><img src="../docs/image/home.png" alt="Home / 首页" width="640"/></p>
+
+<p align="center"><img src="../docs/image/model.png" alt="Models / 模型" width="640"/></p>
+
+<p align="center"><img src="../docs/image/wallet.png" alt="Wallet / 钱包" width="640"/></p>
+
+<p align="center"><img src="../docs/image/log.png" alt="Logs / 日志" width="640"/></p>
+
+<p align="center"><img src="../docs/image/setting.png" alt="Settings / 设置" width="640"/></p>
+
 
 ---
 
-## Arhitektura
+## Arhitektura <a id="architecture"></a>
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -120,7 +129,7 @@ curl http://127.0.0.1:18100/v1/chat/completions \
 
 ---
 
-## Decentralni dizajn
+## Decentralni dizajn <a id="decentralised"></a>
 
 Četiri seed peer-ID-ja su ugrađena u binarni fajl (`src/main/config/trusted-roots.ts`). Tok cold starta:
 
@@ -142,7 +151,7 @@ Zvanični endpoint ostaje **zauvijek** kao kanal za spas, čak i kada je P2P mre
 
 ---
 
-## Format objave čvora (v2)
+## Format objave čvora (v2) <a id="schema"></a>
 
 Zahtjev: `<https://modelbus.cc/api/v1/nodes>` vraća `Array<NodeAnnouncement>`:
 
@@ -191,7 +200,7 @@ Posljednja 4 unosa u `mock/nodes.json` su pouzdani seed čvorovi; njihovi peerId
 
 ---
 
-## Tok zahtjeva
+## Tok zahtjeva <a id="flow"></a>
 
 **Provision** (vi = vlasnik Tokena): Postavke → Dijeljenje Tokena → odaberite providera, zalijepite API ključ, označite modele → `provision:set` → `ProvisionerService.register(config)` → `node.handle('/modelbus/inference/1.0.0', …)` → `events: 'provision:registered'`.
 
@@ -211,7 +220,7 @@ request.model = "openai/gpt-5"
 
 ---
 
-## Preuzimanje i korištenje (uskoro)
+## Preuzimanje i korištenje (uskoro) <a id="download"></a>
 
 > 📦 Zvanični instalateri (paketi za Windows / macOS / Linux, a kasnije mobilni i Web SDK) su u pripremi.
 
@@ -231,7 +240,7 @@ Artefakti završavaju u `release/`.
 
 ---
 
-## Brzi start
+## Brzi start <a id="quickstart"></a>
 
 ```bash
 git clone https://github.com/your-org/modelbus-p2p.git
@@ -244,7 +253,7 @@ Pri prvom pokretanju aplikacija po defaultu pokazuje na `mock/nodes.json`, pa ci
 
 ---
 
-## Mapa puta
+## Mapa puta <a id="roadmap"></a>
 
 - ✅ v1: multi-provider, zvanični cold start, sidra povjerenja, P2P prosljeđivanje, 22 jezika, kostur Novčanika
 - 🔜 v2: lanac povjerenja (trustChain) — knjiga pozivnica potpisana Ed25519

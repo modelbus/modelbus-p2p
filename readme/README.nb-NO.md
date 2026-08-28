@@ -27,20 +27,20 @@
 
 ## Innhold
 
-- [Hva er det](#hva-er-det)
-- [Kjernefunksjoner](#kjernefunksjoner)
-- [Skjermbilder](#skjermbilder)
-- [Arkitektur](#arkitektur)
-- [Desentralisert design](#desentralisert-design)
-- [Node-annonseringsformat (v2)](#node-annonseringsformat-v2)
-- [Forespørselsflyt](#foresprselsflyt)
-- [Nedlasting og bruk (snart)](#nedlasting-og-bruk-snart)
-- [Rask start](#rask-start)
-- [Veikart](#veikart)
+- [Hva er det](#what)
+- [Kjernefunksjoner](#features)
+- [Skjermbilder](#screenshots)
+- [Arkitektur](#architecture)
+- [Desentralisert design](#decentralised)
+- [Node-annonseringsformat (v2)](#schema)
+- [Forespørselsflyt](#flow)
+- [Nedlasting og bruk (snart)](#download)
+- [Rask start](#quickstart)
+- [Veikart](#roadmap)
 
 ---
 
-## Hva er det
+## Hva er det <a id="what"></a>
 
 ModelBus-P2P er en skrivebordsklient bygget på [js-libp2p](https://github.com/libp2p/js-libp2p) og Electron. Den løser et problem nesten alle kjenner: **denne måneden overskudd, neste måned underskudd.**
 
@@ -53,7 +53,7 @@ ModelBus-P2P er en skrivebordsklient bygget på [js-libp2p](https://github.com/l
 
 ---
 
-## Kjernefunksjoner
+## Kjernefunksjoner <a id="features"></a>
 
 | Funksjon | Merknader |
 |---|---|
@@ -68,13 +68,22 @@ ModelBus-P2P er en skrivebordsklient bygget på [js-libp2p](https://github.com/l
 
 ---
 
-## Skjermbilder
+## Skjermbilder <a id="screenshots"></a>
 
-Hjem, Modeller, Wallet, Logger, Innstillinger — totalt fem visninger. Skjermbilder i full oppløsning ligger i [docs/image/](../docs/image/).
+<p align="center"><img src="../docs/image/home.png" alt="Home / 首页" width="640"/></p>
+
+<p align="center"><img src="../docs/image/model.png" alt="Models / 模型" width="640"/></p>
+
+<p align="center"><img src="../docs/image/wallet.png" alt="Wallet / 钱包" width="640"/></p>
+
+<p align="center"><img src="../docs/image/log.png" alt="Logs / 日志" width="640"/></p>
+
+<p align="center"><img src="../docs/image/setting.png" alt="Settings / 设置" width="640"/></p>
+
 
 ---
 
-## Arkitektur
+## Arkitektur <a id="architecture"></a>
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -120,7 +129,7 @@ curl http://127.0.0.1:18100/v1/chat/completions \
 
 ---
 
-## Desentralisert design
+## Desentralisert design <a id="decentralised"></a>
 
 Fire frø-peer-ID-er er bakt inn i binæren (`src/main/config/trusted-roots.ts`). Kaldstart-flyt:
 
@@ -142,7 +151,7 @@ Det offisielle endepunktet beholdes **for alltid** som redningskanal, selv når 
 
 ---
 
-## Node-annonseringsformat (v2)
+## Node-annonseringsformat (v2) <a id="schema"></a>
 
 Forespørsel: `<https://modelbus.cc/api/v1/nodes>` returnerer `Array<NodeAnnouncement>`:
 
@@ -191,7 +200,7 @@ De 4 siste oppføringene i `mock/nodes.json` er de betrodde frø-peerene; peerId
 
 ---
 
-## Forespørselsflyt
+## Forespørselsflyt <a id="flow"></a>
 
 **Provision** (du = Token-innehaver): Innstillinger → Token-deling → velg leverandør, lim inn API-nøkkel, kryss av modeller → `provision:set` → `ProvisionerService.register(config)` → `node.handle('/modelbus/inference/1.0.0', …)` → `events: 'provision:registered'`.
 
@@ -211,7 +220,7 @@ request.model = "openai/gpt-5"
 
 ---
 
-## Nedlasting og bruk (snart)
+## Nedlasting og bruk (snart) <a id="download"></a>
 
 > 📦 Offisielle installatører (Windows / macOS / Linux-pakker, senere mobil og Web SDK) er under forberedelse.
 
@@ -231,7 +240,7 @@ Artefaktene havner i `release/`.
 
 ---
 
-## Rask start
+## Rask start <a id="quickstart"></a>
 
 ```bash
 git clone https://github.com/your-org/modelbus-p2p.git
@@ -244,7 +253,7 @@ Ved første start peker appen som standard til `mock/nodes.json`, så hele flyte
 
 ---
 
-## Veikart
+## Veikart <a id="roadmap"></a>
 
 - ✅ v1: multi-provider, offisiell kaldstart, tillitsankre, P2P-videresending, 22 språk, Wallet-skjelett
 - 🔜 v2: tillitskjede (trustChain) — Ed25519-signert invitasjonsbok

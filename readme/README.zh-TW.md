@@ -27,20 +27,20 @@
 
 ## 目錄
 
-- [這是什麼](#)
-- [核心特色](#)
-- [介面一覽](#)
-- [架構總覽](#)
-- [去中心化設計](#)
-- [節點公告格式（v2）](#v2)
-- [呼叫流程詳解](#)
-- [下載使用（即將開通）](#)
-- [快速開始](#)
-- [路線圖](#)
+- [這是什麼](#what)
+- [核心特色](#features)
+- [介面一覽](#screenshots)
+- [架構總覽](#architecture)
+- [去中心化設計](#decentralised)
+- [節點公告格式（v2）](#schema)
+- [呼叫流程詳解](#flow)
+- [下載使用（即將開通）](#download)
+- [快速開始](#quickstart)
+- [路線圖](#roadmap)
 
 ---
 
-## 這是什麼
+## 這是什麼 <a id="what"></a>
 
 ModelBus-P2P 是一個基於 [js-libp2p](https://github.com/libp2p/js-libp2p) 與 Electron 的桌面客戶端，解決一個幾乎人人都有過的難題：**這個月用不完，下個月又不夠用**。
 
@@ -53,7 +53,7 @@ ModelBus-P2P 是一個基於 [js-libp2p](https://github.com/libp2p/js-libp2p) �
 
 ---
 
-## 核心特色
+## 核心特色 <a id="features"></a>
 
 | 特色 | 說明 |
 |---|---|
@@ -68,13 +68,22 @@ ModelBus-P2P 是一個基於 [js-libp2p](https://github.com/libp2p/js-libp2p) �
 
 ---
 
-## 介面一覽
+## 介面一覽 <a id="screenshots"></a>
 
-首頁、模型、錢包、日誌、設定共 5 個視圖。完整截圖位於 [docs/image/](../docs/image/) 目錄。
+<p align="center"><img src="../docs/image/home.png" alt="Home / 首页" width="640"/></p>
+
+<p align="center"><img src="../docs/image/model.png" alt="Models / 模型" width="640"/></p>
+
+<p align="center"><img src="../docs/image/wallet.png" alt="Wallet / 钱包" width="640"/></p>
+
+<p align="center"><img src="../docs/image/log.png" alt="Logs / 日志" width="640"/></p>
+
+<p align="center"><img src="../docs/image/setting.png" alt="Settings / 设置" width="640"/></p>
+
 
 ---
 
-## 架構總覽
+## 架構總覽 <a id="architecture"></a>
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -120,7 +129,7 @@ curl http://127.0.0.1:18100/v1/chat/completions \
 
 ---
 
-## 去中心化設計
+## 去中心化設計 <a id="decentralised"></a>
 
 應用程式二進位檔內硬編碼了 **4 個種子節點 peerId**（位於 `src/main/config/trusted-roots.ts`）。冷啟動流程：
 
@@ -142,7 +151,7 @@ curl http://127.0.0.1:18100/v1/chat/completions \
 
 ---
 
-## 節點公告格式（v2）
+## 節點公告格式（v2） <a id="schema"></a>
 
 請呼叫 `<https://modelbus.cc/api/v1/nodes>` 取得 `Array<NodeAnnouncement>`：
 
@@ -189,7 +198,7 @@ curl http://127.0.0.1:18100/v1/chat/completions \
 
 ---
 
-## 呼叫流程詳解
+## 呼叫流程詳解 <a id="flow"></a>
 
 **上線**（你 = Token 持有者）：設定 → Token 上線 → 選 provider、貼 API 金鑰、勾選模型 → `provision:set` → `ProvisionerService.register(config)` → `node.handle('/modelbus/inference/1.0.0', …)` → `events: 'provision:registered'`。
 
@@ -209,7 +218,7 @@ request.model = "openai/gpt-5"
 
 ---
 
-## 下載使用（即將開通）
+## 下載使用（即將開通） <a id="download"></a>
 
 > 📦 正式發行版（Windows / macOS / Linux 安裝套件，以及後續的行動端、Web SDK）尚在籌備中。
 
@@ -229,7 +238,7 @@ pnpm run package:linux # Linux AppImage
 
 ---
 
-## 快速開始
+## 快速開始 <a id="quickstart"></a>
 
 ```bash
 git clone https://github.com/your-org/modelbus-p2p.git
@@ -242,7 +251,7 @@ pnpm run dev
 
 ---
 
-## 路線圖
+## 路線圖 <a id="roadmap"></a>
 
 - ✅ v1：多 provider、官方冷啟動、信任根、P2P 轉發、22 語言、錢包雛形
 - 🔜 v2：信任鏈（trustChain）— 基於 Ed25519 簽名的鏈式邀請帳本

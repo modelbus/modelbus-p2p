@@ -27,20 +27,20 @@
 
 ## Περιεχόμενα
 
-- [Τι είναι](#-)
-- [Βασικές δυνατότητες](#-)
-- [Στιγμιότυπα](#)
-- [Αρχιτεκτονική](#)
-- [Αποκεντρωμένος σχεδιασμός](#-)
-- [Μορφή ανακοίνωσης κόμβου (v2)](#-v2)
-- [Ροή αιτήματος](#-)
-- [Λήψη και χρήση (σύντομα)](#-)
-- [Γρήγορη εκκίνηση](#-)
-- [Οδικός χάρτης](#-)
+- [Τι είναι](#what)
+- [Βασικές δυνατότητες](#features)
+- [Στιγμιότυπα](#screenshots)
+- [Αρχιτεκτονική](#architecture)
+- [Αποκεντρωμένος σχεδιασμός](#decentralised)
+- [Μορφή ανακοίνωσης κόμβου (v2)](#schema)
+- [Ροή αιτήματος](#flow)
+- [Λήψη και χρήση (σύντομα)](#download)
+- [Γρήγορη εκκίνηση](#quickstart)
+- [Οδικός χάρτης](#roadmap)
 
 ---
 
-## Τι είναι
+## Τι είναι <a id="what"></a>
 
 Το ModelBus-P2P είναι ένας επιτραπέζιος πελάτης χτισμένος σε [js-libp2p](https://github.com/libp2p/js-libp2p) και Electron. Λύνει ένα πρόβλημα που όλοι γνωρίζουμε: **αυτόν τον μήνα περισσεύει, τον επόμενο δεν φτάνει.**
 
@@ -53,7 +53,7 @@
 
 ---
 
-## Βασικές δυνατότητες
+## Βασικές δυνατότητες <a id="features"></a>
 
 | Δυνατότητα | Σημειώσεις |
 |---|---|
@@ -68,13 +68,22 @@
 
 ---
 
-## Στιγμιότυπα
+## Στιγμιότυπα <a id="screenshots"></a>
 
-Αρχική, Μοντέλα, Πορτοφόλι, Αρχεία, Ρυθμίσεις — πέντε οθόνες συνολικά. Στιγμιότυπα πλήρους ανάλυσης στο [docs/image/](../docs/image/).
+<p align="center"><img src="../docs/image/home.png" alt="Home / 首页" width="640"/></p>
+
+<p align="center"><img src="../docs/image/model.png" alt="Models / 模型" width="640"/></p>
+
+<p align="center"><img src="../docs/image/wallet.png" alt="Wallet / 钱包" width="640"/></p>
+
+<p align="center"><img src="../docs/image/log.png" alt="Logs / 日志" width="640"/></p>
+
+<p align="center"><img src="../docs/image/setting.png" alt="Settings / 设置" width="640"/></p>
+
 
 ---
 
-## Αρχιτεκτονική
+## Αρχιτεκτονική <a id="architecture"></a>
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -120,7 +129,7 @@ curl http://127.0.0.1:18100/v1/chat/completions \
 
 ---
 
-## Αποκεντρωμένος σχεδιασμός
+## Αποκεντρωμένος σχεδιασμός <a id="decentralised"></a>
 
 Τέσσερα seed peer-id είναι ενσωματωμένα στο δυαδικό (`src/main/config/trusted-roots.ts`). Ροή cold start:
 
@@ -142,7 +151,7 @@ curl http://127.0.0.1:18100/v1/chat/completions \
 
 ---
 
-## Μορφή ανακοίνωσης κόμβου (v2)
+## Μορφή ανακοίνωσης κόμβου (v2) <a id="schema"></a>
 
 Αίτημα: `<https://modelbus.cc/api/v1/nodes>` επιστρέφει `Array<NodeAnnouncement>`:
 
@@ -191,7 +200,7 @@ curl http://127.0.0.1:18100/v1/chat/completions \
 
 ---
 
-## Ροή αιτήματος
+## Ροή αιτήματος <a id="flow"></a>
 
 **Provision** (εσείς = κάτοχος Token): Ρυθμίσεις → Κοινή χρήση Token → επιλέξτε πάροχο, επικολλήστε το κλειδί API, σημειώστε μοντέλα → `provision:set` → `ProvisionerService.register(config)` → `node.handle('/modelbus/inference/1.0.0', …)` → `events: 'provision:registered'`.
 
@@ -211,7 +220,7 @@ request.model = "openai/gpt-5"
 
 ---
 
-## Λήψη και χρήση (σύντομα)
+## Λήψη και χρήση (σύντομα) <a id="download"></a>
 
 > 📦 Οι επίσημοι εγκαταστάτες (πακέτα Windows / macOS / Linux, και αργότερα mobile και Web SDK) ετοιμάζονται.
 
@@ -231,7 +240,7 @@ pnpm run package:linux # AppImage για Linux
 
 ---
 
-## Γρήγορη εκκίνηση
+## Γρήγορη εκκίνηση <a id="quickstart"></a>
 
 ```bash
 git clone https://github.com/your-org/modelbus-p2p.git
@@ -244,7 +253,7 @@ pnpm run dev
 
 ---
 
-## Οδικός χάρτης
+## Οδικός χάρτης <a id="roadmap"></a>
 
 - ✅ v1: πολλαπλοί πάροχοι, επίσημο cold start, άγκυρες εμπιστοσύνης, P2P προώθηση, 22 γλώσσες, σκελετός Πορτοφολιού
 - 🔜 v2: αλυσίδα εμπιστοσύνης (trustChain) — βιβλίο προσκλήσεων με υπογραφή Ed25519

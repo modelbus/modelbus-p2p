@@ -27,20 +27,20 @@
 
 ## Sommaire
 
-- [De quoi s'agit-il](#de-quoi-sagit-il)
-- [Fonctionnalités principales](#fonctionnalits-principales)
-- [Captures d'écran](#captures-dcran)
+- [De quoi s'agit-il](#what)
+- [Fonctionnalités principales](#features)
+- [Captures d'écran](#screenshots)
 - [Architecture](#architecture)
-- [Conception décentralisée](#conception-dcentralise)
-- [Schéma d'annonce de nœud (v2)](#schma-dannonce-de-nud-v2)
-- [Déroulement d'une requête](#droulement-dune-requte)
-- [Téléchargement et utilisation (bientôt disponible)](#tlchargement-et-utilisation-bientt-disponible)
-- [Démarrage rapide](#dmarrage-rapide)
-- [Feuille de route](#feuille-de-route)
+- [Conception décentralisée](#decentralised)
+- [Schéma d'annonce de nœud (v2)](#schema)
+- [Déroulement d'une requête](#flow)
+- [Téléchargement et utilisation (bientôt disponible)](#download)
+- [Démarrage rapide](#quickstart)
+- [Feuille de route](#roadmap)
 
 ---
 
-## De quoi s'agit-il
+## De quoi s'agit-il <a id="what"></a>
 
 ModelBus-P2P est un client de bureau construit sur [js-libp2p](https://github.com/libp2p/js-libp2p) et Electron. Il résout un problème que presque tout le monde connaît : **ce mois-ci il me reste du quota, le mois prochain il m'en manquera**.
 
@@ -53,7 +53,7 @@ ModelBus-P2P est un client de bureau construit sur [js-libp2p](https://github.co
 
 ---
 
-## Fonctionnalités principales
+## Fonctionnalités principales <a id="features"></a>
 
 | Fonctionnalité | Notes |
 |---|---|
@@ -68,13 +68,22 @@ ModelBus-P2P est un client de bureau construit sur [js-libp2p](https://github.co
 
 ---
 
-## Captures d'écran
+## Captures d'écran <a id="screenshots"></a>
 
-Accueil, Modèles, Wallet, Journaux, Paramètres — cinq vues au total. Les captures pleine résolution sont dans [docs/image/](../docs/image/).
+<p align="center"><img src="../docs/image/home.png" alt="Home / 首页" width="640"/></p>
+
+<p align="center"><img src="../docs/image/model.png" alt="Models / 模型" width="640"/></p>
+
+<p align="center"><img src="../docs/image/wallet.png" alt="Wallet / 钱包" width="640"/></p>
+
+<p align="center"><img src="../docs/image/log.png" alt="Logs / 日志" width="640"/></p>
+
+<p align="center"><img src="../docs/image/setting.png" alt="Settings / 设置" width="640"/></p>
+
 
 ---
 
-## Architecture
+## Architecture <a id="architecture"></a>
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -120,7 +129,7 @@ curl http://127.0.0.1:18100/v1/chat/completions \
 
 ---
 
-## Conception décentralisée
+## Conception décentralisée <a id="decentralised"></a>
 
 Quatre peerIds graines sont gravés dans le binaire (`src/main/config/trusted-roots.ts`). Flux de démarrage à froid :
 
@@ -142,7 +151,7 @@ L'endpoint officiel est conservé **durablement** comme canal de secours, même 
 
 ---
 
-## Schéma d'annonce de nœud (v2)
+## Schéma d'annonce de nœud (v2) <a id="schema"></a>
 
 Requête : `<https://modelbus.cc/api/v1/nodes>` renvoie `Array<NodeAnnouncement>` :
 
@@ -191,7 +200,7 @@ Les 4 dernières entrées de `mock/nodes.json` sont les pairs graines de confian
 
 ---
 
-## Déroulement d'une requête
+## Déroulement d'une requête <a id="flow"></a>
 
 **Provision** (vous = détenteur du Token) : Paramètres → Partage de Token → choisissez un fournisseur, collez la clé API, cochez les modèles → `provision:set` → `ProvisionerService.register(config)` → `node.handle('/modelbus/inference/1.0.0', …)` → `events: 'provision:registered'`.
 
@@ -211,7 +220,7 @@ request.model = "openai/gpt-5"
 
 ---
 
-## Téléchargement et utilisation (bientôt disponible)
+## Téléchargement et utilisation (bientôt disponible) <a id="download"></a>
 
 > 📦 Les installateurs officiels (Windows / macOS / Linux, et plus tard mobile et Web SDK) sont en cours de préparation.
 
@@ -231,7 +240,7 @@ Les artefacts atterrissent dans `release/`.
 
 ---
 
-## Démarrage rapide
+## Démarrage rapide <a id="quickstart"></a>
 
 ```bash
 git clone https://github.com/your-org/modelbus-p2p.git
@@ -244,7 +253,7 @@ Au premier lancement l'application pointe par défaut sur `mock/nodes.json`, don
 
 ---
 
-## Feuille de route
+## Feuille de route <a id="roadmap"></a>
 
 - ✅ v1 : multi-fournisseur, démarrage à froid officiel, racines de confiance, relayage P2P, 22 langues, ébauche de Wallet
 - 🔜 v2 : chaîne de confiance (trustChain) — registre d'invitations signé Ed25519

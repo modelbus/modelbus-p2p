@@ -27,20 +27,20 @@
 
 ## Contents
 
-- [What is it](#what-is-it)
-- [Core features](#core-features)
+- [What is it](#what)
+- [Core features](#features)
 - [Screenshots](#screenshots)
 - [Architecture](#architecture)
-- [Decentralised design](#decentralised-design)
-- [Node announcement schema (v2)](#node-announcement-schema-v2)
-- [Request flow](#request-flow)
-- [Download & Use (coming soon)](#download-use-coming-soon)
-- [Quick start](#quick-start)
+- [Decentralised design](#decentralised)
+- [Node announcement schema (v2)](#schema)
+- [Request flow](#flow)
+- [Download & Use (coming soon)](#download)
+- [Quick start](#quickstart)
 - [Roadmap](#roadmap)
 
 ---
 
-## What is it
+## What is it <a id="what"></a>
 
 ModelBus-P2P is a desktop client built on [js-libp2p](https://github.com/libp2p/js-libp2p) and Electron. It solves a problem almost everyone has: **this month I have unused quota, next month I will run out.**
 
@@ -53,7 +53,7 @@ ModelBus-P2P is a desktop client built on [js-libp2p](https://github.com/libp2p/
 
 ---
 
-## Core features
+## Core features <a id="features"></a>
 
 | Feature | Notes |
 |---|---|
@@ -68,13 +68,22 @@ ModelBus-P2P is a desktop client built on [js-libp2p](https://github.com/libp2p/
 
 ---
 
-## Screenshots
+## Screenshots <a id="screenshots"></a>
 
-Home, Models, Wallet, Logs, Settings — five views in total. Full-resolution screenshots live under [docs/image/](../docs/image/).
+<p align="center"><img src="../docs/image/home.png" alt="Home / 首页" width="640"/></p>
+
+<p align="center"><img src="../docs/image/model.png" alt="Models / 模型" width="640"/></p>
+
+<p align="center"><img src="../docs/image/wallet.png" alt="Wallet / 钱包" width="640"/></p>
+
+<p align="center"><img src="../docs/image/log.png" alt="Logs / 日志" width="640"/></p>
+
+<p align="center"><img src="../docs/image/setting.png" alt="Settings / 设置" width="640"/></p>
+
 
 ---
 
-## Architecture
+## Architecture <a id="architecture"></a>
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -120,7 +129,7 @@ curl http://127.0.0.1:18100/v1/chat/completions \
 
 ---
 
-## Decentralised design
+## Decentralised design <a id="decentralised"></a>
 
 Four seed peerIds are baked into the binary (`src/main/config/trusted-roots.ts`). Cold-start flow:
 
@@ -142,7 +151,7 @@ The official endpoint is kept **forever** as the rescue channel even when the P2
 
 ---
 
-## Node announcement schema (v2)
+## Node announcement schema (v2) <a id="schema"></a>
 
 `<https://modelbus.cc/api/v1/nodes>` returns `Array<NodeAnnouncement>`:
 
@@ -189,7 +198,7 @@ The trailing 4 entries in `mock/nodes.json` are the trusted seed peers and share
 
 ---
 
-## Request flow
+## Request flow <a id="flow"></a>
 
 **Provision** (you = Token holder): Settings → Share Tokens → pick provider, paste API key, tick models → `provision:set` → `ProvisionerService.register(config)` → `node.handle('/modelbus/inference/1.0.0', …)` → `events: 'provision:registered'`.
 
@@ -209,7 +218,7 @@ request.model = "openai/gpt-5"
 
 ---
 
-## Download & Use (coming soon)
+## Download & Use (coming soon) <a id="download"></a>
 
 > 📦 Official installers (Windows / macOS / Linux, plus mobile and Web SDK later) are still being prepared.
 
@@ -229,7 +238,7 @@ Output lands in `release/`.
 
 ---
 
-## Quick start
+## Quick start <a id="quickstart"></a>
 
 ```bash
 git clone https://github.com/your-org/modelbus-p2p.git
@@ -242,7 +251,7 @@ On first launch the app defaults to `mock/nodes.json`, so the full flow works wi
 
 ---
 
-## Roadmap
+## Roadmap <a id="roadmap"></a>
 
 - ✅ v1: multi-provider, official cold start, trust roots, P2P forwarding, 22 languages, wallet scaffolding
 - 🔜 v2: trust chain (Ed25519-signed invite ledger)

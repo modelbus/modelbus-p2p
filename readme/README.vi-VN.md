@@ -27,20 +27,20 @@
 
 ## Mục lục
 
-- [Đây là gì](#y-l-g)
-- [Tính năng chính](#tnh-nng-chnh)
-- [Ảnh chụp màn hình](#nh-chp-mn-hnh)
-- [Kiến trúc](#kin-trc)
-- [Thiết kế phi tập trung](#thit-k-phi-tp-trung)
-- [Định dạng thông báo nút (v2)](#nh-dng-thng-bo-nt-v2)
-- [Luồng yêu cầu](#lung-yu-cu)
-- [Tải về và sử dụng (sắp ra mắt)](#ti-v-v-s-dng-sp-ra-mt)
-- [Bắt đầu nhanh](#bt-u-nhanh)
-- [Lộ trình](#l-trnh)
+- [Đây là gì](#what)
+- [Tính năng chính](#features)
+- [Ảnh chụp màn hình](#screenshots)
+- [Kiến trúc](#architecture)
+- [Thiết kế phi tập trung](#decentralised)
+- [Định dạng thông báo nút (v2)](#schema)
+- [Luồng yêu cầu](#flow)
+- [Tải về và sử dụng (sắp ra mắt)](#download)
+- [Bắt đầu nhanh](#quickstart)
+- [Lộ trình](#roadmap)
 
 ---
 
-## Đây là gì
+## Đây là gì <a id="what"></a>
 
 ModelBus-P2P là một ứng dụng máy tính để bàn được xây dựng trên [js-libp2p](https://github.com/libp2p/js-libp2p) và Electron. Nó giải quyết một vấn đề mà hầu như ai cũng gặp: **tháng này thừa, tháng sau thiếu.**
 
@@ -53,7 +53,7 @@ ModelBus-P2P là một ứng dụng máy tính để bàn được xây dựng t
 
 ---
 
-## Tính năng chính
+## Tính năng chính <a id="features"></a>
 
 | Tính năng | Ghi chú |
 |---|---|
@@ -68,13 +68,22 @@ ModelBus-P2P là một ứng dụng máy tính để bàn được xây dựng t
 
 ---
 
-## Ảnh chụp màn hình
+## Ảnh chụp màn hình <a id="screenshots"></a>
 
-Trang chính, Mô hình, Ví, Nhật ký, Cài đặt — tổng cộng năm màn hình. Ảnh độ phân giải đầy đủ nằm trong [docs/image/](../docs/image/).
+<p align="center"><img src="../docs/image/home.png" alt="Home / 首页" width="640"/></p>
+
+<p align="center"><img src="../docs/image/model.png" alt="Models / 模型" width="640"/></p>
+
+<p align="center"><img src="../docs/image/wallet.png" alt="Wallet / 钱包" width="640"/></p>
+
+<p align="center"><img src="../docs/image/log.png" alt="Logs / 日志" width="640"/></p>
+
+<p align="center"><img src="../docs/image/setting.png" alt="Settings / 设置" width="640"/></p>
+
 
 ---
 
-## Kiến trúc
+## Kiến trúc <a id="architecture"></a>
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -120,7 +129,7 @@ curl http://127.0.0.1:18100/v1/chat/completions \
 
 ---
 
-## Thiết kế phi tập trung
+## Thiết kế phi tập trung <a id="decentralised"></a>
 
 Bốn peerId seed được nhúng vào tệp nhị phân (`src/main/config/trusted-roots.ts`). Luồng khởi động nguội:
 
@@ -142,7 +151,7 @@ Endpoint chính thức được giữ **mãi mãi** làm kênh cứu hộ, ngay 
 
 ---
 
-## Định dạng thông báo nút (v2)
+## Định dạng thông báo nút (v2) <a id="schema"></a>
 
 Yêu cầu: `<https://modelbus.cc/api/v1/nodes>` trả về `Array<NodeAnnouncement>`:
 
@@ -191,7 +200,7 @@ Các trường:
 
 ---
 
-## Luồng yêu cầu
+## Luồng yêu cầu <a id="flow"></a>
 
 **Provision** (bạn = người giữ Token): Cài đặt → Chia sẻ Token → chọn nhà cung cấp, dán API key, đánh dấu mô hình → `provision:set` → `ProvisionerService.register(config)` → `node.handle('/modelbus/inference/1.0.0', …)` → `events: 'provision:registered'`.
 
@@ -211,7 +220,7 @@ request.model = "openai/gpt-5"
 
 ---
 
-## Tải về và sử dụng (sắp ra mắt)
+## Tải về và sử dụng (sắp ra mắt) <a id="download"></a>
 
 > 📦 Bộ cài chính thức (gói Windows / macOS / Linux, và sau đó mobile và Web SDK) đang được chuẩn bị.
 
@@ -231,7 +240,7 @@ Sản phẩm nằm trong `release/`.
 
 ---
 
-## Bắt đầu nhanh
+## Bắt đầu nhanh <a id="quickstart"></a>
 
 ```bash
 git clone https://github.com/your-org/modelbus-p2p.git
@@ -244,7 +253,7 @@ Lần chạy đầu tiên ứng dụng mặc định trỏ tới `mock/nodes.jso
 
 ---
 
-## Lộ trình
+## Lộ trình <a id="roadmap"></a>
 
 - ✅ v1: đa nhà cung cấp, khởi động nguội chính thức, neo tin cậy, chuyển tiếp P2P, 22 ngôn ngữ, khung Ví
 - 🔜 v2: chuỗi tin cậy (trustChain) — sổ mời ký bằng Ed25519

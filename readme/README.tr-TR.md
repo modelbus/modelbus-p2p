@@ -27,20 +27,20 @@
 
 ## İçindekiler
 
-- [Nedir](#nedir)
-- [Temel özellikler](#temel-zellikler)
-- [Ekran görüntüleri](#ekran-grntleri)
-- [Mimari](#mimari)
-- [Merkeziyetsiz tasarım](#merkeziyetsiz-tasarm)
-- [Düğüm duyuru biçimi (v2)](#dm-duyuru-biimi-v2)
-- [İstek akışı](#istek-ak)
-- [İndirme ve kullanım (yakında)](#indirme-ve-kullanm-yaknda)
-- [Hızlı başlangıç](#hzl-balang)
-- [Yol haritası](#yol-haritas)
+- [Nedir](#what)
+- [Temel özellikler](#features)
+- [Ekran görüntüleri](#screenshots)
+- [Mimari](#architecture)
+- [Merkeziyetsiz tasarım](#decentralised)
+- [Düğüm duyuru biçimi (v2)](#schema)
+- [İstek akışı](#flow)
+- [İndirme ve kullanım (yakında)](#download)
+- [Hızlı başlangıç](#quickstart)
+- [Yol haritası](#roadmap)
 
 ---
 
-## Nedir
+## Nedir <a id="what"></a>
 
 ModelBus-P2P, [js-libp2p](https://github.com/libp2p/js-libp2p) ve Electron üzerine kurulu bir masaüstü istemcisidir. Neredeyse herkesin yaşadığı sorunu çözer: **bu ay artıyor, gelecek ay yetmiyor.**
 
@@ -53,7 +53,7 @@ ModelBus-P2P, [js-libp2p](https://github.com/libp2p/js-libp2p) ve Electron üzer
 
 ---
 
-## Temel özellikler
+## Temel özellikler <a id="features"></a>
 
 | Özellik | Notlar |
 |---|---|
@@ -68,13 +68,22 @@ ModelBus-P2P, [js-libp2p](https://github.com/libp2p/js-libp2p) ve Electron üzer
 
 ---
 
-## Ekran görüntüleri
+## Ekran görüntüleri <a id="screenshots"></a>
 
-Ana Sayfa, Modeller, Wallet, Günlükler, Ayarlar — toplam beş görünüm. Tam çözünürlüklü görüntüler [docs/image/](../docs/image/) altındadır.
+<p align="center"><img src="../docs/image/home.png" alt="Home / 首页" width="640"/></p>
+
+<p align="center"><img src="../docs/image/model.png" alt="Models / 模型" width="640"/></p>
+
+<p align="center"><img src="../docs/image/wallet.png" alt="Wallet / 钱包" width="640"/></p>
+
+<p align="center"><img src="../docs/image/log.png" alt="Logs / 日志" width="640"/></p>
+
+<p align="center"><img src="../docs/image/setting.png" alt="Settings / 设置" width="640"/></p>
+
 
 ---
 
-## Mimari
+## Mimari <a id="architecture"></a>
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -120,7 +129,7 @@ curl http://127.0.0.1:18100/v1/chat/completions \
 
 ---
 
-## Merkeziyetsiz tasarım
+## Merkeziyetsiz tasarım <a id="decentralised"></a>
 
 Dört tohum eş kimliği ikili dosyaya gömülüdür (`src/main/config/trusted-roots.ts`). Soğuk başlangıç akışı:
 
@@ -142,7 +151,7 @@ Resmi uç nokta, P2P ağı sağlıklı olsa bile **sonsuza dek** kurtarma kanal�
 
 ---
 
-## Düğüm duyuru biçimi (v2)
+## Düğüm duyuru biçimi (v2) <a id="schema"></a>
 
 İstek: `<https://modelbus.cc/api/v1/nodes>` `Array<NodeAnnouncement>` döndürür:
 
@@ -191,7 +200,7 @@ Alanlar:
 
 ---
 
-## İstek akışı
+## İstek akışı <a id="flow"></a>
 
 **Provision** (siz = Token sahibi): Ayarlar → Token paylaşımı → sağlayıcı seç, API anahtarını yapıştır, modelleri işaretle → `provision:set` → `ProvisionerService.register(config)` → `node.handle('/modelbus/inference/1.0.0', …)` → `events: 'provision:registered'`.
 
@@ -211,7 +220,7 @@ request.model = "openai/gpt-5"
 
 ---
 
-## İndirme ve kullanım (yakında)
+## İndirme ve kullanım (yakında) <a id="download"></a>
 
 > 📦 Resmi yükleyiciler (Windows / macOS / Linux paketleri, sonra mobil ve Web SDK) hazırlanıyor.
 
@@ -231,7 +240,7 @@ pnpm run package:linux # Linux AppImage
 
 ---
 
-## Hızlı başlangıç
+## Hızlı başlangıç <a id="quickstart"></a>
 
 ```bash
 git clone https://github.com/your-org/modelbus-p2p.git
@@ -244,7 +253,7 @@ pnpm run dev
 
 ---
 
-## Yol haritası
+## Yol haritası <a id="roadmap"></a>
 
 - ✅ v1: çoklu sağlayıcı, resmi soğuk başlangıç, güven çapaları, P2P iletimi, 22 dil, Wallet iskeleti
 - 🔜 v2: güven zinciri (trustChain) — Ed25519 imzalı davet defteri

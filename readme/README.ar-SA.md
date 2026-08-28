@@ -27,20 +27,20 @@
 
 ## المحتويات
 
-- [ما هو](#-)
-- [الميزات الأساسية](#-)
-- [لقطات الشاشة](#-)
-- [البنية](#)
-- [التصميم اللامركزي](#-)
-- [صيغة إعلان العقدة (v2)](#-v2)
-- [تدفق الطلب](#-)
-- [التحميل والاستخدام (قريباً)](#-)
-- [البدء السريع](#-)
-- [خارطة الطريق](#-)
+- [ما هو](#what)
+- [الميزات الأساسية](#features)
+- [لقطات الشاشة](#screenshots)
+- [البنية](#architecture)
+- [التصميم اللامركزي](#decentralised)
+- [صيغة إعلان العقدة (v2)](#schema)
+- [تدفق الطلب](#flow)
+- [التحميل والاستخدام (قريباً)](#download)
+- [البدء السريع](#quickstart)
+- [خارطة الطريق](#roadmap)
 
 ---
 
-## ما هو
+## ما هو <a id="what"></a>
 
 ModelBus-P2P هو عميل سطح مكتب مبني على [js-libp2p](https://github.com/libp2p/js-libp2p) و Electron. يحل مشكلة يعرفها الجميع تقريباً: **هذا الشهر فائض والشهر القادم نقص.**
 
@@ -53,7 +53,7 @@ ModelBus-P2P هو عميل سطح مكتب مبني على [js-libp2p](https://g
 
 ---
 
-## الميزات الأساسية
+## الميزات الأساسية <a id="features"></a>
 
 | الميزة | ملاحظات |
 |---|---|
@@ -68,13 +68,22 @@ ModelBus-P2P هو عميل سطح مكتب مبني على [js-libp2p](https://g
 
 ---
 
-## لقطات الشاشة
+## لقطات الشاشة <a id="screenshots"></a>
 
-الرئيسية، النماذج، المحفظة، السجلات، الإعدادات — خمس شاشات إجمالاً. لقطات بدقة كاملة في [docs/image/](../docs/image/).
+<p align="center"><img src="../docs/image/home.png" alt="Home / 首页" width="640"/></p>
+
+<p align="center"><img src="../docs/image/model.png" alt="Models / 模型" width="640"/></p>
+
+<p align="center"><img src="../docs/image/wallet.png" alt="Wallet / 钱包" width="640"/></p>
+
+<p align="center"><img src="../docs/image/log.png" alt="Logs / 日志" width="640"/></p>
+
+<p align="center"><img src="../docs/image/setting.png" alt="Settings / 设置" width="640"/></p>
+
 
 ---
 
-## البنية
+## البنية <a id="architecture"></a>
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -120,7 +129,7 @@ curl http://127.0.0.1:18100/v1/chat/completions \
 
 ---
 
-## التصميم اللامركزي
+## التصميم اللامركزي <a id="decentralised"></a>
 
 أربعة معرّفات عقد بذرية مدمجة في الثنائي (`src/main/config/trusted-roots.ts`). تدفق البدء البارد:
 
@@ -142,7 +151,7 @@ curl http://127.0.0.1:18100/v1/chat/completions \
 
 ---
 
-## صيغة إعلان العقدة (v2)
+## صيغة إعلان العقدة (v2) <a id="schema"></a>
 
 الطلب: `<https://modelbus.cc/api/v1/nodes>` يُرجع `Array<NodeAnnouncement>`:
 
@@ -191,7 +200,7 @@ curl http://127.0.0.1:18100/v1/chat/completions \
 
 ---
 
-## تدفق الطلب
+## تدفق الطلب <a id="flow"></a>
 
 **Provision** (أنت = حامل الرمز): الإعدادات → مشاركة الرمز → اختر المزود، الصق مفتاح API، حدّد النماذج → `provision:set` → `ProvisionerService.register(config)` → `node.handle('/modelbus/inference/1.0.0', …)` → `events: 'provision:registered'`.
 
@@ -211,7 +220,7 @@ request.model = "openai/gpt-5"
 
 ---
 
-## التحميل والاستخدام (قريباً)
+## التحميل والاستخدام (قريباً) <a id="download"></a>
 
 > 📦 المثبتات الرسمية (حزم Windows / macOS / Linux، ولاحقاً الموبايل و Web SDK) قيد التحضير.
 
@@ -231,7 +240,7 @@ pnpm run package:linux # AppImage لنظام Linux
 
 ---
 
-## البدء السريع
+## البدء السريع <a id="quickstart"></a>
 
 ```bash
 git clone https://github.com/your-org/modelbus-p2p.git
@@ -244,7 +253,7 @@ pnpm run dev
 
 ---
 
-## خارطة الطريق
+## خارطة الطريق <a id="roadmap"></a>
 
 - ✅ v1: متعدد المزودين، بدء بارد رسمي، مراسي ثقة، تمرير P2P، 22 لغة، هيكل المحفظة
 - 🔜 v2: سلسلة الثقة (trustChain) — دفتر دعوات موقّع Ed25519

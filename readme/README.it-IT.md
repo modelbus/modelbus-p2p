@@ -27,20 +27,20 @@
 
 ## Indice
 
-- [Cos'è](#cos)
-- [Funzionalità principali](#funzionalit-principali)
-- [Schermate](#schermate)
-- [Architettura](#architettura)
-- [Design decentralizzato](#design-decentralizzato)
-- [Schema annuncio nodo (v2)](#schema-annuncio-nodo-v2)
-- [Flusso di una richiesta](#flusso-di-una-richiesta)
-- [Download e uso (in arrivo)](#download-e-uso-in-arrivo)
-- [Avvio rapido](#avvio-rapido)
+- [Cos'è](#what)
+- [Funzionalità principali](#features)
+- [Schermate](#screenshots)
+- [Architettura](#architecture)
+- [Design decentralizzato](#decentralised)
+- [Schema annuncio nodo (v2)](#schema)
+- [Flusso di una richiesta](#flow)
+- [Download e uso (in arrivo)](#download)
+- [Avvio rapido](#quickstart)
 - [Roadmap](#roadmap)
 
 ---
 
-## Cos'è
+## Cos'è <a id="what"></a>
 
 ModelBus-P2P è un client desktop basato su [js-libp2p](https://github.com/libp2p/js-libp2p) ed Electron. Risolve un problema che quasi tutti conosciamo: **questo mese avanza, il prossimo non basta.**
 
@@ -53,7 +53,7 @@ ModelBus-P2P è un client desktop basato su [js-libp2p](https://github.com/libp2
 
 ---
 
-## Funzionalità principali
+## Funzionalità principali <a id="features"></a>
 
 | Funzionalità | Note |
 |---|---|
@@ -68,13 +68,22 @@ ModelBus-P2P è un client desktop basato su [js-libp2p](https://github.com/libp2
 
 ---
 
-## Schermate
+## Schermate <a id="screenshots"></a>
 
-Home, Modelli, Wallet, Log, Impostazioni: cinque viste in totale. Le schermate a risoluzione piena sono in [docs/image/](../docs/image/).
+<p align="center"><img src="../docs/image/home.png" alt="Home / 首页" width="640"/></p>
+
+<p align="center"><img src="../docs/image/model.png" alt="Models / 模型" width="640"/></p>
+
+<p align="center"><img src="../docs/image/wallet.png" alt="Wallet / 钱包" width="640"/></p>
+
+<p align="center"><img src="../docs/image/log.png" alt="Logs / 日志" width="640"/></p>
+
+<p align="center"><img src="../docs/image/setting.png" alt="Settings / 设置" width="640"/></p>
+
 
 ---
 
-## Architettura
+## Architettura <a id="architecture"></a>
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -120,7 +129,7 @@ curl http://127.0.0.1:18100/v1/chat/completions \
 
 ---
 
-## Design decentralizzato
+## Design decentralizzato <a id="decentralised"></a>
 
 Quattro peerId seed sono impressi nel binario (`src/main/config/trusted-roots.ts`). Flusso di cold-start:
 
@@ -142,7 +151,7 @@ L'endpoint ufficiale resta **per sempre** come canale di soccorso, anche quando 
 
 ---
 
-## Schema annuncio nodo (v2)
+## Schema annuncio nodo (v2) <a id="schema"></a>
 
 Richiesta: `<https://modelbus.cc/api/v1/nodes>` restituisce `Array<NodeAnnouncement>`:
 
@@ -191,7 +200,7 @@ Le ultime 4 voci di `mock/nodes.json` sono i peer seed fidati; i loro peerId coi
 
 ---
 
-## Flusso di una richiesta
+## Flusso di una richiesta <a id="flow"></a>
 
 **Provision** (tu = detentore del Token): Impostazioni → Condivisione Token → scegli provider, incolla la chiave API, seleziona i modelli → `provision:set` → `ProvisionerService.register(config)` → `node.handle('/modelbus/inference/1.0.0', …)` → `events: 'provision:registered'`.
 
@@ -211,7 +220,7 @@ request.model = "openai/gpt-5"
 
 ---
 
-## Download e uso (in arrivo)
+## Download e uso (in arrivo) <a id="download"></a>
 
 > 📦 Gli installer ufficiali (pacchetti Windows / macOS / Linux, e in seguito mobile e Web SDK) sono attualmente in preparazione.
 
@@ -231,7 +240,7 @@ Gli artefatti finiscono in `release/`.
 
 ---
 
-## Avvio rapido
+## Avvio rapido <a id="quickstart"></a>
 
 ```bash
 git clone https://github.com/your-org/modelbus-p2p.git
@@ -244,7 +253,7 @@ Al primo avvio l'app punta di default a `mock/nodes.json`, quindi l'intero fluss
 
 ---
 
-## Roadmap
+## Roadmap <a id="roadmap"></a>
 
 - ✅ v1: multi-provider, cold-start ufficiale, radici di fiducia, inoltro P2P, 22 lingue, scheletro del Wallet
 - 🔜 v2: catena di fiducia (trustChain) — registro inviti firmato Ed25519

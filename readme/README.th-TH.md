@@ -27,20 +27,20 @@
 
 ## สารบัญ
 
-- [คืออะไร](#)
-- [คุณสมบัติหลัก](#)
-- [ภาพหน้าจอ](#)
-- [สถาปัตยกรรม](#)
-- [การออกแบบแบบกระจายศูนย์](#)
-- [รูปแบบการประกาศโหนด (v2)](#-v2)
-- [ขั้นตอนคำขอ](#)
-- [ดาวน์โหลดและใช้งาน (เร็ว ๆ นี้)](#-)
-- [เริ่มต้นอย่างรวดเร็ว](#)
-- [แผนงาน](#)
+- [คืออะไร](#what)
+- [คุณสมบัติหลัก](#features)
+- [ภาพหน้าจอ](#screenshots)
+- [สถาปัตยกรรม](#architecture)
+- [การออกแบบแบบกระจายศูนย์](#decentralised)
+- [รูปแบบการประกาศโหนด (v2)](#schema)
+- [ขั้นตอนคำขอ](#flow)
+- [ดาวน์โหลดและใช้งาน (เร็ว ๆ นี้)](#download)
+- [เริ่มต้นอย่างรวดเร็ว](#quickstart)
+- [แผนงาน](#roadmap)
 
 ---
 
-## คืออะไร
+## คืออะไร <a id="what"></a>
 
 ModelBus-P2P เป็นไคลเอนต์เดสก์ท็อปที่สร้างจาก [js-libp2p](https://github.com/libp2p/js-libp2p) และ Electron แก้ปัญหาที่แทบทุกคนรู้จัก: **เดือนนี้เหลือ เดือนหน้าไม่พอ**
 
@@ -53,7 +53,7 @@ ModelBus-P2P เป็นไคลเอนต์เดสก์ท็อปท�
 
 ---
 
-## คุณสมบัติหลัก
+## คุณสมบัติหลัก <a id="features"></a>
 
 | คุณสมบัติ | หมายเหตุ |
 |---|---|
@@ -68,13 +68,22 @@ ModelBus-P2P เป็นไคลเอนต์เดสก์ท็อปท�
 
 ---
 
-## ภาพหน้าจอ
+## ภาพหน้าจอ <a id="screenshots"></a>
 
-หน้าแรก, โมเดล, กระเป๋าเงิน, บันทึก, การตั้งค่า — รวม 5 มุมมอง ภาพหน้าจอความละเอียดเต็มอยู่ใน [docs/image/](../docs/image/)
+<p align="center"><img src="../docs/image/home.png" alt="Home / 首页" width="640"/></p>
+
+<p align="center"><img src="../docs/image/model.png" alt="Models / 模型" width="640"/></p>
+
+<p align="center"><img src="../docs/image/wallet.png" alt="Wallet / 钱包" width="640"/></p>
+
+<p align="center"><img src="../docs/image/log.png" alt="Logs / 日志" width="640"/></p>
+
+<p align="center"><img src="../docs/image/setting.png" alt="Settings / 设置" width="640"/></p>
+
 
 ---
 
-## สถาปัตยกรรม
+## สถาปัตยกรรม <a id="architecture"></a>
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -120,7 +129,7 @@ curl http://127.0.0.1:18100/v1/chat/completions \
 
 ---
 
-## การออกแบบแบบกระจายศูนย์
+## การออกแบบแบบกระจายศูนย์ <a id="decentralised"></a>
 
 peerId seed 4 ตัวถูกฝังในไบนารี (`src/main/config/trusted-roots.ts`) ขั้นตอนการเริ่มต้นเร็ว:
 
@@ -142,7 +151,7 @@ endpooint ทางการจะคงอยู่ **ตลอดไป** เ�
 
 ---
 
-## รูปแบบการประกาศโหนด (v2)
+## รูปแบบการประกาศโหนด (v2) <a id="schema"></a>
 
 คำขอ: `<https://modelbus.cc/api/v1/nodes>` คืนค่า `Array<NodeAnnouncement>`:
 
@@ -191,7 +200,7 @@ endpooint ทางการจะคงอยู่ **ตลอดไป** เ�
 
 ---
 
-## ขั้นตอนคำขอ
+## ขั้นตอนคำขอ <a id="flow"></a>
 
 **Provision** (คุณ = ผู้ถือ Token): การตั้งค่า → แชร์ Token → เลือกผู้ให้บริการ วาง API Key ทำเครื่องหมายโมเดล → `provision:set` → `ProvisionerService.register(config)` → `node.handle('/modelbus/inference/1.0.0', …)` → `events: 'provision:registered'`
 
@@ -211,7 +220,7 @@ request.model = "openai/gpt-5"
 
 ---
 
-## ดาวน์โหลดและใช้งาน (เร็ว ๆ นี้)
+## ดาวน์โหลดและใช้งาน (เร็ว ๆ นี้) <a id="download"></a>
 
 > 📦 ตัวติดตั้งอย่างเป็นทางการ (แพ็กเกจ Windows / macOS / Linux และต่อมามือถือและ Web SDK) กำลังเตรียมการ
 
@@ -231,7 +240,7 @@ pnpm run package:linux # AppImage สำหรับ Linux
 
 ---
 
-## เริ่มต้นอย่างรวดเร็ว
+## เริ่มต้นอย่างรวดเร็ว <a id="quickstart"></a>
 
 ```bash
 git clone https://github.com/your-org/modelbus-p2p.git
@@ -244,7 +253,7 @@ pnpm run dev
 
 ---
 
-## แผนงาน
+## แผนงาน <a id="roadmap"></a>
 
 - ✅ v1: หลายผู้ให้บริการ, เริ่มต้นเร็วอย่างเป็นทางการ, จุดยึดความไว้วางใจ, ส่งต่อ P2P, 22 ภาษา, โครงกระเป๋าเงิน
 - 🔜 v2: ห่วงโซ่ความไว้วางใจ (trustChain) — สมุดเชิญที่ลงนามด้วย Ed25519

@@ -27,20 +27,20 @@
 
 ## Зміст
 
-- [Що це таке](#-)
-- [Основні можливості](#-)
-- [Скріншоти](#)
-- [Архітектура](#)
-- [Децентралізований дизайн](#-)
-- [Формат оголошення вузла (v2)](#-v2)
-- [Потік запиту](#-)
-- [Завантаження та використання (скоро)](#-)
-- [Швидкий старт](#-)
-- [Дорожня карта](#-)
+- [Що це таке](#what)
+- [Основні можливості](#features)
+- [Скріншоти](#screenshots)
+- [Архітектура](#architecture)
+- [Децентралізований дизайн](#decentralised)
+- [Формат оголошення вузла (v2)](#schema)
+- [Потік запиту](#flow)
+- [Завантаження та використання (скоро)](#download)
+- [Швидкий старт](#quickstart)
+- [Дорожня карта](#roadmap)
 
 ---
 
-## Що це таке
+## Що це таке <a id="what"></a>
 
 ModelBus-P2P — це настільний клієнт на базі [js-libp2p](https://github.com/libp2p/js-libp2p) та Electron. Він вирішує проблему, знайому майже кожному: **цього місяця залишається, наступного не вистачає.**
 
@@ -53,7 +53,7 @@ ModelBus-P2P — це настільний клієнт на базі [js-libp2p
 
 ---
 
-## Основні можливості
+## Основні можливості <a id="features"></a>
 
 | Функція | Примітки |
 |---|---|
@@ -68,13 +68,22 @@ ModelBus-P2P — це настільний клієнт на базі [js-libp2p
 
 ---
 
-## Скріншоти
+## Скріншоти <a id="screenshots"></a>
 
-Головна, Моделі, Гаманець, Журнали, Налаштування — загалом п'ять видів. Скріншоти в повній роздільності в [docs/image/](../docs/image/).
+<p align="center"><img src="../docs/image/home.png" alt="Home / 首页" width="640"/></p>
+
+<p align="center"><img src="../docs/image/model.png" alt="Models / 模型" width="640"/></p>
+
+<p align="center"><img src="../docs/image/wallet.png" alt="Wallet / 钱包" width="640"/></p>
+
+<p align="center"><img src="../docs/image/log.png" alt="Logs / 日志" width="640"/></p>
+
+<p align="center"><img src="../docs/image/setting.png" alt="Settings / 设置" width="640"/></p>
+
 
 ---
 
-## Архітектура
+## Архітектура <a id="architecture"></a>
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -120,7 +129,7 @@ curl http://127.0.0.1:18100/v1/chat/completions \
 
 ---
 
-## Децентралізований дизайн
+## Децентралізований дизайн <a id="decentralised"></a>
 
 Чотири ID вузлів-сидів вшиті в бінарник (`src/main/config/trusted-roots.ts`). Потік холодного старту:
 
@@ -142,7 +151,7 @@ curl http://127.0.0.1:18100/v1/chat/completions \
 
 ---
 
-## Формат оголошення вузла (v2)
+## Формат оголошення вузла (v2) <a id="schema"></a>
 
 Запит: `<https://modelbus.cc/api/v1/nodes>` повертає `Array<NodeAnnouncement>`:
 
@@ -191,7 +200,7 @@ curl http://127.0.0.1:18100/v1/chat/completions \
 
 ---
 
-## Потік запиту
+## Потік запиту <a id="flow"></a>
 
 **Provision** (ви = власник токена): Налаштування → Поділитися токеном → виберіть провайдера, вставте API-ключ, позначте моделі → `provision:set` → `ProvisionerService.register(config)` → `node.handle('/modelbus/inference/1.0.0', …)` → `events: 'provision:registered'`.
 
@@ -211,7 +220,7 @@ request.model = "openai/gpt-5"
 
 ---
 
-## Завантаження та використання (скоро)
+## Завантаження та використання (скоро) <a id="download"></a>
 
 > 📦 Офіційні інсталятори (пакети Windows / macOS / Linux, а пізніше мобільний і Web SDK) зараз готуються.
 
@@ -231,7 +240,7 @@ pnpm run package:linux # AppImage для Linux
 
 ---
 
-## Швидкий старт
+## Швидкий старт <a id="quickstart"></a>
 
 ```bash
 git clone https://github.com/your-org/modelbus-p2p.git
@@ -244,7 +253,7 @@ pnpm run dev
 
 ---
 
-## Дорожня карта
+## Дорожня карта <a id="roadmap"></a>
 
 - ✅ v1: мульти-провайдер, офіційний холодний старт, якорі довіри, P2P-пересилка, 22 мови, каркас гаманця
 - 🔜 v2: ланцюг довіри (trustChain) — реєстр запрошень із підписом Ed25519

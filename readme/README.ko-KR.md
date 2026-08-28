@@ -27,20 +27,20 @@
 
 ## 목차
 
-- [이것은 무엇인가](#-)
-- [핵심 기능](#-)
-- [화면 미리보기](#-)
-- [아키텍처](#)
-- [탈중앙 설계](#-)
-- [노드 공지 포맷 (v2)](#-v2)
-- [요청 흐름](#-)
-- [다운로드 및 사용 (출시 예정)](#-)
-- [빠른 시작](#-)
-- [로드맵](#)
+- [이것은 무엇인가](#what)
+- [핵심 기능](#features)
+- [화면 미리보기](#screenshots)
+- [아키텍처](#architecture)
+- [탈중앙 설계](#decentralised)
+- [노드 공지 포맷 (v2)](#schema)
+- [요청 흐름](#flow)
+- [다운로드 및 사용 (출시 예정)](#download)
+- [빠른 시작](#quickstart)
+- [로드맵](#roadmap)
 
 ---
 
-## 이것은 무엇인가
+## 이것은 무엇인가 <a id="what"></a>
 
 ModelBus-P2P는 [js-libp2p](https://github.com/libp2p/js-libp2p)와 Electron 기반의 데스크톱 클라이언트로, 누구나 한 번쯤 겪는 **이번 달엔 남고 다음 달엔 부족한** 문제를 해결합니다.
 
@@ -53,7 +53,7 @@ ModelBus-P2P는 [js-libp2p](https://github.com/libp2p/js-libp2p)와 Electron 기
 
 ---
 
-## 핵심 기능
+## 핵심 기능 <a id="features"></a>
 
 | 기능 | 설명 |
 |---|---|
@@ -68,13 +68,22 @@ ModelBus-P2P는 [js-libp2p](https://github.com/libp2p/js-libp2p)와 Electron 기
 
 ---
 
-## 화면 미리보기
+## 화면 미리보기 <a id="screenshots"></a>
 
-홈, 모델, 월렛, 로그, 설정 — 총 5개 화면. 전체 해상도 스크린샷은 [docs/image/](../docs/image/) 폴더에 있습니다.
+<p align="center"><img src="../docs/image/home.png" alt="Home / 首页" width="640"/></p>
+
+<p align="center"><img src="../docs/image/model.png" alt="Models / 模型" width="640"/></p>
+
+<p align="center"><img src="../docs/image/wallet.png" alt="Wallet / 钱包" width="640"/></p>
+
+<p align="center"><img src="../docs/image/log.png" alt="Logs / 日志" width="640"/></p>
+
+<p align="center"><img src="../docs/image/setting.png" alt="Settings / 设置" width="640"/></p>
+
 
 ---
 
-## 아키텍처
+## 아키텍처 <a id="architecture"></a>
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -120,7 +129,7 @@ curl http://127.0.0.1:18100/v1/chat/completions \
 
 ---
 
-## 탈중앙 설계
+## 탈중앙 설계 <a id="decentralised"></a>
 
 바이너리에 시드 피어 ID 4개가 하드코드되어 있습니다(`src/main/config/trusted-roots.ts`). 콜드 스타트 흐름:
 
@@ -142,7 +151,7 @@ curl http://127.0.0.1:18100/v1/chat/completions \
 
 ---
 
-## 노드 공지 포맷 (v2)
+## 노드 공지 포맷 (v2) <a id="schema"></a>
 
 요청: `<https://modelbus.cc/api/v1/nodes>` 는 `Array<NodeAnnouncement>` 를 반환합니다:
 
@@ -191,7 +200,7 @@ curl http://127.0.0.1:18100/v1/chat/completions \
 
 ---
 
-## 요청 흐름
+## 요청 흐름 <a id="flow"></a>
 
 **Provision** (당신 = Token 보유자): 설정 → Token 공유 → 공급자 선택 → API 키 붙여넣기 → 모델 선택 → `provision:set` → `ProvisionerService.register(config)` → `node.handle('/modelbus/inference/1.0.0', …)` → `events: 'provision:registered'`.
 
@@ -211,7 +220,7 @@ request.model = "openai/gpt-5"
 
 ---
 
-## 다운로드 및 사용 (출시 예정)
+## 다운로드 및 사용 (출시 예정) <a id="download"></a>
 
 > 📦 공식 인스톨러(Windows / macOS / Linux 패키지, 추후 모바일·Web SDK)는 현재 준비 중입니다.
 
@@ -231,7 +240,7 @@ pnpm run package:linux # Linux AppImage
 
 ---
 
-## 빠른 시작
+## 빠른 시작 <a id="quickstart"></a>
 
 ```bash
 git clone https://github.com/your-org/modelbus-p2p.git
@@ -244,7 +253,7 @@ pnpm run dev
 
 ---
 
-## 로드맵
+## 로드맵 <a id="roadmap"></a>
 
 - ✅ v1: 다중 Provider, 공식 콜드 스타트, 신뢰 앵커, P2P 포워딩, 22개 언어, 월렛 골격
 - 🔜 v2: 신뢰 체인(trustChain) — Ed25519 서명 기반 초대 원장

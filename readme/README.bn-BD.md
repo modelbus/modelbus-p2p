@@ -27,20 +27,20 @@
 
 ## সূচি
 
-- [এটি কী](#-)
-- [মূল বৈশিষ্ট্য](#-)
-- [স্ক্রিনশট](#)
-- [আর্কিটেকচার](#)
-- [বিকেন্দ্রীভূত নকশা](#-)
-- [নোড ঘোষণা ফরম্যাট (v2)](#-v2)
-- [অনুরোধ প্রবাহ](#-)
-- [ডাউনলোড ও ব্যবহার (শীঘ্রই)](#-)
-- [দ্রুত শুরু](#-)
-- [রোডম্যাপ](#)
+- [এটি কী](#what)
+- [মূল বৈশিষ্ট্য](#features)
+- [স্ক্রিনশট](#screenshots)
+- [আর্কিটেকচার](#architecture)
+- [বিকেন্দ্রীভূত নকশা](#decentralised)
+- [নোড ঘোষণা ফরম্যাট (v2)](#schema)
+- [অনুরোধ প্রবাহ](#flow)
+- [ডাউনলোড ও ব্যবহার (শীঘ্রই)](#download)
+- [দ্রুত শুরু](#quickstart)
+- [রোডম্যাপ](#roadmap)
 
 ---
 
-## এটি কী
+## এটি কী <a id="what"></a>
 
 ModelBus-P2P হল [js-libp2p](https://github.com/libp2p/js-libp2p) এবং Electron-এর উপর নির্মিত একটি ডেস্কটপ ক্লায়েন্ট। এটি প্রায় সবার জানা একটি সমস্যার সমাধান করে: **এই মাসে অতিরিক্ত, পরের মাসে অভাব।**
 
@@ -53,7 +53,7 @@ ModelBus-P2P হল [js-libp2p](https://github.com/libp2p/js-libp2p) এবং E
 
 ---
 
-## মূল বৈশিষ্ট্য
+## মূল বৈশিষ্ট্য <a id="features"></a>
 
 | বৈশিষ্ট্য | নোট |
 |---|---|
@@ -68,13 +68,22 @@ ModelBus-P2P হল [js-libp2p](https://github.com/libp2p/js-libp2p) এবং E
 
 ---
 
-## স্ক্রিনশট
+## স্ক্রিনশট <a id="screenshots"></a>
 
-হোম, মডেল, ওয়ালেট, লগ, সেটিংস — মোট পাঁচটি ভিউ। পূর্ণ রেজোলিউশনের স্ক্রিনশট [docs/image/](../docs/image/)-এ আছে।
+<p align="center"><img src="../docs/image/home.png" alt="Home / 首页" width="640"/></p>
+
+<p align="center"><img src="../docs/image/model.png" alt="Models / 模型" width="640"/></p>
+
+<p align="center"><img src="../docs/image/wallet.png" alt="Wallet / 钱包" width="640"/></p>
+
+<p align="center"><img src="../docs/image/log.png" alt="Logs / 日志" width="640"/></p>
+
+<p align="center"><img src="../docs/image/setting.png" alt="Settings / 设置" width="640"/></p>
+
 
 ---
 
-## আর্কিটেকচার
+## আর্কিটেকচার <a id="architecture"></a>
 
 ```
 ┌─────────────────────────────────────────────────────────────────┐
@@ -120,7 +129,7 @@ curl http://127.0.0.1:18100/v1/chat/completions \
 
 ---
 
-## বিকেন্দ্রীভূত নকশা
+## বিকেন্দ্রীভূত নকশা <a id="decentralised"></a>
 
 চারটি সিড পিয়ার আইডি বাইনারিতে এমবেড করা (`src/main/config/trusted-roots.ts`)। কোল্ড স্টার্ট প্রবাহ:
 
@@ -142,7 +151,7 @@ curl http://127.0.0.1:18100/v1/chat/completions \
 
 ---
 
-## নোড ঘোষণা ফরম্যাট (v2)
+## নোড ঘোষণা ফরম্যাট (v2) <a id="schema"></a>
 
 অনুরোধ: `<https://modelbus.cc/api/v1/nodes>` `Array<NodeAnnouncement>` ফেরত দেয়:
 
@@ -191,7 +200,7 @@ curl http://127.0.0.1:18100/v1/chat/completions \
 
 ---
 
-## অনুরোধ প্রবাহ
+## অনুরোধ প্রবাহ <a id="flow"></a>
 
 **Provision** (আপনি = Token ধারক): সেটিংস → Token শেয়ার → প্রোভাইডার বাছুন, API কী আটকান, মডেল টিক দিন → `provision:set` → `ProvisionerService.register(config)` → `node.handle('/modelbus/inference/1.0.0', …)` → `events: 'provision:registered'`।
 
@@ -211,7 +220,7 @@ request.model = "openai/gpt-5"
 
 ---
 
-## ডাউনলোড ও ব্যবহার (শীঘ্রই)
+## ডাউনলোড ও ব্যবহার (শীঘ্রই) <a id="download"></a>
 
 > 📦 অফিসিয়াল ইনস্টলার (Windows / macOS / Linux প্যাকেজ, পরে মোবাইল ও Web SDK) প্রস্তুত করা হচ্ছে।
 
@@ -231,7 +240,7 @@ pnpm run package:linux # Linux AppImage
 
 ---
 
-## দ্রুত শুরু
+## দ্রুত শুরু <a id="quickstart"></a>
 
 ```bash
 git clone https://github.com/your-org/modelbus-p2p.git
@@ -244,7 +253,7 @@ pnpm run dev
 
 ---
 
-## রোডম্যাপ
+## রোডম্যাপ <a id="roadmap"></a>
 
 - ✅ v1: মাল্টি-প্রোভাইডার, অফিসিয়াল কোল্ড স্টার্ট, বিশ্বাস অ্যাঙ্কর, P2P ফরওয়ার্ড, ২২ ভাষা, ওয়ালেট কাঠামো
 - 🔜 v2: বিশ্বাস চেইন (trustChain) — Ed25519 স্বাক্ষরিত আমন্ত্রণ খতিয়ান
