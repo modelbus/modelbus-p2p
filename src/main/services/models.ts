@@ -1,4 +1,4 @@
-import type { ModelEntry, LeaderboardEntry, ModelQualityNode, NodeAnnouncement } from '@shared/types';
+import type { ModelEntry, LeaderboardEntry, ModelQualityNode, NodeAnnouncementFlat } from '@shared/types';
 
 /**
  * Compute a 0-100 quality score from a set of signals.
@@ -30,12 +30,12 @@ function clamp01(n: number): number {
 }
 
 /**
- * Aggregate an arbitrary list of NodeAnnouncements into:
- *  - model table (deduplicated by model id, with average latency and quality)
- *  - per-node quality rows
- *  - leaderboard sorted by quality desc
+* Aggregate an arbitrary list of NodeAnnouncementFlat rows into:
+  - model table (deduplicated by model id, with average latency and quality)
+  - per-node quality rows
+  - leaderboard sorted by quality desc
  */
-export function buildModelViews(nodes: NodeAnnouncement[], localStats: {
+export function buildModelViews(nodes: NodeAnnouncementFlat[], localStats: {
   peerId: string | null;
   uptimeMinutes: number;
   avgLatencyMs: number;
@@ -48,7 +48,7 @@ export function buildModelViews(nodes: NodeAnnouncement[], localStats: {
   const now = Date.now();
 
   // Deduplicate nodes by peerId (registry may list the same peer twice).
-  const dedup = new Map<string, NodeAnnouncement>();
+  const dedup = new Map<string, NodeAnnouncementFlat>();
   for (const n of nodes) dedup.set(n.peerId, n);
 
   // Heuristic: latency scales with how many models the node advertises.

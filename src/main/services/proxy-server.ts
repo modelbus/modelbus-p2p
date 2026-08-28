@@ -6,7 +6,7 @@ import { peerIdFromString } from '@libp2p/peer-id';
 import type { Multiaddr } from '@multiformats/multiaddr';
 
 import { dialAndCallInference } from '../proto/inference.js';
-import type { ProxyStats, NodeAnnouncement } from '@shared/types';
+import type { ProxyStats, NodeAnnouncementFlat } from '@shared/types';
 
 export interface ConsumerEvents {
   emit(event: { type: string; payload: unknown }): void;
@@ -28,7 +28,7 @@ export class ConsumerProxy {
   private server: ReturnType<typeof createServer> | null = null;
   private port = 0;
   private host = '127.0.0.1';
-  private target: NodeAnnouncement | null = null;
+  private target: NodeAnnouncementFlat | null = null;
   private stats: ProxyStats = {
     totalRequests: 0,
     successRequests: 0,
@@ -51,12 +51,12 @@ export class ConsumerProxy {
     return this.port;
   }
 
-  setTarget(t: NodeAnnouncement | null) {
+  setTarget(t: NodeAnnouncementFlat | null) {
     this.target = t;
     this.events.emit({ type: 'target:set', payload: { peerId: t?.peerId ?? null } });
   }
 
-  getTarget(): NodeAnnouncement | null {
+  getTarget(): NodeAnnouncementFlat | null {
     return this.target;
   }
 
