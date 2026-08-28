@@ -119,6 +119,13 @@ export const zhCN = {
     consumerApiKeyHint: '调用方访问本地代理时必须在请求头中携带此 Key（Authorization: Bearer <key>）。',
     localEndpoint: '本地端点',
     authHeader: '鉴权请求头',
+    trustHint: '以下节点来自官方接入点或本地缓存。本地已硬编码 4 个根节点作为冷启动信任根。',
+    trustBadge: '信任',
+    trustTrusted: '信任',
+    trustQuarantine: '待验证',
+    trustEmpty: '暂无节点。请确认 registry URL 可访问，或前往官网获取最新列表。',
+    providers: '供应商',
+    peerShort: '节点 ID',
   },
   logs: {
     title: '日志',
