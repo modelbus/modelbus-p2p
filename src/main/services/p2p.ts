@@ -13,11 +13,13 @@ import { uPnPNAT } from '@libp2p/upnp-nat';
 import { autoNAT } from '@libp2p/autonat';
 import { multiaddr, type Multiaddr } from '@multiformats/multiaddr';
 import { peerIdFromString } from '@libp2p/peer-id';
-import { generateKeyPair, privateKeyFromProtobuf, privateKeyToProtobuf } from '@libp2p/crypto/keys';
+import { generateKeyPair, generateKeyPairFromSeed, privateKeyFromProtobuf, privateKeyToProtobuf } from '@libp2p/crypto/keys';
 import type { PeerId, PrivateKey } from '@libp2p/interface';
+import { createHash } from 'node:crypto';
 
 import type { BootstrapConfig } from '@shared/types';
 import type { Store } from './store.js';
+import { getMachineId } from './machine-id.js';
 
 export interface P2PEventBus {
   emit(event: { type: string; payload: unknown }): void;
@@ -113,8 +115,23 @@ export class P2PService {
     }
   }
 
-  /** Load the persisted identity or generate + persist a fresh one. */
+  /**
+   * Derive the node identity deterministically from the machine's disk /
+   * hardware UUID, so the peerId is always the same on a given device.
+   *
+   *   peerId = Ed25519( SHA-256( machineId ) )
+   *
+   * Falls back to a persisted random key (store.peerKey) only when the
+   * hardware identifier is unavailable.
+   */
   private async loadOrCreatePrivateKey(): Promise<PrivateKey> {
+    const machineId = getMachineId();
+    if (machineId) {
+      const seed = createHash('sha256').update(machineId).digest();
+      const privateKey = await generateKeyPairFromSeed('Ed25519', seed);
+      return privateKey as unknown as PrivateKey;
+    }
+
     if (this.store) {
       const saved = this.store.getPeerKey();
       if (saved) {
@@ -129,7 +146,7 @@ export class P2PService {
         }
       }
     }
-    // No store, no saved key, or corrupt key — generate a new Ed25519 key.
+    // No machine id, no store, or corrupt key — generate a fresh Ed25519 key.
     const privateKey = await generateKeyPair('Ed25519');
     if (this.store) {
       const bytes = privateKeyToProtobuf(privateKey);
