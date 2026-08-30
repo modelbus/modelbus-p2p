@@ -14,6 +14,15 @@ export interface EventLogEntry {
   msg: string;
 }
 
+/** One in-progress provider draft in the multi-provider provision form. */
+export interface DraftProvider {
+  providerId: string;
+  providerName: string;
+  apiBase: string;
+  apiKey: string;
+  selectedModels: string[];
+}
+
 export interface AppRefs {
   status: import('vue').Ref<{
     started: boolean;
@@ -27,11 +36,8 @@ export interface AppRefs {
   providerLoading: import('vue').Ref<boolean>;
   provision: import('vue').Ref<ProvisionConfig | null>;
   draft: import('vue').Ref<{
-    providerId: string;
     nickname: string;
-    apiBase: string;
-    apiKey: string;
-    selectedModels: string[];
+    providers: DraftProvider[];
   }>;
   nodes: import('vue').Ref<NodeAnnouncement[]>;
   registryLoading: import('vue').Ref<boolean>;
@@ -55,8 +61,10 @@ export interface AppActions {
   stopNode: () => Promise<void>;
   loadProviders: (force?: boolean) => Promise<void>;
   loadProviderDetail: (id: string) => Promise<void>;
-  selectProvider: (id: string) => Promise<void>;
-  toggleModel: (m: ModelInfo) => void;
+  addProvider: () => void;
+  removeProvider: (index: number) => void;
+  selectProvider: (index: number, id: string) => Promise<void>;
+  toggleModel: (index: number, m: ModelInfo) => void;
   saveProvision: () => Promise<void>;
   clearProvision: () => Promise<void>;
   pickTarget: (peerId: string) => Promise<void>;
