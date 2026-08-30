@@ -30,6 +30,7 @@ export const plPL: Dict = {
     refreshNodes: 'Odśwież listę węzłów',
     pick: 'Użyj tego węzła',
     stopUsing: 'Zatrzymaj',
+    remove: 'Usuń',
   },
   status: {
     title: 'Status',
@@ -72,6 +73,7 @@ export const plPL: Dict = {
     apiBase: 'Nadpisz bazowy URL (opcjonalne)',
     apiKey: 'Klucz API',
     modelsToShare: 'Modele do udostępnienia (puste = wszystkie)',
+    addProvider: 'Dodaj dostawcę',
     needPick: 'Najpierw wybierz dostawcę',
     needKey: 'Klucz API jest wymagany',
     saved: 'Zapisano',

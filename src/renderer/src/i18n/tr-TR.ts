@@ -30,6 +30,7 @@ export const trTR: Dict = {
     refreshNodes: 'Düğüm listesini yenile',
     pick: 'Bu düğümü kullan',
     stopUsing: 'Durdur',
+    remove: 'Kaldır',
   },
   status: {
     title: 'Durum',
@@ -72,6 +73,7 @@ export const trTR: Dict = {
     apiBase: 'API tabanını geçersiz kıl (isteğe bağlı)',
     apiKey: 'API anahtarı',
     modelsToShare: 'Paylaşılacak modeller (boş = tümü)',
+    addProvider: 'Sağlayıcı ekle',
     needPick: 'Önce bir sağlayıcı seç',
     needKey: 'API anahtarı gerekli',
     saved: 'Kaydedildi',

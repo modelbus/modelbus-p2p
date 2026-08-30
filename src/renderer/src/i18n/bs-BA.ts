@@ -30,6 +30,7 @@ export const bsBA: Dict = {
     refreshNodes: 'Osvježi listu čvorova',
     pick: 'Koristi ovaj čvor',
     stopUsing: 'Zaustavi',
+    remove: 'Ukloni',
   },
   status: {
     title: 'Status',
@@ -72,6 +73,7 @@ export const bsBA: Dict = {
     apiBase: 'Pregazi bazni URL (opcionalno)',
     apiKey: 'API ključ',
     modelsToShare: 'Modeli za dijeljenje (prazno = svi)',
+    addProvider: 'Dodaj dobavljača',
     needPick: 'Najprije odaberite dobavljača',
     needKey: 'API ključ je obavezan',
     saved: 'Sačuvano',

@@ -30,6 +30,7 @@ export const thTH: Dict = {
     refreshNodes: 'รีเฟรชรายการโหนด',
     pick: 'ใช้โหนดนี้',
     stopUsing: 'หยุด',
+    remove: 'ลบ',
   },
   status: {
     title: 'สถานะ',
@@ -72,6 +73,7 @@ export const thTH: Dict = {
     apiBase: 'URL ฐานที่จะแทนที่ (ไม่บังคับ)',
     apiKey: 'คีย์ API',
     modelsToShare: 'โมเดลที่จะแชร์ (ว่าง = ทั้งหมด)',
+    addProvider: 'เพิ่มผู้ให้บริการ',
     needPick: 'กรุณาเลือกผู้ให้บริการก่อน',
     needKey: 'จำเป็นต้องใช้คีย์ API',
     saved: 'บันทึกแล้ว',

@@ -30,6 +30,7 @@ export const ukUA: Dict = {
     refreshNodes: 'Оновити список вузлів',
     pick: 'Використати цей вузол',
     stopUsing: 'Зупинити',
+    remove: 'Видалити',
   },
   status: {
     title: 'Статус',
@@ -72,6 +73,7 @@ export const ukUA: Dict = {
     apiBase: 'Перевизначити базову URL (необов\'язково)',
     apiKey: 'API-ключ',
     modelsToShare: 'Моделі для поширення (порожньо = всі)',
+    addProvider: 'Додати провайдера',
     needPick: 'Спершу виберіть провайдера',
     needKey: 'API-ключ обов\'язковий',
     saved: 'Збережено',

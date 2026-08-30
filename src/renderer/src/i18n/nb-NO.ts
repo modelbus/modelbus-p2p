@@ -30,6 +30,7 @@ export const nbNO: Dict = {
     refreshNodes: 'Oppdater nodeliste',
     pick: 'Bruk denne noden',
     stopUsing: 'Stopp',
+    remove: 'Fjern',
   },
   status: {
     title: 'Status',
@@ -72,6 +73,7 @@ export const nbNO: Dict = {
     apiBase: 'Overstyr API-grunnadresse (valgfritt)',
     apiKey: 'API-nøkkel',
     modelsToShare: 'Modeller som deles (tomt = alle)',
+    addProvider: 'Legg til leverandør',
     needPick: 'Velg en leverandør først',
     needKey: 'API-nøkkel kreves',
     saved: 'Lagret',

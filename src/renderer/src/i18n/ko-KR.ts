@@ -30,6 +30,7 @@ export const koKR: Dict = {
     refreshNodes: '노드 목록 새로고침',
     pick: '이 노드 사용',
     stopUsing: '중지',
+    remove: '제거',
   },
   status: {
     title: '상태',
@@ -72,6 +73,7 @@ export const koKR: Dict = {
     apiBase: 'API 기본 URL 재정의 (선택)',
     apiKey: 'API 키',
     modelsToShare: '공유할 모델 (비워두면 전체)',
+    addProvider: 'Provider 추가',
     needPick: '먼저 프로바이더를 선택하세요',
     needKey: 'API 키는 필수입니다',
     saved: '저장됨',

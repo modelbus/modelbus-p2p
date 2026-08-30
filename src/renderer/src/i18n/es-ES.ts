@@ -30,6 +30,7 @@ export const esES: Dict = {
     refreshNodes: 'Actualizar lista de nodos',
     pick: 'Usar este nodo',
     stopUsing: 'Detener',
+    remove: 'Quitar',
   },
   status: {
     title: 'Estado',
@@ -72,6 +73,7 @@ export const esES: Dict = {
     apiBase: 'Sobrescribir URL base (opcional)',
     apiKey: 'Clave API',
     modelsToShare: 'Modelos a compartir (vacío = todos)',
+    addProvider: 'Añadir proveedor',
     needPick: 'Elige primero un proveedor',
     needKey: 'La clave API es obligatoria',
     saved: 'Guardado',

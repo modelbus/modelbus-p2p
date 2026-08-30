@@ -30,6 +30,7 @@ export const bnBD: Dict = {
     refreshNodes: 'নোড তালিকা রিফ্রেশ',
     pick: 'এই নোডটি ব্যবহার',
     stopUsing: 'বন্ধ',
+    remove: 'মুছুন',
   },
   status: {
     title: 'অবস্থা',
@@ -72,6 +73,7 @@ export const bnBD: Dict = {
     apiBase: 'API বেস ওভাররাইড (ঐচ্ছিক)',
     apiKey: 'API কী',
     modelsToShare: 'শেয়ার করার মডেল (খালি = সব)',
+    addProvider: 'প্রোভাইডার যোগ করুন',
     needPick: 'প্রথমে একটি প্রোভাইডার নির্বাচন করুন',
     needKey: 'API কী আবশ্যক',
     saved: 'সংরক্ষিত',

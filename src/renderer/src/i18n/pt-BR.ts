@@ -30,6 +30,7 @@ export const ptBR: Dict = {
     refreshNodes: 'Atualizar lista de nós',
     pick: 'Usar este nó',
     stopUsing: 'Parar',
+    remove: 'Remover',
   },
   status: {
     title: 'Status',
@@ -72,6 +73,7 @@ export const ptBR: Dict = {
     apiBase: 'Sobrescrever URL base (opcional)',
     apiKey: 'Chave API',
     modelsToShare: 'Modelos a compartilhar (vazio = todos)',
+    addProvider: 'Adicionar provedor',
     needPick: 'Escolha um provedor primeiro',
     needKey: 'A chave API é obrigatória',
     saved: 'Salvo',

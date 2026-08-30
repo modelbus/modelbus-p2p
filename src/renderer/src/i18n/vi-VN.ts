@@ -30,6 +30,7 @@ export const viVN: Dict = {
     refreshNodes: 'Làm mới danh sách nút',
     pick: 'Dùng nút này',
     stopUsing: 'Dừng',
+    remove: 'Xóa',
   },
   status: {
     title: 'Trạng thái',
@@ -72,6 +73,7 @@ export const viVN: Dict = {
     apiBase: 'Ghi đè URL gốc (tùy chọn)',
     apiKey: 'Khóa API',
     modelsToShare: 'Mô hình chia sẻ (trống = tất cả)',
+    addProvider: 'Thêm nhà cung cấp',
     needPick: 'Hãy chọn nhà cung cấp trước',
     needKey: 'Cần có khóa API',
     saved: 'Đã lưu',

@@ -30,6 +30,7 @@ export const frFR: Dict = {
     refreshNodes: 'Actualiser la liste des nœuds',
     pick: 'Utiliser ce nœud',
     stopUsing: 'Arrêter',
+    remove: 'Retirer',
   },
   status: {
     title: 'État',
@@ -72,6 +73,7 @@ export const frFR: Dict = {
     apiBase: 'Remplacer l\'URL de base (optionnel)',
     apiKey: 'Clé API',
     modelsToShare: 'Modèles à partager (vide = tous)',
+    addProvider: 'Ajouter un fournisseur',
     needPick: 'Choisissez d\'abord un fournisseur',
     needKey: 'La clé API est requise',
     saved: 'Enregistré',

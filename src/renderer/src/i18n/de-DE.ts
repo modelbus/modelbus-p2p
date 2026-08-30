@@ -30,6 +30,7 @@ export const deDE: Dict = {
     refreshNodes: 'Knotenliste aktualisieren',
     pick: 'Diesen Knoten verwenden',
     stopUsing: 'Stoppen',
+    remove: 'Entfernen',
   },
   status: {
     title: 'Status',
@@ -72,6 +73,7 @@ export const deDE: Dict = {
     apiBase: 'API-Basis überschreiben (optional)',
     apiKey: 'API-Schlüssel',
     modelsToShare: 'Freizugebende Modelle (leer = alle)',
+    addProvider: 'Provider hinzufügen',
     needPick: 'Bitte zuerst einen Anbieter wählen',
     needKey: 'API-Schlüssel ist erforderlich',
     saved: 'Gespeichert',

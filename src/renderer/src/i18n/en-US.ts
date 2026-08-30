@@ -30,6 +30,7 @@ export const enUS: Dict = {
     refreshNodes: 'Refresh node list',
     pick: 'Use this peer',
     stopUsing: 'Stop',
+    remove: 'Remove',
   },
   status: {
     title: 'Status',
@@ -72,6 +73,7 @@ export const enUS: Dict = {
     apiBase: 'API base override (optional)',
     apiKey: 'API key',
     modelsToShare: 'Models to share (empty = all)',
+    addProvider: 'Add provider',
     needPick: 'Please pick a provider first',
     needKey: 'API key is required',
     saved: 'Saved',

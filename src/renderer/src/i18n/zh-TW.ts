@@ -30,6 +30,7 @@ export const zhTW: Dict = {
     refreshNodes: '重新整理節點',
     pick: '選用此節點',
     stopUsing: '停止使用',
+    remove: '移除',
   },
   status: {
     title: '執行狀態',
@@ -72,6 +73,7 @@ export const zhTW: Dict = {
     apiBase: 'API 網址覆寫（選用）',
     apiKey: 'API Key',
     modelsToShare: '要分享的模型（留空 = 全部）',
+    addProvider: '新增 Provider',
     needPick: '請先選擇供應商',
     needKey: 'API Key 不能為空',
     saved: '已儲存',

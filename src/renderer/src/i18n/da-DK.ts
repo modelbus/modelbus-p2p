@@ -30,6 +30,7 @@ export const daDK: Dict = {
     refreshNodes: 'Opdater nodeliste',
     pick: 'Brug denne node',
     stopUsing: 'Stop',
+    remove: 'Fjern',
   },
   status: {
     title: 'Status',
@@ -72,6 +73,7 @@ export const daDK: Dict = {
     apiBase: 'Overskriv API-basis (valgfrit)',
     apiKey: 'API-nøgle',
     modelsToShare: 'Modeller der deles (tom = alle)',
+    addProvider: 'Tilføj udbyder',
     needPick: 'Vælg først en udbyder',
     needKey: 'API-nøgle er påkrævet',
     saved: 'Gemt',

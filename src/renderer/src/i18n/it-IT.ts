@@ -30,6 +30,7 @@ export const itIT: Dict = {
     refreshNodes: 'Aggiorna elenco nodi',
     pick: 'Usa questo nodo',
     stopUsing: 'Interrompi',
+    remove: 'Rimuovi',
   },
   status: {
     title: 'Stato',
@@ -72,6 +73,7 @@ export const itIT: Dict = {
     apiBase: 'Sovrascrivi URL base (opzionale)',
     apiKey: 'Chiave API',
     modelsToShare: 'Modelli da condividere (vuoto = tutti)',
+    addProvider: 'Aggiungi provider',
     needPick: 'Seleziona prima un provider',
     needKey: 'La chiave API è obbligatoria',
     saved: 'Salvato',

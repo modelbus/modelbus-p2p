@@ -26,6 +26,7 @@ export const zhCN = {
     refreshNodes: '刷新节点列表',
     pick: '选用此节点',
     stopUsing: '停止使用',
+    remove: '移除',
   },
   status: {
     title: '运行状态',
@@ -68,6 +69,7 @@ export const zhCN = {
     apiBase: 'API 地址覆盖（可选）',
     apiKey: 'API Key',
     modelsToShare: '要分享的模型（留空 = 全部）',
+    addProvider: '添加 Provider',
     needPick: '请先选择供应商',
     needKey: 'API Key 不能为空',
     saved: '配置已保存',

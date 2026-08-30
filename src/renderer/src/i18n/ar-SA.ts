@@ -30,6 +30,7 @@ export const arSA: Dict = {
     refreshNodes: 'تحديث قائمة العقد',
     pick: 'استخدم هذه العقدة',
     stopUsing: 'إيقاف',
+    remove: 'إزالة',
   },
   status: {
     title: 'الحالة',
@@ -72,6 +73,7 @@ export const arSA: Dict = {
     apiBase: 'تجاوز عنوان API (اختياري)',
     apiKey: 'مفتاح API',
     modelsToShare: 'النماذج المراد مشاركتها (فارغ = الكل)',
+    addProvider: 'إضافة مزود',
     needPick: 'اختر موفرًا أولًا',
     needKey: 'مفتاح API مطلوب',
     saved: 'تم الحفظ',

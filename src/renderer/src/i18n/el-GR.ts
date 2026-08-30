@@ -30,6 +30,7 @@ export const elGR: Dict = {
     refreshNodes: 'Ανανέωση λίστας κόμβων',
     pick: 'Χρήση αυτού του κόμβου',
     stopUsing: 'Διακοπή',
+    remove: 'Αφαίρεση',
   },
   status: {
     title: 'Κατάσταση',
@@ -72,6 +73,7 @@ export const elGR: Dict = {
     apiBase: 'Παράκαμψη βασικού URL (προαιρετικό)',
     apiKey: 'Κλειδί API',
     modelsToShare: 'Μοντέλα προς κοινή χρήση (κενό = όλα)',
+    addProvider: 'Προσθήκη παρόχου',
     needPick: 'Επιλέξτε πρώτα πάροχο',
     needKey: 'Απαιτείται κλειδί API',
     saved: 'Αποθηκεύτηκε',

@@ -30,6 +30,7 @@ export const jaJP: Dict = {
     refreshNodes: 'ノード一覧を更新',
     pick: 'このノードを使用',
     stopUsing: '停止',
+    remove: '削除',
   },
   status: {
     title: 'ステータス',
@@ -72,6 +73,7 @@ export const jaJP: Dict = {
     apiBase: 'API ベース上書き（任意）',
     apiKey: 'API キー',
     modelsToShare: '共有するモデル（空 = すべて）',
+    addProvider: 'プロバイダを追加',
     needPick: 'プロバイダーを選択してください',
     needKey: 'API キーは必須です',
     saved: '保存しました',

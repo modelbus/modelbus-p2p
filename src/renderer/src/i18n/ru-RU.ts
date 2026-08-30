@@ -30,6 +30,7 @@ export const ruRU: Dict = {
     refreshNodes: 'Обновить список узлов',
     pick: 'Использовать этот узел',
     stopUsing: 'Остановить',
+    remove: 'Удалить',
   },
   status: {
     title: 'Статус',
@@ -72,6 +73,7 @@ export const ruRU: Dict = {
     apiBase: 'Переопределить базовый URL (необязательно)',
     apiKey: 'API-ключ',
     modelsToShare: 'Модели для общего доступа (пусто = все)',
+    addProvider: 'Добавить провайдера',
     needPick: 'Сначала выберите провайдера',
     needKey: 'Требуется API-ключ',
     saved: 'Сохранено',
