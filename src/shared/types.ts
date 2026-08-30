@@ -25,14 +25,23 @@ export interface ModelInfo {
   reasoning?: boolean;
 }
 
-export interface ProvisionConfig {
-  peerId: string;
-  nickname: string;
+/**
+ * A single LLM provider credential the node owner is willing to share.
+ * A node may carry several of these at once (e.g. MiniMax + DeepSeek).
+ */
+export interface ProviderCredential {
   providerId: string;
   providerName: string;
+  /** Optional API base override (OpenAI-compatible endpoint). */
   apiBase?: string;
   apiKey: string;
   modelIds: string[];
+}
+
+export interface ProvisionConfig {
+  peerId: string;
+  nickname: string;
+  providers: ProviderCredential[];
 }
 
 /**

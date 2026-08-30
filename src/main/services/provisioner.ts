@@ -1,6 +1,5 @@
 import type { Libp2p } from 'libp2p';
-import type { PeerId } from '@libp2p/interface';
-import type { ProviderDetail, ProvisionConfig } from '@shared/types';
+import type { ProviderDetail, ProvisionConfig, ProviderCredential } from '@shared/types';
 import { INFERENCE_PROTOCOL, serveInference } from '../proto/inference.js';
 import { buildUpstreamCall, callUpstream } from './upstream.js';
 import { ProviderService } from './providers.js';
@@ -11,22 +10,21 @@ export interface ProvisionerEvents {
 
 /**
  * ProvisionerService registers a single libp2p protocol handler for the
- * `/modelbus/inference/1.0.0` protocol. Incoming requests are routed to
- * the right provider based on `req.model` (the canonical model id from
- * models.dev, e.g. "openai/gpt-5" or "anthropic/claude-opus-4-7").
+ * `/modelbus/inference/1.0.0` protocol. A node can carry several LLM
+ * providers at once (e.g. MiniMax + DeepSeek); incoming requests are
+ * routed to the right provider by the canonical model id.
  *
  * If the caller asks for a model that this node doesn't carry, the
  * service returns 400 with an explanatory body — it never falls through
- * to a random provider. That's the correct behaviour for a peer whose
- * owner deliberately doesn't share a particular model.
+ * to a random provider.
  */
 export class ProvisionerService {
   private registered = false;
   /**
-   * Map from providerId to its ProvisionConfig + ProviderDetail.
+   * Map from providerId to its credential + ProviderDetail (models.dev).
    * One node can carry many provider configs (one per LLM vendor).
    */
-  private providers: Map<string, { config: ProvisionConfig; detail: ProviderDetail }> = new Map();
+  private providers: Map<string, { config: ProviderCredential; detail: ProviderDetail }> = new Map();
 
   constructor(
     private libp2p: () => Libp2p | null,
@@ -38,25 +36,29 @@ export class ProvisionerService {
     return this.registered && this.providers.size > 0;
   }
 
-  /** Convenience: return the primary (first registered) provider config. */
-  config(): ProvisionConfig | null {
+  /** Convenience: return the primary (first registered) provider credential. */
+  config(): ProviderCredential | null {
     const first = this.providers.values().next().value;
     return first ? first.config : null;
   }
 
   /**
-   * Register the inference handler if it isn't already. Subsequent calls
-   * add additional providers to the existing handler without
-   * re-registering the protocol.
+   * (Re)register the inference handler and install the full set of
+   * provider credentials. Replaces any previous set atomically.
    */
   async register(config: ProvisionConfig): Promise<void> {
-    const detail = await this.providersService.get(config.providerId);
-    if (!detail) throw new Error(`unknown provider ${config.providerId}`);
-
-    this.providers.set(config.providerId, { config, detail });
-
     const node = this.libp2p();
     if (!node) throw new Error('libp2p node is not started');
+
+    // Resolve all providers first so a bad providerId fails cleanly
+    // without leaving a half-installed route table.
+    const next = new Map<string, { config: ProviderCredential; detail: ProviderDetail }>();
+    for (const cred of config.providers) {
+      const detail = await this.providersService.get(cred.providerId);
+      if (!detail) throw new Error(`unknown provider ${cred.providerId}`);
+      next.set(cred.providerId, { config: cred, detail });
+    }
+    if (next.size === 0) throw new Error('at least one provider is required');
 
     if (!this.registered) {
       await node.handle(
@@ -67,12 +69,14 @@ export class ProvisionerService {
       this.registered = true;
     }
 
+    this.providers = next;
+
     this.events.emit({
       type: 'provision:registered',
       payload: {
         peerId: config.peerId,
-        provider: detail.name,
-        models: config.modelIds.length,
+        providerCount: this.providers.size,
+        providers: Array.from(this.providers.values()).map((e) => e.detail.name),
       },
     });
   }
@@ -106,12 +110,11 @@ export class ProvisionerService {
   }
 
   /** Resolve which provider should serve a given model id. */
-  resolveProvider(modelId: string): { config: ProvisionConfig; detail: ProviderDetail } | null {
+  resolveProvider(modelId: string): { config: ProviderCredential; detail: ProviderDetail } | null {
     for (const entry of this.providers.values()) {
       if (entry.config.modelIds.includes(modelId)) return entry;
     }
-    // Fallback: if the request has no provider prefix and only one
-    // provider is registered, route to it.
+    // Fallback: if only one provider is registered, route to it.
     if (this.providers.size === 1) {
       return this.providers.values().next().value ?? null;
     }
@@ -192,26 +195,5 @@ export class ProvisionerService {
       providerId,
       modelIds: [...config.modelIds],
     }));
-  }
-
-  // Compat alias kept so callers that imported `handle` previously
-  // (used by tests / earlier versions) still compile.
-  async handleLegacy(
-    peerId: PeerId,
-    config: ProvisionConfig,
-    provider: ProviderDetail,
-    req: { model: string; path: string; method: string; headers: Record<string, string>; body: string }
-  ): Promise<{ status: number; headers: Record<string, string>; body: string }> {
-    const upstream = buildUpstreamCall(provider, config.apiKey, req.path, req.method, req.headers, req.body);
-    try {
-      return await callUpstream(upstream);
-    } catch (err) {
-      const status = (err as { status?: number }).status ?? 500;
-      return {
-        status,
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ error: (err as Error).message }),
-      };
-    }
   }
 }
