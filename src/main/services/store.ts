@@ -1,7 +1,6 @@
-import { app } from 'electron';
 import { promises as fs } from 'node:fs';
-import { join } from 'node:path';
 import type { ProvisionConfig, BootstrapConfig } from '@shared/types';
+import { PATHS } from './paths.js';
 
 interface StoreShape {
   bootstrap?: BootstrapConfig;
@@ -14,7 +13,7 @@ interface StoreShape {
    *  click anything first). */
   consumerAutostart?: boolean;
   /** base64-encoded protobuf Ed25519 private key used to derive the
-   *  stable libp2p peerId. Persisted so the identity survives restarts. */
+   *  stable libp2p peerId (fallback when no hardware UUID exists). */
   peerKey?: string;
 }
 
@@ -31,8 +30,9 @@ export class Store {
   private path: string;
   private data: StoreShape = {};
 
-  constructor(filename = 'modelbus-store.json') {
-    this.path = join(app.getPath('userData'), filename);
+  /** Settings live in ~/.modelbus/p2p.json (see services/paths.ts). */
+  constructor(path = PATHS.settings) {
+    this.path = path;
   }
 
   async load(): Promise<void> {
@@ -45,8 +45,7 @@ export class Store {
   }
 
   async save(): Promise<void> {
-    const dir = join(this.path, '..');
-    await fs.mkdir(dir, { recursive: true });
+    await fs.mkdir(PATHS.dir, { recursive: true });
     await fs.writeFile(this.path, JSON.stringify(this.data, null, 2));
   }
 
