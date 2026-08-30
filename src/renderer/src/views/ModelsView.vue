@@ -9,6 +9,29 @@ const leaderboard = ref<LeaderboardEntry[]>([]);
 const refreshing = ref(false);
 const nodeSearch = ref('');
 
+// ---- consumer proxy state (kept in sync with the main process) ----
+const proxyTarget = ref<{ peerId: string | null; nickname: string | null; providerId: string | null }>({
+  peerId: null,
+  nickname: null,
+  providerId: null,
+});
+const proxyPort = ref(18100);
+const busyPeer = ref<string | null>(null); // peerId currently being dialed
+const proxyError = ref<string | null>(null);
+
+async function refreshProxy() {
+  try {
+    const [t, cfg] = await Promise.all([
+      window.modelbus.proxy.target(),
+      window.modelbus.bootstrap.getConfig(),
+    ]);
+    proxyTarget.value = t;
+    proxyPort.value = cfg.proxyPort;
+  } catch (err) {
+    proxyError.value = (err as Error).message;
+  }
+}
+
 async function refresh() {
   refreshing.value = true;
   try {
@@ -21,13 +44,63 @@ async function refresh() {
   }
 }
 
+async function useNode(peerId: string) {
+  proxyError.value = null;
+  busyPeer.value = peerId;
+  try {
+    await window.modelbus.proxy.setTarget(peerId);
+    await refreshProxy();
+  } catch (err) {
+    proxyError.value = (err as Error).message;
+  } finally {
+    busyPeer.value = null;
+  }
+}
+
+async function stopUsing() {
+  proxyError.value = null;
+  try {
+    await window.modelbus.proxy.clearTarget();
+    await refreshProxy();
+  } catch (err) {
+    proxyError.value = (err as Error).message;
+  }
+}
+
+// "Connect to self" — start the consumer proxy pointed at our own
+// provision entry, so `curl http://127.0.0.1:<port>/...` works right
+// after the user shares a Token, no peer picking needed.
+async function connectSelf() {
+  proxyError.value = null;
+  busyPeer.value = 'self';
+  try {
+    await window.modelbus.proxy.startAt();
+    await refreshProxy();
+  } catch (err) {
+    proxyError.value = (err as Error).message;
+  } finally {
+    busyPeer.value = null;
+  }
+}
+
 let timer: number | undefined;
+let proxyTimer: number | undefined;
 onMounted(() => {
   refresh();
+  refreshProxy();
   timer = window.setInterval(refresh, 12_000);
+  proxyTimer = window.setInterval(refreshProxy, 4_000);
+  // React to proxy events (served / error / target changes) emitted by
+  // the main process so the badge stays live.
+  window.modelbus.proxy.onEvent((evt) => {
+    if (evt.type === 'target:set' || evt.type === 'proxy:started' || evt.type === 'proxy:stopped') {
+      refreshProxy();
+    }
+  });
 });
 onBeforeUnmount(() => {
   if (timer) window.clearInterval(timer);
+  if (proxyTimer) window.clearInterval(proxyTimer);
 });
 
 const filteredNodes = computed(() => {
@@ -56,6 +129,35 @@ function fmtMin(m: number): string {
 
 <template>
   <div class="models-stack">
+    <!-- ===== Consumer proxy status + self connect ===== -->
+    <section class="card proxy-card">
+      <div class="proxy-row">
+        <div>
+          <span class="muted">{{ t('consume.proxyStatus') }}：</span>
+          <span v-if="proxyTarget.peerId" class="tag success">
+            {{ t('consume.running', { port: proxyPort }) }}
+          </span>
+          <span v-else class="tag">{{ t('consume.idle') }}</span>
+          <span v-if="proxyTarget.peerId" class="muted" style="font-size: 12px; margin-left: 8px;">
+            {{ t('consume.target') }}: {{ proxyTarget.nickname }}
+            ({{ proxyTarget.peerId.slice(0, 8) }}…)
+          </span>
+        </div>
+        <div style="display: flex; gap: 8px; align-items: center;">
+          <button class="primary" @click="connectSelf" :disabled="busyPeer === 'self'">
+            {{ busyPeer === 'self' ? '…' : t('models.connectSelf') }}
+          </button>
+          <button v-if="proxyTarget.peerId" class="danger" @click="stopUsing">
+            {{ t('actions.stopUsing') }}
+          </button>
+          <span v-if="proxyError" class="tag danger">{{ proxyError }}</span>
+        </div>
+      </div>
+      <p class="muted" style="margin: 6px 0 0; font-size: 11px;">
+        {{ t('models.connectSelfHint', { port: proxyPort }) }}
+      </p>
+    </section>
+
     <!-- ===== Models ===== -->
     <section class="card models-block">
       <h3>{{ t('models.title') }}</h3>
@@ -107,12 +209,18 @@ function fmtMin(m: number): string {
               <th class="num">{{ t('models.colUptime') }}</th>
               <th class="num">{{ t('models.colRequests') }}</th>
               <th class="num">{{ t('models.colLatency') }}</th>
+              <th>{{ t('models.colAction') }}</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="n in filteredNodes" :key="n.peerId">
+            <tr
+              v-for="n in filteredNodes"
+              :key="n.peerId"
+              :class="{ 'self-row': n.self }"
+            >
               <td>
                 <strong>{{ n.nickname }}</strong>
+                <span v-if="n.self" class="tag accent" style="font-size: 10px;">{{ t('models.selfBadge') }}</span>
               </td>
               <td class="muted">{{ n.providerName }}</td>
               <td class="muted models-list">
@@ -132,6 +240,25 @@ function fmtMin(m: number): string {
               <td class="num muted">{{ fmtMin(n.uptimeMinutes) }}</td>
               <td class="num muted">{{ n.servedRequests }}</td>
               <td class="num muted">{{ n.avgLatencyMs }}ms</td>
+              <td>
+                <button
+                  v-if="proxyTarget.peerId !== n.peerId"
+                  class="primary"
+                  style="padding: 3px 10px; font-size: 12px;"
+                  :disabled="busyPeer === n.peerId"
+                  @click="useNode(n.peerId)"
+                >
+                  {{ busyPeer === n.peerId ? '…' : t('actions.use') }}
+                </button>
+                <button
+                  v-else
+                  class="danger"
+                  style="padding: 3px 10px; font-size: 12px;"
+                  @click="stopUsing"
+                >
+                  {{ t('actions.stopUsing') }}
+                </button>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -155,6 +282,18 @@ function fmtMin(m: number): string {
   letter-spacing: 0.06em;
   color: var(--muted);
   font-weight: 600;
+}
+
+.proxy-card {
+  display: flex;
+  flex-direction: column;
+}
+.proxy-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
 }
 
 .models-grid {
@@ -219,6 +358,9 @@ function fmtMin(m: number): string {
 .nodes-table-wrap .log-table th.num,
 .nodes-table-wrap .log-table td.num {
   text-align: right;
+}
+.self-row {
+  background: var(--accent-soft);
 }
 .models-list {
   display: flex;
