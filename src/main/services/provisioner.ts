@@ -61,7 +61,7 @@ export class ProvisionerService {
     if (!this.registered) {
       await node.handle(
         INFERENCE_PROTOCOL,
-        serveInference(async (req) => this.handle(req)),
+        serveInference(async (req) => this.handleLocal(req)),
         { maxInboundStreams: 32 }
       );
       this.registered = true;
@@ -118,7 +118,13 @@ export class ProvisionerService {
     return null;
   }
 
-  private async handle(req: {
+  /**
+   * Handle an inference request locally, without going through the
+   * libp2p stream. This is what ConsumerProxy calls when the selected
+   * target peer is our own node — libp2p forbids dialing yourself
+   * ("Can not dial self"), so the loop must be short-circuited here.
+   */
+  async handleLocal(req: {
     model: string;
     path: string;
     method: string;

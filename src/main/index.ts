@@ -67,7 +67,12 @@ async function bootstrap() {
   const registry = new RegistryService();
   const p2p = new P2PService(bus);
   const provisioner = new ProvisionerService(() => p2p.getNode(), providers, bus);
-  const proxy = new ConsumerProxy(() => p2p.getNode(), bus);
+  const proxy = new ConsumerProxy(
+    () => p2p.getNode(),
+    bus,
+    () => p2p.peerIdString(),
+    (req) => provisioner.handleLocal(req)
+  );
   const bootstrapCache = new BootstrapCache();
 
   const deps = {

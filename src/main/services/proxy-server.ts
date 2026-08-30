@@ -6,11 +6,19 @@ import { peerIdFromString } from '@libp2p/peer-id';
 import type { Multiaddr } from '@multiformats/multiaddr';
 
 import { dialAndCallInference } from '../proto/inference.js';
-import type { ProxyStats, NodeAnnouncementFlat } from '@shared/types';
+import type { ProxyStats, NodeAnnouncementFlat, InferenceRequest, InferenceResponse } from '@shared/types';
 
 export interface ConsumerEvents {
   emit(event: { type: string; payload: unknown }): void;
 }
+
+/**
+ * Local inference hook. When the selected target peer is our own node,
+ * libp2p cannot dial ourselves ("Can not dial self"), so the proxy
+ * short-circuits and calls this function directly instead of opening a
+ * P2P stream. The IPC layer wires it to ProvisionerService.handleLocal.
+ */
+export type LocalInferFn = (req: InferenceRequest) => Promise<InferenceResponse>;
 
 export interface ProxyLogEntry {
   ts: number;
@@ -47,7 +55,9 @@ export class ConsumerProxy {
 
   constructor(
     private libp2p: () => Libp2p | null,
-    private events: ConsumerEvents
+    private events: ConsumerEvents,
+    private localPeerId: () => string | null = () => null,
+    private localInfer: LocalInferFn | null = null
   ) {}
 
   isRunning(): boolean {
@@ -158,31 +168,28 @@ export class ConsumerProxy {
     this.stats.totalRequests += 1;
 
     try {
-      const peerId = peerIdFromString(this.target.peerId);
       const headers = this.collectHeaders(req);
       const bodyBuf = await this.readBody(req);
       const bodyText = bodyBuf.toString('utf-8');
 
       this.stats.bytesSent += bodyBuf.length;
 
-      const conn = await this.openConnection(node, peerId);
-
       const id = randomUUID();
-      const upstream = await dialAndCallInference(conn, {
+      const inferenceReq: InferenceRequest = {
         id,
         model: this.extractModel(headers, bodyText),
         path: req.url ?? '/',
         method: req.method ?? 'GET',
         headers: this.stripHopHeaders(headers),
         body: bodyText,
-      });
+      };
 
-      // Drain the connection; we already consumed the response via stream.
-      try {
-        await conn.close();
-      } catch {
-        // ignore
-      }
+      // Short-circuit: when the target is our own node, libp2p refuses
+      // to dial ourselves. Call the provisioner directly instead.
+      const isSelf = this.target.peerId === this.localPeerId();
+      const upstream = isSelf && this.localInfer
+        ? await this.localInfer(inferenceReq)
+        : await this.dialAndCall(node, inferenceReq);
 
       const status = upstream.status ?? 200;
       res.statusCode = status;
@@ -227,16 +234,31 @@ export class ConsumerProxy {
     }
   }
 
-  private async openConnection(node: Libp2p, peerId: ReturnType<typeof peerIdFromString>) {
-    // First try direct / known peer-store addrs; otherwise dial via peerId (which uses cached addrs / DHT).
+  /**
+   * Dial the remote target peer over libp2p, open an inference stream,
+   * send the request and return the response. Falls back to the cached
+   * peer-store addresses if a direct peerId dial fails.
+   */
+  private async dialAndCall(node: Libp2p, req: InferenceRequest): Promise<InferenceResponse> {
+    const peerId = peerIdFromString(this.target!.peerId);
+    let conn;
     try {
-      return await node.dial(peerId);
+      conn = await node.dial(peerId);
     } catch (err) {
       console.warn('[consumer] direct dial failed, trying addresses', (err as Error).message);
       const peer = await node.peerStore.get(peerId);
       const addrs: Multiaddr[] = (peer.addresses ?? []).map((a: { multiaddr: Multiaddr }) => a.multiaddr);
       if (!addrs.length) throw new Error('no known addresses for target peer');
-      return await node.dial(addrs[0]);
+      conn = await node.dial(addrs[0]);
+    }
+    try {
+      return await dialAndCallInference(conn, req);
+    } finally {
+      try {
+        await conn.close();
+      } catch {
+        // ignore
+      }
     }
   }
 
