@@ -265,69 +265,89 @@ const trustedNodes = computed(() =>
       <p class="muted" style="margin-top: 0;">
         {{ t('settings.provisionHint') }}
       </p>
-      <div class="form-row cols-2">
-        <div>
-          <label>{{ t('provision.provider') }}</label>
-          <select
-            :value="refs.draft.value.providerId"
-            @change="actions.selectProvider(($event.target as HTMLSelectElement).value)"
-          >
-            <option value="">{{ t('setup.pickProvider') }}</option>
-            <option v-for="p in refs.providers.value" :key="p.id" :value="p.id">
-              {{ p.name }}
-            </option>
-          </select>
-        </div>
+      <div class="form-row">
         <div>
           <label>{{ t('provision.nickname') }}</label>
           <input v-model="refs.draft.value.nickname" />
         </div>
       </div>
-      <div class="form-row cols-2">
-        <div>
-          <label>{{ t('provision.apiBase') }}</label>
-          <input
-            v-model="refs.draft.value.apiBase"
-            :placeholder="refs.providerDetail.value?.api ?? 'https://api.openai.com/v1'"
-          />
-        </div>
-        <div>
-          <label>{{ t('provision.apiKey') }}</label>
-          <input
-            type="password"
-            v-model="refs.draft.value.apiKey"
-            placeholder="sk-…"
-            autocomplete="off"
-          />
-        </div>
-      </div>
-      <div v-if="refs.providerDetail.value" style="margin-bottom: 10px;">
-        <label>{{ t('provision.modelsToShare') }}</label>
-        <div class="chip-grid">
-          <span
-            v-for="m in refs.providerDetail.value.models"
-            :key="m.id"
-            class="chip"
-            :class="{ selected: refs.draft.value.selectedModels.includes(m.id) }"
-            @click="actions.toggleModel(m)"
-          >
-            {{ m.id }}
-          </span>
-        </div>
-        <div style="margin-top: 8px; display: flex; gap: 8px;">
-          <button @click="refs.draft.value.selectedModels = refs.providerDetail.value!.models.map((m) => m.id)">
-            {{ t('actions.selectAll') }}
-          </button>
-          <button @click="refs.draft.value.selectedModels = []">
-            {{ t('actions.clearSelection') }}
+
+      <div
+        v-for="(p, idx) in refs.draft.value.providers"
+        :key="idx"
+        style="border: 1px solid var(--border); border-radius: 6px; padding: 12px; margin-bottom: 12px;"
+      >
+        <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
+          <strong>{{ t('provision.provider') }} #{{ idx + 1 }}</strong>
+          <button class="danger" style="padding: 2px 8px; font-size: 12px;" @click="actions.removeProvider(idx)">
+            {{ t('actions.remove') }}
           </button>
         </div>
+        <div class="form-row cols-2">
+          <div>
+            <label>{{ t('provision.provider') }}</label>
+            <select
+              :value="p.providerId"
+              @change="actions.selectProvider(idx, ($event.target as HTMLSelectElement).value)"
+            >
+              <option value="">{{ t('setup.pickProvider') }}</option>
+              <option v-for="sp in refs.providers.value" :key="sp.id" :value="sp.id">
+                {{ sp.name }} ({{ sp.id }})
+              </option>
+            </select>
+          </div>
+          <div>
+            <label>{{ t('provision.apiKey') }}</label>
+            <input
+              type="password"
+              v-model="p.apiKey"
+              placeholder="sk-…"
+              autocomplete="off"
+            />
+          </div>
+        </div>
+        <div class="form-row">
+          <div>
+            <label>{{ t('provision.apiBase') }}</label>
+            <input
+              v-model="p.apiBase"
+              :placeholder="refs.providerDetail.value?.api ?? 'https://api.openai.com/v1'"
+            />
+          </div>
+        </div>
+        <div v-if="refs.providerDetail.value && p.providerId === refs.providerDetail.value.id">
+          <label>{{ t('provision.modelsToShare') }}</label>
+          <div class="chip-grid">
+            <span
+              v-for="m in refs.providerDetail.value.models"
+              :key="m.id"
+              class="chip"
+              :class="{ selected: p.selectedModels.includes(m.id) }"
+              @click="actions.toggleModel(idx, m)"
+            >
+              {{ m.id }}
+            </span>
+          </div>
+          <div style="margin-top: 8px; display: flex; gap: 8px;">
+            <button @click="p.selectedModels = refs.providerDetail.value!.models.map((m) => m.id)">
+              {{ t('actions.selectAll') }}
+            </button>
+            <button @click="p.selectedModels = []">
+              {{ t('actions.clearSelection') }}
+            </button>
+          </div>
+        </div>
       </div>
+
+      <button style="margin-bottom: 12px;" @click="actions.addProvider">
+        + {{ t('provision.addProvider') }}
+      </button>
+
       <div style="display: flex; gap: 8px; align-items: center;">
         <button
           class="primary"
           @click="actions.saveProvision"
-          :disabled="!refs.draft.value.providerId || !refs.draft.value.apiKey"
+          :disabled="!refs.draft.value.providers.length"
         >
           {{ refs.provision.value ? t('actions.update') : t('actions.startSharing') }}
         </button>

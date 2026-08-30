@@ -50,7 +50,7 @@ const localEndpoint = computed(() => `http://127.0.0.1:${props.refs.proxyPort.va
 const isProvisioning = computed(() => !!props.refs.provision.value);
 
 const curlExample = computed(() => {
-  const model = props.refs.provision.value?.modelIds[0] ?? '<model-id>';
+  const model = props.refs.provision.value?.providers[0]?.modelIds[0] ?? '<model-id>';
   return `curl ${localEndpoint.value}/v1/chat/completions \\
   -H "Content-Type: application/json" \\
   -H "Authorization: Bearer ${apiKey.value || '<your-api-key>'}" \\
@@ -58,9 +58,14 @@ const curlExample = computed(() => {
 });
 
 const nodeModels = computed(() => {
-  // Group by provider for the shared-tokens list.
+  // Flatten the model ids across all shared providers.
   const p = props.refs.provision.value;
-  return p ? p.modelIds : [];
+  return p ? p.providers.flatMap((x) => x.modelIds) : [];
+});
+
+const nodeProviderNames = computed(() => {
+  const p = props.refs.provision.value;
+  return p ? p.providers.map((x) => x.providerName) : [];
 });
 
 const consumeNode = computed(() => props.refs.proxyTarget.value);
@@ -155,7 +160,7 @@ function qualityClass(q: number): string {
           <div v-if="isProvisioning" class="token-summary">
             <div class="kvline">
               <span class="muted">{{ t('provision.provider') }}</span>
-              <span class="tag accent">{{ refs.provision.value!.providerName }}</span>
+              <span class="tag accent">{{ nodeProviderNames.join(', ') }}</span>
             </div>
             <div class="kvline">
               <span class="muted">{{ t('provision.nickname') }}</span>
@@ -216,7 +221,7 @@ function qualityClass(q: number): string {
       <div v-else class="guide started">
         <div class="guide-icon">✅</div>
         <div class="guide-body">
-          <div class="guide-title">{{ t('home.provisionedTitle', { provider: refs.provision.value!.providerName }) }}</div>
+          <div class="guide-title">{{ t('home.provisionedTitle', { provider: nodeProviderNames.join(', ') }) }}</div>
           <div class="guide-desc">
             {{ t('home.provisionedDesc', { n: nodeModels.length }) }}
           </div>
