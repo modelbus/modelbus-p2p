@@ -14,26 +14,90 @@ type Sub = 'node' | 'register' | 'provision' | 'service';
 
 const sub = ref<Sub>(props.initialSub ?? 'node');
 
-// API key used to authenticate callers of the consume proxy. In a future
-// release this will be wired through the IPC layer; for now it lives in
-// localStorage so it survives restarts.
-const apiKeyInput = ref<string>(
-  (typeof localStorage !== 'undefined' && localStorage.getItem('modelbus.consumer.apiKey')) ?? ''
-);
+// API key used to authenticate callers of the consume proxy. The value
+// now lives in the main-process store (persisted in modelbus-store.json)
+// and is pushed into the running proxy immediately on save so that
+// `curl http://127.0.0.1:18100/...` enforces it right away.
+const apiKeyInput = ref<string>('');
 const apiKeySaved = ref(false);
-function saveApiKey() {
-  if (typeof localStorage !== 'undefined') {
-    localStorage.setItem('modelbus.consumer.apiKey', apiKeyInput.value);
+const apiKeyError = ref<string | null>(null);
+
+async function refreshConsumerState() {
+  try {
+    const [key, auto] = await Promise.all([
+      window.modelbus.consumer.getApiKey(),
+      window.modelbus.consumer.getAutostart(),
+    ]);
+    apiKeyInput.value = key ?? '';
+    consumerAutostart.value = !!auto;
+  } catch (err) {
+    console.error('[settings] refresh consumer state failed:', err);
   }
-  apiKeySaved.value = true;
-  setTimeout(() => (apiKeySaved.value = false), 1800);
 }
-function clearApiKey() {
-  apiKeyInput.value = '';
-  if (typeof localStorage !== 'undefined') {
-    localStorage.removeItem('modelbus.consumer.apiKey');
+
+const consumerAutostart = ref(false);
+const consumerStarting = ref(false);
+const consumerStartError = ref<string | null>(null);
+
+async function saveApiKey() {
+  apiKeyError.value = null;
+  try {
+    await window.modelbus.consumer.setApiKey(apiKeyInput.value);
+    apiKeySaved.value = true;
+    setTimeout(() => (apiKeySaved.value = false), 1800);
+  } catch (err) {
+    apiKeyError.value = (err as Error).message;
   }
 }
+
+async function clearApiKey() {
+  apiKeyError.value = null;
+  try {
+    await window.modelbus.consumer.setApiKey('');
+    apiKeyInput.value = '';
+  } catch (err) {
+    apiKeyError.value = (err as Error).message;
+  }
+}
+
+async function toggleAutostart(enabled: boolean) {
+  consumerStartError.value = null;
+  try {
+    await window.modelbus.consumer.setAutostart(enabled);
+    consumerAutostart.value = enabled;
+    // If the user just enabled autostart and we're already provisioned,
+    // start the proxy right away so curl works immediately.
+    if (enabled && !props.refs.proxyStats.value && props.refs.provision.value) {
+      consumerStarting.value = true;
+      try {
+        await window.modelbus.proxy.startAt();
+        await props.actions.refreshProxy();
+      } catch (err) {
+        consumerStartError.value = (err as Error).message;
+      } finally {
+        consumerStarting.value = false;
+      }
+    }
+  } catch (err) {
+    consumerStartError.value = (err as Error).message;
+  }
+}
+
+async function startConsumerNow() {
+  consumerStartError.value = null;
+  consumerStarting.value = true;
+  try {
+    await window.modelbus.proxy.startAt();
+    // refresh proxy state so the UI flips to "running"
+    if (props.actions.refreshProxy) await props.actions.refreshProxy();
+  } catch (err) {
+    consumerStartError.value = (err as Error).message ?? String(err);
+  } finally {
+    consumerStarting.value = false;
+  }
+}
+
+refreshConsumerState();
 
 function openDevTools() {
   window.modelbus.system.openDevTools().catch((err) => {
@@ -281,6 +345,22 @@ const trustedNodes = computed(() =>
       </p>
       <div class="form-row">
         <div>
+          <label>
+            <input
+              type="checkbox"
+              :checked="consumerAutostart"
+              @change="toggleAutostart(($event.target as HTMLInputElement).checked)"
+              style="margin-right: 6px;"
+            />
+            {{ t('settings.consumerAutostart') }}
+          </label>
+          <div class="muted" style="margin-top: 4px; font-size: 11px;">
+            {{ t('settings.consumerAutostartHint') }}
+          </div>
+        </div>
+      </div>
+      <div class="form-row">
+        <div>
           <label>{{ t('settings.consumerApiKey') }}</label>
           <input
             v-model="apiKeyInput"
@@ -301,6 +381,18 @@ const trustedNodes = computed(() =>
           {{ t('actions.clear') }}
         </button>
         <span v-if="apiKeySaved" class="tag success">{{ t('provision.saved') }}</span>
+        <span v-if="apiKeyError" class="tag danger">{{ apiKeyError }}</span>
+      </div>
+      <hr />
+      <div style="display: flex; gap: 8px; align-items: center;">
+        <button
+          class="primary"
+          @click="startConsumerNow"
+          :disabled="consumerStarting || !refs.provision.value"
+        >
+          {{ consumerStarting ? '…' : t('settings.startConsumer') }}
+        </button>
+        <span v-if="consumerStartError" class="tag danger">{{ consumerStartError }}</span>
       </div>
       <hr />
       <dl class="kv">
