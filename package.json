@@ -10,6 +10,7 @@
     "dev": "electron-vite dev",
     "build": "electron-vite build",
     "start": "electron-vite preview",
+    "postinstall": "electron-rebuild -f -w better-sqlite3",
     "package": "electron-vite build && electron-builder",
     "package:mac": "electron-vite build && electron-builder --mac",
     "package:win": "electron-vite build && electron-builder --win",
@@ -31,7 +32,7 @@
     "@libp2p/upnp-nat": "^3.1.4",
     "@libp2p/websockets": "^9.1.4",
     "@multiformats/multiaddr": "^12.3.3",
-    "better-sqlite3": "^13.0.3",
+    "better-sqlite3": "^12.11.1",
     "electron-store": "^8.2.0",
     "it-length-prefixed": "^10.0.1",
     "libp2p": "^2.3.0",
@@ -39,6 +40,7 @@
     "uint8arrays": "^5.1.1"
   },
   "devDependencies": {
+    "@electron/rebuild": "^4.2.0",
     "@types/better-sqlite3": "^9.6.0",
     "@types/node": "^22.10.5",
     "@vitejs/plugin-vue": "^5.2.1",
