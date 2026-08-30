@@ -8,6 +8,7 @@ import { P2PService } from './services/p2p.js';
 import { ProvisionerService } from './services/provisioner.js';
 import { ConsumerProxy } from './services/proxy-server.js';
 import { BootstrapCache } from './services/bootstrap-cache.js';
+import { Logger } from './services/logger.js';
 import { registerIpc } from './ipc.js';
 
 const isDev = !app.isPackaged;
@@ -61,6 +62,9 @@ async function bootstrap() {
   const store = new Store();
   await store.load();
 
+  const logger = new Logger();
+  await logger.init();
+
   const bus = new EventBus();
 
   const providers = new ProviderService();
@@ -83,16 +87,20 @@ async function bootstrap() {
     provisioner,
     proxy,
     bootstrapCache,
+    logger,
     getMainWindow: () => mainWindow,
   };
   registerIpc(deps);
   bus.on((evt) => {
+    logger.info(evt.type, evt.payload as Record<string, unknown>);
     for (const win of BrowserWindow.getAllWindows()) {
       win.webContents.send('p2p:event', evt);
       win.webContents.send('proxy:event', evt);
     }
   });
-  return deps;
+
+  (globalThis as unknown as { __deps?: unknown }).__deps = { p2p, proxy, logger };
+  return { ...deps, logger };
 }
 
 app.whenReady().then(async () => {
@@ -114,10 +122,11 @@ app.on('before-quit', async (event) => {
     event.preventDefault();
     const all = BrowserWindow.getAllWindows();
     for (const w of all) w.webContents.send('p2p:event', { type: 'shutting-down', payload: {} });
-    const node = (globalThis as unknown as { __deps?: { p2p: P2PService; proxy: ConsumerProxy } }).__deps;
+    const node = (globalThis as unknown as { __deps?: { p2p: P2PService; proxy: ConsumerProxy; logger: Logger } }).__deps;
     if (node) {
       await node.p2p.stop();
       await node.proxy.stop();
+      node.logger.close();
     }
     app.exit(0);
   } catch (err) {

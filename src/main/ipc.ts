@@ -7,6 +7,7 @@ import type { P2PService } from './services/p2p.js';
 import type { ProvisionerService } from './services/provisioner.js';
 import type { ConsumerProxy } from './services/proxy-server.js';
 import type { BootstrapCache } from './services/bootstrap-cache.js';
+import type { Logger } from './services/logger.js';
 import { computeWallet } from './services/wallet.js';
 import { buildModelViews } from './services/models.js';
 
@@ -18,6 +19,7 @@ export interface Deps {
   provisioner: ProvisionerService;
   proxy: ConsumerProxy;
   bootstrapCache: BootstrapCache;
+  logger?: Logger;
   getMainWindow: () => BrowserWindow | null;
 }
 
