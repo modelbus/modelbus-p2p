@@ -29,6 +29,13 @@ export class ConsumerProxy {
   private port = 0;
   private host = '127.0.0.1';
   private target: NodeAnnouncementFlat | null = null;
+  /**
+   * Optional API key. When set, requests must carry
+   * `Authorization: Bearer <key>`; otherwise the proxy responds 401.
+   * The setter is wired from IPC so changes in Settings take effect
+   * without restarting the proxy.
+   */
+  private apiKey: string | null = null;
   private stats: ProxyStats = {
     totalRequests: 0,
     successRequests: 0,
@@ -58,6 +65,20 @@ export class ConsumerProxy {
 
   getTarget(): NodeAnnouncementFlat | null {
     return this.target;
+  }
+
+  /**
+   * Set / clear the API key that incoming HTTP requests must present
+   * as `Authorization: Bearer <key>`. Empty string / null disables
+   * authentication (the proxy then accepts any request, which is fine
+   * for local testing).
+   */
+  setApiKey(key: string | null): void {
+    this.apiKey = key && key.length > 0 ? key : null;
+  }
+
+  getApiKey(): string | null {
+    return this.apiKey;
   }
 
   getStats(): ProxyStats {
@@ -102,14 +123,35 @@ export class ConsumerProxy {
   }
 
   private async handleHttp(req: IncomingMessage, res: ServerResponse) {
+    if (!this.server) {
+      // The HTTP server should always be running while we accept
+      // requests, but guard against the brief window where start()
+      // hasn't returned yet.
+      this.writeError(res, 503, 'consumer proxy not ready yet');
+      return;
+    }
     if (!this.target) {
-      this.writeError(res, 503, 'No target peer selected. Pick a node in the Consume tab first.');
+      this.writeError(res, 503,
+        'No target peer selected. Open the Models tab and pick one, ' +
+        'or enable consumer autostart in Settings.');
       return;
     }
     const node = this.libp2p();
     if (!node) {
       this.writeError(res, 503, 'libp2p node is not running');
       return;
+    }
+
+    // API-key check: skip CORS preflight requests; otherwise enforce.
+    if (this.apiKey) {
+      const auth = req.headers['authorization'];
+      const expected = 'Bearer ' + this.apiKey;
+      if (auth !== expected) {
+        const challenge = this.apiKey ? 'Bearer' : 'Bearer';
+        res.setHeader('WWW-Authenticate', challenge);
+        this.writeError(res, 401, 'invalid or missing API key');
+        return;
+      }
     }
 
     const start = Date.now();

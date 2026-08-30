@@ -56,6 +56,8 @@ const api = {
   proxy: {
     stats: (): Promise<ProxyStats> => ipcRenderer.invoke('proxy:stats'),
     clear: (): Promise<void> => ipcRenderer.invoke('proxy:clear'),
+    startAt: (peerId?: string): Promise<{ port: number; target: { peerId: string; nickname: string; providerId: string; providerName: string; modelIds: string[]; primaryAddr: string; announcedAt: number; trusted: boolean } }> =>
+      ipcRenderer.invoke('consumer:startAt', peerId ? { peerId } : undefined),
     logs: (limit?: number): Promise<Array<{
       ts: number;
       method: string;
@@ -84,6 +86,15 @@ const api = {
       leaderboard: LeaderboardEntry[];
     }> => ipcRenderer.invoke('models:catalogue'),
   },
+  consumer: {
+    setApiKey: (key: string): Promise<{ apiKey: string | null }> =>
+      ipcRenderer.invoke('consumer:setApiKey', key),
+    getApiKey: (): Promise<string | null> => ipcRenderer.invoke('consumer:getApiKey'),
+    setAutostart: (enabled: boolean): Promise<{ autostart: boolean }> =>
+      ipcRenderer.invoke('consumer:setAutostart', enabled),
+    getAutostart: (): Promise<boolean> => ipcRenderer.invoke('consumer:getAutostart'),
+  },
+
   system: {
     openExternal: (url: string): Promise<void> => ipcRenderer.invoke('system:openExternal', url),
     openDevTools: (): Promise<void> => ipcRenderer.invoke('system:openDevTools'),

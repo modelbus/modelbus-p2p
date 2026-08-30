@@ -6,6 +6,13 @@ import type { ProvisionConfig, BootstrapConfig } from '@shared/types';
 interface StoreShape {
   bootstrap?: BootstrapConfig;
   provision?: ProvisionConfig;
+  /** Optional consumer-side API key. When set, ConsumerProxy rejects
+   *  any HTTP request that doesn't carry it as `Authorization: Bearer`. */
+  consumerApiKey?: string;
+  /** True if the user wants the consumer proxy to start automatically
+   *  whenever the P2P node comes up (so curl works without having to
+   *  click anything first). */
+  consumerAutostart?: boolean;
 }
 
 const DEFAULT_BOOTSTRAP: BootstrapConfig = {
@@ -62,6 +69,29 @@ export class Store {
 
   async clearProvision(): Promise<void> {
     delete this.data.provision;
+    await this.save();
+  }
+
+  getConsumerApiKey(): string | null {
+    return this.data.consumerApiKey ?? null;
+  }
+
+  async setConsumerApiKey(key: string): Promise<void> {
+    this.data.consumerApiKey = key;
+    await this.save();
+  }
+
+  async clearConsumerApiKey(): Promise<void> {
+    delete this.data.consumerApiKey;
+    await this.save();
+  }
+
+  getConsumerAutostart(): boolean {
+    return this.data.consumerAutostart ?? false;
+  }
+
+  async setConsumerAutostart(enabled: boolean): Promise<void> {
+    this.data.consumerAutostart = enabled;
     await this.save();
   }
 }

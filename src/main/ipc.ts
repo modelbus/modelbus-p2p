@@ -98,6 +98,31 @@ export function registerIpc(deps: Deps): void {
         console.error('[ipc] provision re-register failed:', (err as Error).message);
       }
     }
+    // If the user wants the consumer proxy to auto-start, point it at
+    // our own provision entry and bring the listener up. This is what
+    // makes `curl http://127.0.0.1:18100/...` work without having to
+    // open the Models tab first.
+    if (store.getConsumerAutostart() && provisioner.isActive() && !proxy.isRunning()) {
+      try {
+        const local = store.getProvision();
+        const me = p2p.peerIdString();
+        if (local && me) {
+          proxy.setTarget({
+            peerId: local.peerId,
+            nickname: local.nickname,
+            providerId: local.providerId,
+            providerName: local.providerName,
+            modelIds: local.modelIds,
+            primaryAddr: p2p.multiaddrs()[0] ?? '',
+            announcedAt: Date.now(),
+            trusted: true,
+          });
+          await proxy.start(cfg.proxyPort);
+        }
+      } catch (err) {
+        console.warn('[ipc] consumer autostart failed:', (err as Error).message);
+      }
+    }
   });
 
   ipcMain.handle('p2p:stop', async () => {
@@ -122,6 +147,27 @@ export function registerIpc(deps: Deps): void {
         console.warn('[ipc] auto announce failed:', (err as Error).message);
       }
     }
+    // If the user wants the consumer proxy to auto-start, point it at
+    // our own node and bring the listener up. This is what makes
+    // `curl http://127.0.0.1:18100/...` work right after a successful
+    // provision.
+    if (store.getConsumerAutostart() && p2p.isStarted() && !proxy.isRunning()) {
+      try {
+        proxy.setTarget({
+          peerId: full.peerId,
+          nickname: full.nickname,
+          providerId: full.providerId,
+          providerName: full.providerName,
+          modelIds: full.modelIds,
+          primaryAddr: p2p.multiaddrs()[0] ?? '',
+          announcedAt: Date.now(),
+          trusted: true,
+        });
+        await proxy.start(store.getBootstrap().proxyPort);
+      } catch (err) {
+        console.warn('[ipc] consumer autostart after provision failed:', (err as Error).message);
+      }
+    }
     return full;
   });
   ipcMain.handle('provision:clear', async () => {
@@ -132,6 +178,71 @@ export function registerIpc(deps: Deps): void {
   ipcMain.handle('proxy:stats', async () => proxy.getStats());
   ipcMain.handle('proxy:clear', async () => proxy.clearStats());
   ipcMain.handle('proxy:logs', async (_e, limit: number) => proxy.getLogs(limit));
+
+  // ---- Consumer-side configuration ----
+  // Push the currently-stored API key into the running proxy so any
+  // setting change in the UI takes effect immediately. We don't
+  // auto-restart the listener; the key is read on every request.
+  function applyConsumerApiKey(): void {
+    proxy.setApiKey(store.getConsumerApiKey());
+  }
+  applyConsumerApiKey();
+
+  ipcMain.handle('consumer:setApiKey', async (_e, key: string) => {
+    if (typeof key !== 'string') throw new Error('key must be a string');
+    const trimmed = key.trim();
+    if (trimmed.length === 0) {
+      await store.clearConsumerApiKey();
+    } else {
+      await store.setConsumerApiKey(trimmed);
+    }
+    applyConsumerApiKey();
+    return { apiKey: store.getConsumerApiKey() };
+  });
+
+  ipcMain.handle('consumer:getApiKey', async () => store.getConsumerApiKey());
+
+  ipcMain.handle('consumer:setAutostart', async (_e, enabled: boolean) => {
+    await store.setConsumerAutostart(!!enabled);
+    return { autostart: store.getConsumerAutostart() };
+  });
+
+  ipcMain.handle('consumer:getAutostart', async () => store.getConsumerAutostart());
+
+  /**
+   * Start the proxy pointed at a specific peer (or the local node if
+   * peerId is omitted). Used by Settings → 调用服务 ("Save & Start")
+   * to make curl work immediately.
+   */
+  ipcMain.handle('consumer:startAt', async (_e, payload?: { peerId?: string }) => {
+    const peerId = payload?.peerId ?? p2p.peerIdString();
+    if (!peerId) throw new Error('libp2p is not started yet');
+
+    const items: NodeAnnouncementFlat[] = await registry.fetch(store.getBootstrap().registryUrl);
+    let target: NodeAnnouncementFlat | undefined = items.find((it) => it.peerId === peerId);
+    if (!target && peerId === p2p.peerIdString()) {
+      const local = store.getProvision();
+      if (local) {
+        target = {
+          peerId: local.peerId,
+          nickname: local.nickname,
+          providerId: local.providerId,
+          providerName: local.providerName,
+          modelIds: local.modelIds,
+          primaryAddr: p2p.multiaddrs()[0] ?? '',
+          announcedAt: Date.now(),
+          trusted: true,
+        };
+      }
+    }
+    if (!target) throw new Error(`peer ${peerId} not found in registry`);
+
+    proxy.setTarget(target);
+    if (!proxy.isRunning()) {
+      await proxy.start(store.getBootstrap().proxyPort);
+    }
+    return { port: store.getBootstrap().proxyPort, target };
+  });
   ipcMain.handle('proxy:target', async () => {
     const t = proxy.getTarget();
     return {
