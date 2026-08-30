@@ -228,7 +228,11 @@ export const nbNO: Dict = {
     colLatency: 'Latens',
     nodesShort: '{n} noder',
     more: 'mer',
-  },
+
+    connectSelf: 'Koble til deg selv (test lokal tjeneste)',
+    connectSelfHint: 'Koble til din egen node og start den lokale HTTP-proxyen; test deretter med curl http://127.0.0.1:{port}/v1/chat/completions.',
+    selfBadge: 'selv',
+    colAction: 'Handling',  },
   system: {
     menuLabel: 'System',
     openDevTools: 'Åpne utviklerverktøy',

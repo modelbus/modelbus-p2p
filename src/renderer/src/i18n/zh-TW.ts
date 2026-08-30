@@ -228,7 +228,11 @@ export const zhTW: Dict = {
     colLatency: '延遲',
     nodesShort: '{n} 節點',
     more: '更多',
-  },
+
+    connectSelf: '連接自己（測試本機服務）',
+    connectSelfHint: '連接本機節點並啟動本地 HTTP 代理，然後可用 curl http://127.0.0.1:{port}/v1/chat/completions 測試。',
+    selfBadge: '本機',
+    colAction: '操作',  },
   system: {
     menuLabel: '系統',
     openDevTools: '開啟開發者工具',

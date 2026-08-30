@@ -228,7 +228,11 @@ export const viVN: Dict = {
     colLatency: 'Độ trễ',
     nodesShort: '{n} nút',
     more: 'thêm',
-  },
+
+    connectSelf: 'Kết nối chính mình (kiểm tra dịch vụ cục bộ)',
+    connectSelfHint: 'Kết nối nút của chính bạn và khởi động proxy HTTP cục bộ, rồi kiểm tra bằng curl http://127.0.0.1:{port}/v1/chat/completions.',
+    selfBadge: 'chính mình',
+    colAction: 'Thao tác',  },
   system: {
     menuLabel: 'Hệ thống',
     openDevTools: 'Mở công cụ dành cho nhà phát triển',

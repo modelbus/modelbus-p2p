@@ -228,7 +228,11 @@ export const esES: Dict = {
     colLatency: 'Latencia',
     nodesShort: '{n} nodos',
     more: 'más',
-  },
+
+    connectSelf: 'Conectarse a sí mismo (probar servicio local)',
+    connectSelfHint: 'Conéctate a tu propio nodo e inicia el proxy HTTP local; prueba con curl http://127.0.0.1:{port}/v1/chat/completions.',
+    selfBadge: 'propio',
+    colAction: 'Acción',  },
   system: {
     menuLabel: 'Sistema',
     openDevTools: 'Abrir herramientas de desarrollador',

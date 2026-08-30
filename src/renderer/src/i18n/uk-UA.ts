@@ -228,7 +228,11 @@ export const ukUA: Dict = {
     colLatency: 'Затримка',
     nodesShort: '{n} вузлів',
     more: 'ще',
-  },
+
+    connectSelf: 'Підключитися до себе (перевірити локальний сервіс)',
+    connectSelfHint: 'Підключіться до свого вузла та запустіть локальний HTTP-проксі, потім перевірте: curl http://127.0.0.1:{port}/v1/chat/completions.',
+    selfBadge: 'власний',
+    colAction: 'Дія',  },
   system: {
     menuLabel: 'Система',
     openDevTools: 'Відкрити інструменти розробника',

@@ -228,7 +228,11 @@ export const trTR: Dict = {
     colLatency: 'Gecikme',
     nodesShort: '{n} düğüm',
     more: 'daha fazla',
-  },
+
+    connectSelf: 'Kendine bağlan (yerel hizmeti test et)',
+    connectSelfHint: 'Kendi düğümünüze bağlanın ve yerel HTTP proxy\'sini başlatın; ardından curl http://127.0.0.1:{port}/v1/chat/completions ile test edin.',
+    selfBadge: 'kendisi',
+    colAction: 'İşlem',  },
   system: {
     menuLabel: 'Sistem',
     openDevTools: 'Geliştirici araçlarını aç',

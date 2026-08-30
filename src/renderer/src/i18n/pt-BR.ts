@@ -228,7 +228,11 @@ export const ptBR: Dict = {
     colLatency: 'Latência',
     nodesShort: '{n} nós',
     more: 'mais',
-  },
+
+    connectSelf: 'Conectar a si mesmo (testar serviço local)',
+    connectSelfHint: 'Conecte ao seu próprio nó e inicie o proxy HTTP local, depois teste com curl http://127.0.0.1:{port}/v1/chat/completions.',
+    selfBadge: 'próprio',
+    colAction: 'Ação',  },
   system: {
     menuLabel: 'Sistema',
     openDevTools: 'Abrir ferramentas de desenvolvedor',

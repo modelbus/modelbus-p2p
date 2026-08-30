@@ -228,7 +228,11 @@ export const elGR: Dict = {
     colLatency: 'Καθυστέρηση',
     nodesShort: '{n} κόμβοι',
     more: 'περισσότερα',
-  },
+
+    connectSelf: 'Σύνδεση με τον εαυτό σας (δοκιμή τοπικής υπηρεσίας)',
+    connectSelfHint: 'Συνδεθείτε στον δικό σας κόμβο και ξεκινήστε το τοπικό HTTP proxy· στη συνέχεια δοκιμάστε με curl http://127.0.0.1:{port}/v1/chat/completions.',
+    selfBadge: 'εαυτός',
+    colAction: 'Ενέργεια',  },
   system: {
     menuLabel: 'Σύστημα',
     openDevTools: 'Άνοιγμα εργαλείων προγραμματιστή',

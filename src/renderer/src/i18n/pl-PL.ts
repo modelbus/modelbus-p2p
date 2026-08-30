@@ -228,7 +228,11 @@ export const plPL: Dict = {
     colLatency: 'Opóźnienie',
     nodesShort: '{n} węzłów',
     more: 'więcej',
-  },
+
+    connectSelf: 'Połącz ze sobą (testuj usługę lokalną)',
+    connectSelfHint: 'Połącz ze swoim węzłem i uruchom lokalny proxy HTTP, a następnie przetestuj: curl http://127.0.0.1:{port}/v1/chat/completions.',
+    selfBadge: 'własny',
+    colAction: 'Akcja',  },
   system: {
     menuLabel: 'System',
     openDevTools: 'Otwórz narzędzia deweloperskie',

@@ -228,7 +228,11 @@ export const arSA: Dict = {
     colLatency: 'الكمون',
     nodesShort: '{n} عقد',
     more: 'المزيد',
-  },
+
+    connectSelf: 'الاتصال بالذات (اختبار الخدمة المحلية)',
+    connectSelfHint: 'اتصل بعقدتك وابدأ بروكسي HTTP المحلي، ثم اختبر باستخدام curl http://127.0.0.1:{port}/v1/chat/completions.',
+    selfBadge: 'ذاتي',
+    colAction: 'إجراء',  },
   system: {
     menuLabel: 'النظام',
     openDevTools: 'افتح أدوات المطور',

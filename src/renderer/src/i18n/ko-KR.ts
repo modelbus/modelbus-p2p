@@ -228,7 +228,11 @@ export const koKR: Dict = {
     colLatency: '지연',
     nodesShort: '노드 {n}개',
     more: '더보기',
-  },
+
+    connectSelf: '자신에게 연결 (로컬 서비스 테스트)',
+    connectSelfHint: '자신의 노드에 연결하고 로컬 HTTP 프록시를 시작한 후 curl http://127.0.0.1:{port}/v1/chat/completions로 테스트하세요.',
+    selfBadge: '본인',
+    colAction: '동작',  },
   system: {
     menuLabel: '시스템',
     openDevTools: '개발자 도구 열기',

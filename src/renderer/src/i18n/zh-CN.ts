@@ -212,6 +212,10 @@ export const zhCN = {
     colLatency: '延迟',
     nodesShort: '{n} 节点',
     more: '更多',
+    connectSelf: '连接自己（测试本机服务）',
+    connectSelfHint: '连接本机节点并启动本地 HTTP 代理，然后可用 curl http://127.0.0.1:{port}/v1/chat/completions 测试。',
+    selfBadge: '本机',
+    colAction: '操作',
   },
   days: {
     today: '今天',

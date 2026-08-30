@@ -228,7 +228,11 @@ export const bnBD: Dict = {
     colLatency: 'বিলম্ব',
     nodesShort: '{n} নোড',
     more: 'আরো',
-  },
+
+    connectSelf: 'নিজের সাথে সংযোগ করুন (লোকাল সার্ভিস পরীক্ষা)',
+    connectSelfHint: 'নিজের নোডে সংযুক্ত হয়ে লোকাল HTTP প্রক্সি চালু করুন, তারপর curl http://127.0.0.1:{port}/v1/chat/completions দিয়ে পরীক্ষা করুন।',
+    selfBadge: 'নিজের',
+    colAction: 'কর্ম',  },
   system: {
     menuLabel: 'সিস্টেম',
     openDevTools: 'ডেভেলপার টুল খুলুন',

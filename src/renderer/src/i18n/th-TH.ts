@@ -228,7 +228,11 @@ export const thTH: Dict = {
     colLatency: 'เวลาแฝง',
     nodesShort: '{n} โหนด',
     more: 'เพิ่มเติม',
-  },
+
+    connectSelf: 'เชื่อมต่อกับตัวเอง (ทดสอบบริการในเครื่อง)',
+    connectSelfHint: 'เชื่อมต่อกับโหนดของคุณเองและเริ่มพร็อกซี HTTP ในเครื่อง จากนั้นทดสอบด้วย curl http://127.0.0.1:{port}/v1/chat/completions',
+    selfBadge: 'ตัวเอง',
+    colAction: 'การดำเนินการ',  },
   system: {
     menuLabel: 'ระบบ',
     openDevTools: 'เปิดเครื่องมือสำหรับนักพัฒนา',

@@ -228,7 +228,11 @@ export const ruRU: Dict = {
     colLatency: 'Задержка',
     nodesShort: '{n} узлов',
     more: 'ещё',
-  },
+
+    connectSelf: 'Подключиться к себе (проверить локальный сервис)',
+    connectSelfHint: 'Подключитесь к своему узлу и запустите локальный HTTP-прокси, затем проверьте: curl http://127.0.0.1:{port}/v1/chat/completions.',
+    selfBadge: 'свой',
+    colAction: 'Действие',  },
   system: {
     menuLabel: 'Система',
     openDevTools: 'Открыть инструменты разработчика',

@@ -228,7 +228,11 @@ export const itIT: Dict = {
     colLatency: 'Latenza',
     nodesShort: '{n} nodi',
     more: 'altri',
-  },
+
+    connectSelf: 'Connetti a te stesso (testa il servizio locale)',
+    connectSelfHint: 'Connettiti al tuo nodo e avvia il proxy HTTP locale, poi testa con curl http://127.0.0.1:{port}/v1/chat/completions.',
+    selfBadge: 'sé',
+    colAction: 'Azione',  },
   system: {
     menuLabel: 'Sistema',
     openDevTools: 'Apri strumenti per sviluppatori',

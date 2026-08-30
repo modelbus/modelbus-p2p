@@ -228,7 +228,11 @@ export const bsBA: Dict = {
     colLatency: 'Kašnjenje',
     nodesShort: '{n} čvorova',
     more: 'više',
-  },
+
+    connectSelf: 'Poveži se sa sobom (testiraj lokalni servis)',
+    connectSelfHint: 'Povežite se sa svojim čvorom i pokrenite lokalni HTTP proxy, zatim testirajte: curl http://127.0.0.1:{port}/v1/chat/completions.',
+    selfBadge: 'svoj',
+    colAction: 'Radnja',  },
   system: {
     menuLabel: 'Sistem',
     openDevTools: 'Otvori razvojne alate',

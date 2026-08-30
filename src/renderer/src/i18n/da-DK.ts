@@ -228,7 +228,11 @@ export const daDK: Dict = {
     colLatency: 'Latens',
     nodesShort: '{n} noder',
     more: 'mere',
-  },
+
+    connectSelf: 'Forbind til dig selv (test lokal tjeneste)',
+    connectSelfHint: 'Forbind til din egen node og start den lokale HTTP-proxy; test derefter med curl http://127.0.0.1:{port}/v1/chat/completions.',
+    selfBadge: 'selv',
+    colAction: 'Handling',  },
   system: {
     menuLabel: 'System',
     openDevTools: 'Åbn udviklerværktøjer',

@@ -228,7 +228,11 @@ export const deDE: Dict = {
     colLatency: 'Latenz',
     nodesShort: '{n} Knoten',
     more: 'mehr',
-  },
+
+    connectSelf: 'Mit sich selbst verbinden (lokalen Dienst testen)',
+    connectSelfHint: 'Verbinde dich mit deinem eigenen Knoten und starte den lokalen HTTP-Proxy; teste dann mit curl http://127.0.0.1:{port}/v1/chat/completions.',
+    selfBadge: 'selbst',
+    colAction: 'Aktion',  },
   system: {
     menuLabel: 'System',
     openDevTools: 'Entwicklertools öffnen',

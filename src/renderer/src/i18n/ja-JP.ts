@@ -228,7 +228,11 @@ export const jaJP: Dict = {
     colLatency: '遅延',
     nodesShort: '{n} ノード',
     more: 'さらに表示',
-  },
+
+    connectSelf: '自分に接続（ローカルサービスをテスト）',
+    connectSelfHint: '自分のノードに接続してローカル HTTP プロキシを起動し、curl http://127.0.0.1:{port}/v1/chat/completions でテストします。',
+    selfBadge: '自分',
+    colAction: '操作',  },
   system: {
     menuLabel: 'システム',
     openDevTools: '開発者ツールを開く',
