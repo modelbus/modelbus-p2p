@@ -20,18 +20,8 @@ import ModelsView from './views/ModelsView.vue';
 import WalletView from './views/WalletView.vue';
 import LogsView from './views/LogsView.vue';
 import SettingsView from './views/SettingsView.vue';
-// SetupView / ProvisionView / ConsumeView are still implemented but
-// their content is now folded into HomeView / SettingsView for a more
-// compact layout. Kept here as reference imports in case a future
-// need arises to surface them again.
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import SetupView from './views/SetupView.vue';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import ProvisionView from './views/ProvisionView.vue';
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-import ConsumeView from './views/ConsumeView.vue';
 
-import type { EventLogEntry, AppRefs, AppActions, AppHelpers } from './views/types';
+import type { EventLogEntry, AppRefs, AppActions, AppHelpers, DraftProvider } from './views/types';
 
 type Tab = 'home' | 'models' | 'wallet' | 'logs' | 'settings';
 
@@ -58,12 +48,12 @@ const providerDetail = ref<ProviderDetail | null>(null);
 const providerLoading = ref(false);
 
 const provision = ref<ProvisionConfig | null>(null);
-const draft = ref({
-  providerId: '',
+const draft = ref<{
+  nickname: string;
+  providers: DraftProvider[];
+}>({
   nickname: '',
-  apiBase: '',
-  apiKey: '',
-  selectedModels: [] as string[],
+  providers: [],
 });
 
 const nodes = ref<NodeAnnouncement[]>([]);
@@ -131,13 +121,18 @@ async function refreshProvision() {
   provision.value = await window.modelbus.provision.get();
   if (provision.value) {
     draft.value = {
-      providerId: provision.value.providerId,
       nickname: provision.value.nickname,
-      apiBase: provision.value.apiBase ?? '',
-      apiKey: provision.value.apiKey,
-      selectedModels: [...provision.value.modelIds],
+      providers: provision.value.providers.map((p) => ({
+        providerId: p.providerId,
+        providerName: p.providerName,
+        apiBase: p.apiBase ?? '',
+        apiKey: p.apiKey,
+        selectedModels: [...p.modelIds],
+      })),
     };
-    await loadProviderDetail(provision.value.providerId);
+    if (provision.value.providers.length > 0) {
+      await loadProviderDetail(provision.value.providers[0].providerId);
+    }
   }
 }
 
@@ -186,44 +181,78 @@ async function loadProviderDetail(id: string) {
   providerDetail.value = await window.modelbus.providers.get(id);
 }
 
-async function selectProvider(id: string) {
-  draft.value.providerId = id;
-  draft.value.selectedModels = [];
+function addProvider() {
+  draft.value.providers.push({
+    providerId: '',
+    providerName: '',
+    apiBase: '',
+    apiKey: '',
+    selectedModels: [],
+  });
+}
+
+function removeProvider(index: number) {
+  draft.value.providers.splice(index, 1);
+}
+
+async function selectProvider(index: number, id: string) {
+  const p = draft.value.providers[index];
+  if (!p) return;
+  const summary = providers.value.find((x) => x.id === id);
+  p.providerId = id;
+  p.providerName = summary?.name ?? id;
+  p.selectedModels = [];
   await loadProviderDetail(id);
 }
 
-function toggleModel(m: ModelInfo) {
-  const i = draft.value.selectedModels.indexOf(m.id);
-  if (i >= 0) draft.value.selectedModels.splice(i, 1);
-  else draft.value.selectedModels.push(m.id);
+function toggleModel(index: number, m: ModelInfo) {
+  const p = draft.value.providers[index];
+  if (!p) return;
+  const i = p.selectedModels.indexOf(m.id);
+  if (i >= 0) p.selectedModels.splice(i, 1);
+  else p.selectedModels.push(m.id);
 }
 
 async function saveProvision() {
   error.value = null;
   try {
-    const provider = providers.value.find((p) => p.id === draft.value.providerId);
-    if (!provider) {
+    if (draft.value.providers.length === 0) {
       error.value = t('provision.needPick');
       return;
     }
-    if (!draft.value.apiKey) {
-      error.value = t('provision.needKey');
-      return;
+    for (const p of draft.value.providers) {
+      if (!p.providerId) {
+        error.value = t('provision.needPick');
+        return;
+      }
+      if (!p.apiKey) {
+        error.value = t('provision.needKey');
+        return;
+      }
     }
     if (!draft.value.nickname) draft.value.nickname = status.value.peerId?.slice(-6) ?? 'anonymous';
-    const detail = providerDetail.value ?? (await window.modelbus.providers.get(provider.id));
-    const allowed = new Set((detail?.models ?? []).map((m) => m.id));
-    const models = draft.value.selectedModels.length
-      ? draft.value.selectedModels.filter((id) => allowed.has(id))
-      : (detail?.models ?? []).map((m) => m.id);
+
+    // Resolve each provider's model set (empty selection => share all).
+    const creds = [];
+    for (const p of draft.value.providers) {
+      const detail = await window.modelbus.providers.get(p.providerId);
+      const allowed = new Set((detail?.models ?? []).map((m) => m.id));
+      const models = p.selectedModels.length
+        ? p.selectedModels.filter((id) => allowed.has(id))
+        : (detail?.models ?? []).map((m) => m.id);
+      creds.push({
+        providerId: p.providerId,
+        providerName: p.providerName,
+        apiBase: p.apiBase || undefined,
+        apiKey: p.apiKey,
+        modelIds: models,
+      });
+    }
+
     if (!status.value.peerId) await startNode();
     const full = await window.modelbus.provision.set({
       nickname: draft.value.nickname,
-      providerId: provider.id,
-      providerName: provider.name,
-      apiBase: draft.value.apiBase || undefined,
-      apiKey: draft.value.apiKey,
-      modelIds: models,
+      providers: creds,
     });
     provision.value = full;
     await refreshStatus();
@@ -237,11 +266,8 @@ async function clearProvision() {
   await window.modelbus.provision.clear();
   provision.value = null;
   draft.value = {
-    providerId: '',
     nickname: '',
-    apiBase: '',
-    apiKey: '',
-    selectedModels: [],
+    providers: [],
   };
   await loadProviderDetail('');
 }
@@ -321,7 +347,7 @@ const refs: AppRefs = {
 const actions: AppActions = {
   refreshStatus, refreshProvision, refreshProxy, refreshNodes, refreshAll,
   startNode, stopNode,
-  loadProviders, loadProviderDetail, selectProvider, toggleModel,
+  loadProviders, loadProviderDetail, addProvider, removeProvider, selectProvider, toggleModel,
   saveProvision, clearProvision,
   pickTarget, clearTarget,
   loadConfig, saveConfig,
