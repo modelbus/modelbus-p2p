@@ -13,9 +13,11 @@ import { uPnPNAT } from '@libp2p/upnp-nat';
 import { autoNAT } from '@libp2p/autonat';
 import { multiaddr, type Multiaddr } from '@multiformats/multiaddr';
 import { peerIdFromString } from '@libp2p/peer-id';
-import type { PeerId } from '@libp2p/interface';
+import { generateKeyPair, privateKeyFromProtobuf, privateKeyToProtobuf } from '@libp2p/crypto/keys';
+import type { PeerId, PrivateKey } from '@libp2p/interface';
 
 import type { BootstrapConfig } from '@shared/types';
+import type { Store } from './store.js';
 
 export interface P2PEventBus {
   emit(event: { type: string; payload: unknown }): void;
@@ -27,7 +29,10 @@ export class P2PService {
   private stopping = false;
   private startedAt = 0;
 
-  constructor(private events: P2PEventBus) {}
+  constructor(
+    private events: P2PEventBus,
+    private store?: Store
+  ) {}
 
   isStarted(): boolean {
     return !!this.node;
@@ -60,7 +65,12 @@ export class P2PService {
       ];
       const bootstrapList = cfg.bootstrapMultiaddrs.filter((m) => !!m && m.length > 0);
 
+      // Stable identity: reuse the persisted Ed25519 key (or mint one on
+      // first run) so the peerId never changes across restarts.
+      const privateKey = await this.loadOrCreatePrivateKey();
+
       this.node = await createLibp2p({
+        privateKey: privateKey as PrivateKey,
         addresses: { listen },
         transports: [
           tcp(),
@@ -101,6 +111,31 @@ export class P2PService {
     } finally {
       this.starting = false;
     }
+  }
+
+  /** Load the persisted identity or generate + persist a fresh one. */
+  private async loadOrCreatePrivateKey(): Promise<PrivateKey> {
+    if (this.store) {
+      const saved = this.store.getPeerKey();
+      if (saved) {
+        try {
+          const bytes = Uint8Array.from(Buffer.from(saved, 'base64'));
+          // NOTE: @libp2p/crypto resolves against @libp2p/interface@3 while
+          // libp2p/peer-id resolve against @2; the runtime key objects are
+          // identical, only their TS types differ. Cast across the split.
+          return privateKeyFromProtobuf(bytes) as unknown as PrivateKey;
+        } catch (err) {
+          console.warn('[p2p] failed to load persisted peer key, regenerating:', (err as Error).message);
+        }
+      }
+    }
+    // No store, no saved key, or corrupt key — generate a new Ed25519 key.
+    const privateKey = await generateKeyPair('Ed25519');
+    if (this.store) {
+      const bytes = privateKeyToProtobuf(privateKey);
+      await this.store.setPeerKey(Buffer.from(bytes).toString('base64'));
+    }
+    return privateKey as unknown as PrivateKey;
   }
 
   async stop(): Promise<void> {

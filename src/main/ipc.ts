@@ -46,7 +46,7 @@ export function registerIpc(deps: Deps): void {
       const primaryAddr = p2p.multiaddrs()[0] ?? '';
       const modelIds = cfg2.modelIds;
       const local: NodeAnnouncementFlat = {
-        peerId: cfg2.peerId,
+        peerId: p2p.peerIdString() ?? cfg2.peerId,
         nickname: cfg2.nickname,
         providerId: cfg2.providerId,
         providerName: cfg2.providerName,
@@ -91,11 +91,22 @@ export function registerIpc(deps: Deps): void {
     if (!p2p.isStarted()) await p2p.start(cfg);
     // If a provision config exists, re-register so the node is ready to serve.
     const prov = store.getProvision();
-    if (prov && !provisioner.isActive()) {
-      try {
-        await provisioner.register({ ...prov, peerId: p2p.peerIdString() ?? prov.peerId });
-      } catch (err) {
-        console.error('[ipc] provision re-register failed:', (err as Error).message);
+    if (prov) {
+      // The peerId is now persisted (stable across restarts), but a store
+      // written by an older build may still carry a random peerId from
+      // before persistence landed. Re-align it with the live identity so
+      // every downstream "local target" uses the right peerId and the
+      // self-dial short-circuit matches.
+      const me = p2p.peerIdString();
+      if (me && prov.peerId !== me) {
+        await store.setProvision({ ...prov, peerId: me });
+      }
+      if (!provisioner.isActive()) {
+        try {
+          await provisioner.register({ ...prov, peerId: me ?? prov.peerId });
+        } catch (err) {
+          console.error('[ipc] provision re-register failed:', (err as Error).message);
+        }
       }
     }
     // If the user wants the consumer proxy to auto-start, point it at
@@ -108,7 +119,7 @@ export function registerIpc(deps: Deps): void {
         const me = p2p.peerIdString();
         if (local && me) {
           proxy.setTarget({
-            peerId: local.peerId,
+            peerId: me,
             nickname: local.nickname,
             providerId: local.providerId,
             providerName: local.providerName,
@@ -224,7 +235,7 @@ export function registerIpc(deps: Deps): void {
       const local = store.getProvision();
       if (local) {
         target = {
-          peerId: local.peerId,
+          peerId: p2p.peerIdString() ?? local.peerId,
           nickname: local.nickname,
           providerId: local.providerId,
           providerName: local.providerName,
@@ -259,7 +270,7 @@ export function registerIpc(deps: Deps): void {
       if (local) {
         const primaryAddr = p2p.multiaddrs()[0] ?? '';
         found = {
-          peerId: local.peerId,
+          peerId: p2p.peerIdString() ?? local.peerId,
           nickname: local.nickname,
           providerId: local.providerId,
           providerName: local.providerName,
@@ -327,7 +338,7 @@ export function registerIpc(deps: Deps): void {
       const local = provisioner.config()!;
       const primaryAddr = p2p.multiaddrs()[0] ?? '';
       const localEntry: NodeAnnouncementFlat = {
-        peerId: local.peerId,
+        peerId: p2p.peerIdString() ?? local.peerId,
         nickname: local.nickname,
         providerId: local.providerId,
         providerName: local.providerName,

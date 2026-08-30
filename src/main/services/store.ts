@@ -13,6 +13,9 @@ interface StoreShape {
    *  whenever the P2P node comes up (so curl works without having to
    *  click anything first). */
   consumerAutostart?: boolean;
+  /** base64-encoded protobuf Ed25519 private key used to derive the
+   *  stable libp2p peerId. Persisted so the identity survives restarts. */
+  peerKey?: string;
 }
 
 const DEFAULT_BOOTSTRAP: BootstrapConfig = {
@@ -92,6 +95,21 @@ export class Store {
 
   async setConsumerAutostart(enabled: boolean): Promise<void> {
     this.data.consumerAutostart = enabled;
+    await this.save();
+  }
+
+  /**
+   * The persisted libp2p identity. A stable peerId is essential: without
+   * it every app restart would mint a fresh peerId, invalidating the
+   * provision entry, the consumer proxy's self-dial, and every peer that
+   * cached our multiaddrs. Stored as a base64 protobuf Ed25519 private key.
+   */
+  getPeerKey(): string | null {
+    return this.data.peerKey ?? null;
+  }
+
+  async setPeerKey(base64: string): Promise<void> {
+    this.data.peerKey = base64;
     await this.save();
   }
 }

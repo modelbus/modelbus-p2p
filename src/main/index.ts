@@ -65,7 +65,7 @@ async function bootstrap() {
 
   const providers = new ProviderService();
   const registry = new RegistryService();
-  const p2p = new P2PService(bus);
+  const p2p = new P2PService(bus, store);
   const provisioner = new ProvisionerService(() => p2p.getNode(), providers, bus);
   const proxy = new ConsumerProxy(
     () => p2p.getNode(),
