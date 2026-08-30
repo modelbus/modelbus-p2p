@@ -225,4 +225,6 @@ export interface ModelQualityNode {
   uptimeMinutes: number;
   /** Aggregate quality score (0-100) */
   quality: number;
+  /** True when this row represents the local node itself. */
+  self?: boolean;
 }

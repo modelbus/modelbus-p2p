@@ -76,6 +76,7 @@ export function buildModelViews(nodes: NodeAnnouncementFlat[], localStats: {
       servedRequests: served,
       uptimeMinutes: uptime,
       quality,
+      self: localStats.peerId === n.peerId,
     });
   }
 
