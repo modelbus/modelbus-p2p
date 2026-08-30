@@ -26,6 +26,26 @@ export interface Deps {
 export function registerIpc(deps: Deps): void {
   const { store, providers, registry, p2p, provisioner, proxy, bootstrapCache, getMainWindow } = deps;
 
+  /**
+   * Flatten a multi-provider ProvisionConfig into the single-provider
+   * NodeAnnouncementFlat view the rest of the app consumes. Uses the
+   * FIRST provider as the headline provider; the full provider list is
+   * only carried on the wire-format NodeAnnouncement (v2).
+   */
+  function localFlat(config: ProvisionConfig): NodeAnnouncementFlat {
+    const first = config.providers[0];
+    return {
+      peerId: p2p.peerIdString() ?? config.peerId,
+      nickname: config.nickname,
+      providerId: first?.providerId ?? '',
+      providerName: first?.providerName ?? '',
+      modelIds: first ? [...first.modelIds] : [],
+      primaryAddr: p2p.multiaddrs()[0] ?? '',
+      announcedAt: Date.now(),
+      trusted: true,
+    };
+  }
+
   ipcMain.handle('bootstrap:getConfig', async () => store.getBootstrap());
   ipcMain.handle('bootstrap:setConfig', async (_e, patch: Partial<BootstrapConfig>) =>
     store.setBootstrap(patch)
@@ -44,20 +64,11 @@ export function registerIpc(deps: Deps): void {
     }
     // Merge live data: also include the locally registered provider (if any)
     if (provisioner.isActive()) {
-      const cfg2 = provisioner.config()!;
-      const primaryAddr = p2p.multiaddrs()[0] ?? '';
-      const modelIds = cfg2.modelIds;
-      const local: NodeAnnouncementFlat = {
-        peerId: p2p.peerIdString() ?? cfg2.peerId,
-        nickname: cfg2.nickname,
-        providerId: cfg2.providerId,
-        providerName: cfg2.providerName,
-        modelIds,
-        primaryAddr,
-        announcedAt: Date.now(),
-        trusted: true,
-      };
-      if (!items.find((it) => it.peerId === local.peerId)) items.unshift(local);
+      const prov = store.getProvision();
+      if (prov) {
+        const local = localFlat(prov);
+        if (!items.find((it) => it.peerId === local.peerId)) items.unshift(local);
+      }
     }
     // Persist the validated/trusted subset so the next launch has a
     // warm cache even if the official endpoint is unreachable.
@@ -120,16 +131,7 @@ export function registerIpc(deps: Deps): void {
         const local = store.getProvision();
         const me = p2p.peerIdString();
         if (local && me) {
-          proxy.setTarget({
-            peerId: me,
-            nickname: local.nickname,
-            providerId: local.providerId,
-            providerName: local.providerName,
-            modelIds: local.modelIds,
-            primaryAddr: p2p.multiaddrs()[0] ?? '',
-            announcedAt: Date.now(),
-            trusted: true,
-          });
+          proxy.setTarget(localFlat(local));
           await proxy.start(cfg.proxyPort);
         }
       } catch (err) {
@@ -166,16 +168,7 @@ export function registerIpc(deps: Deps): void {
     // provision.
     if (store.getConsumerAutostart() && p2p.isStarted() && !proxy.isRunning()) {
       try {
-        proxy.setTarget({
-          peerId: full.peerId,
-          nickname: full.nickname,
-          providerId: full.providerId,
-          providerName: full.providerName,
-          modelIds: full.modelIds,
-          primaryAddr: p2p.multiaddrs()[0] ?? '',
-          announcedAt: Date.now(),
-          trusted: true,
-        });
+        proxy.setTarget(localFlat(full));
         await proxy.start(store.getBootstrap().proxyPort);
       } catch (err) {
         console.warn('[ipc] consumer autostart after provision failed:', (err as Error).message);
@@ -236,16 +229,7 @@ export function registerIpc(deps: Deps): void {
     if (!target && peerId === p2p.peerIdString()) {
       const local = store.getProvision();
       if (local) {
-        target = {
-          peerId: p2p.peerIdString() ?? local.peerId,
-          nickname: local.nickname,
-          providerId: local.providerId,
-          providerName: local.providerName,
-          modelIds: local.modelIds,
-          primaryAddr: p2p.multiaddrs()[0] ?? '',
-          announcedAt: Date.now(),
-          trusted: true,
-        };
+        target = localFlat(local);
       }
     }
     if (!target) throw new Error(`peer ${peerId} not found in registry`);
@@ -270,17 +254,7 @@ export function registerIpc(deps: Deps): void {
     if (!found && p2p.peerIdString() === peerId) {
       const local = store.getProvision();
       if (local) {
-        const primaryAddr = p2p.multiaddrs()[0] ?? '';
-        found = {
-          peerId: p2p.peerIdString() ?? local.peerId,
-          nickname: local.nickname,
-          providerId: local.providerId,
-          providerName: local.providerName,
-          modelIds: local.modelIds,
-          primaryAddr,
-          announcedAt: Date.now(),
-          trusted: true,
-        };
+        found = localFlat(local);
       }
     }
     if (!found) throw new Error(`peer ${peerId} not found in registry`);
@@ -337,19 +311,11 @@ export function registerIpc(deps: Deps): void {
     const items = await registry.fetch(store.getBootstrap().registryUrl);
     // Always include the local node if it is provisioned.
     if (provisioner.isActive()) {
-      const local = provisioner.config()!;
-      const primaryAddr = p2p.multiaddrs()[0] ?? '';
-      const localEntry: NodeAnnouncementFlat = {
-        peerId: p2p.peerIdString() ?? local.peerId,
-        nickname: local.nickname,
-        providerId: local.providerId,
-        providerName: local.providerName,
-        modelIds: local.modelIds,
-        primaryAddr,
-        announcedAt: Date.now(),
-        trusted: true,
-      };
-      if (!items.find((it) => it.peerId === localEntry.peerId)) items.unshift(localEntry);
+      const prov = store.getProvision();
+      if (prov) {
+        const localEntry = localFlat(prov);
+        if (!items.find((it) => it.peerId === localEntry.peerId)) items.unshift(localEntry);
+      }
     }
     return buildModelViews(items, {
       peerId: p2p.peerIdString(),
@@ -386,12 +352,13 @@ async function announceToRegistry(
   // The registry URL by convention is read-only in this first cut. But if it's a
   // mock file:// or a writable endpoint, we can do a best-effort PUT/POST.
   try {
+    const first = cfg.providers[0];
     const payload = {
       peerId: cfg.peerId,
       nickname: cfg.nickname,
-      providerId: cfg.providerId,
-      providerName: cfg.providerName,
-      modelIds: cfg.modelIds,
+      providerId: first?.providerId ?? '',
+      providerName: first?.providerName ?? '',
+      modelIds: first ? [...first.modelIds] : [],
       multiaddrs,
       announcedAt: Date.now(),
     };
