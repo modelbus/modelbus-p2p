@@ -31,6 +31,7 @@
     "@libp2p/upnp-nat": "^3.1.4",
     "@libp2p/websockets": "^9.1.4",
     "@multiformats/multiaddr": "^12.3.3",
+    "better-sqlite3": "^13.0.3",
     "electron-store": "^8.2.0",
     "it-length-prefixed": "^10.0.1",
     "libp2p": "^2.3.0",
@@ -38,6 +39,7 @@
     "uint8arrays": "^5.1.1"
   },
   "devDependencies": {
+    "@types/better-sqlite3": "^9.6.0",
     "@types/node": "^22.10.5",
     "@vitejs/plugin-vue": "^5.2.1",
     "electron": "^33.3.0",
@@ -46,11 +48,6 @@
     "typescript": "^5.7.3",
     "vite": "^5.4.11",
     "vue": "^3.5.13"
-  },
-  "pnpm": {
-    "onlyBuiltDependencies": [
-      "electron"
-    ]
   },
   "build": {
     "appId": "com.modelbus.p2p",

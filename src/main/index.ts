@@ -9,6 +9,7 @@ import { ProvisionerService } from './services/provisioner.js';
 import { ConsumerProxy } from './services/proxy-server.js';
 import { BootstrapCache } from './services/bootstrap-cache.js';
 import { Logger } from './services/logger.js';
+import { Db } from './services/db.js';
 import { registerIpc } from './ipc.js';
 
 const isDev = !app.isPackaged;
@@ -65,6 +66,9 @@ async function bootstrap() {
   const logger = new Logger();
   await logger.init();
 
+  const db = new Db();
+  await db.init();
+
   const bus = new EventBus();
 
   const providers = new ProviderService();
@@ -88,19 +92,52 @@ async function bootstrap() {
     proxy,
     bootstrapCache,
     logger,
+    db,
     getMainWindow: () => mainWindow,
   };
   registerIpc(deps);
   bus.on((evt) => {
     logger.info(evt.type, evt.payload as Record<string, unknown>);
+    recordRequest(db, proxy, evt);
     for (const win of BrowserWindow.getAllWindows()) {
       win.webContents.send('p2p:event', evt);
       win.webContents.send('proxy:event', evt);
     }
   });
 
-  (globalThis as unknown as { __deps?: unknown }).__deps = { p2p, proxy, logger };
-  return { ...deps, logger };
+  (globalThis as unknown as { __deps?: unknown }).__deps = { p2p, proxy, logger, db };
+  return { ...deps, logger, db };
+}
+
+/**
+ * Persist served / consumed inference requests into the SQLite store.
+ * The proxy and provisioner already emit events on every request; this
+ * translates those events into RequestRecord rows keyed by direction.
+ */
+function recordRequest(
+  db: Db,
+  proxy: ConsumerProxy,
+  evt: { type: string; payload: unknown }
+): void {
+  const p = (evt.payload ?? {}) as Record<string, unknown>;
+  if (evt.type === 'proxy:served') {
+    db.record({
+      ts: Date.now(),
+      direction: 'consume',
+      peerId: proxy.getTarget()?.peerId,
+      method: String(p.method ?? ''),
+      path: String(p.path ?? ''),
+      status: Number(p.status ?? 0),
+      latencyMs: Number(p.latencyMs ?? 0),
+    });
+  } else if (evt.type === 'provision:served') {
+    db.record({
+      ts: Date.now(),
+      direction: 'supply',
+      model: String(p.model ?? ''),
+      status: Number(p.status ?? 0),
+    });
+  }
 }
 
 app.whenReady().then(async () => {
@@ -122,11 +159,12 @@ app.on('before-quit', async (event) => {
     event.preventDefault();
     const all = BrowserWindow.getAllWindows();
     for (const w of all) w.webContents.send('p2p:event', { type: 'shutting-down', payload: {} });
-    const node = (globalThis as unknown as { __deps?: { p2p: P2PService; proxy: ConsumerProxy; logger: Logger } }).__deps;
+    const node = (globalThis as unknown as { __deps?: { p2p: P2PService; proxy: ConsumerProxy; logger: Logger; db: Db } }).__deps;
     if (node) {
       await node.p2p.stop();
       await node.proxy.stop();
       node.logger.close();
+      node.db.close();
     }
     app.exit(0);
   } catch (err) {

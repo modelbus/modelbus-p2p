@@ -10,7 +10,6 @@ dist
 
 # Lockfiles (pick one package manager; we standardize on pnpm)
 package-lock.json
-pnpm-workspace.yaml
 
 # Logs
 *.log
