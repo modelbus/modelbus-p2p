@@ -65,7 +65,7 @@ export const zhCN = {
     contextShort: '{n}k 上下文',
   },
   provision: {
-    title: 'Token 上线',
+    title: '模型',
     offlineHint: '请先在首页启动 P2P 节点。',
     activeHint: '你正在分享 {provider}（{n} 个模型）。其他用户选中你的节点后会通过你转发请求。',
     provider: '模型供应商',
@@ -249,7 +249,7 @@ export const zhCN = {
     },
   },
   models: {
-    title: '可用模型',
+    title: '模型',
     hint: '汇总当前注册到节点列表的所有模型，按质量排序。',
     empty: '暂无模型数据。请确认节点列表 URL 配置正确。',
     nodesTitle: '节点列表',

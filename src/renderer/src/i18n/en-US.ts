@@ -69,7 +69,7 @@ export const enUS: Dict = {
     models: 'Models',
   },
   provision: {
-    title: 'Provision — share your token',
+    title: 'Models',
     offlineHint: 'Please start the P2P node from the Home tab first.',
     activeHint: 'Sharing {provider} ({n} models). Other peers will route inference requests through you.',
     provider: 'Provider',
@@ -265,7 +265,7 @@ export const enUS: Dict = {
     },
   },
   models: {
-    title: 'Available models',
+    title: 'Models',
     hint: 'Aggregates every model advertised by nodes in the registry, sorted by quality.',
     empty: 'No models yet. Double-check the registry URL in Settings → Node.',
     nodesTitle: 'Node list',
