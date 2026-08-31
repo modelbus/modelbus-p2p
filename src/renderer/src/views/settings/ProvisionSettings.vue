@@ -596,12 +596,6 @@ watch(modal, async (v) => {
   border-top: 1px solid var(--border);
   background: var(--bg-elev);
 }
-.chip-actions {
-  margin-top: 8px;
-  display: flex;
-  gap: 8px;
-}
-
 @media (max-width: 720px) {
   .provider-card-aside .quota {
     display: none;
