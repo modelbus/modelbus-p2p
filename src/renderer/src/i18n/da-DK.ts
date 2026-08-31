@@ -22,7 +22,6 @@ export const daDK: Dict = {
     save: 'Gem',
     reload: 'Genindlæs',
     use: 'Brug',
-    stopSharing: 'Stop deling',
     startSharing: 'Start deling',
     update: 'Opdater',
     clear: 'Ryd',

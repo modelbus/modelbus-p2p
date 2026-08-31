@@ -22,7 +22,6 @@ export const frFR: Dict = {
     save: 'Enregistrer',
     reload: 'Recharger',
     use: 'Utiliser',
-    stopSharing: 'Arrêter le partage',
     startSharing: 'Commencer le partage',
     update: 'Mettre à jour',
     clear: 'Vider',

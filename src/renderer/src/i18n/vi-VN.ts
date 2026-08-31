@@ -22,7 +22,6 @@ export const viVN: Dict = {
     save: 'Lưu',
     reload: 'Tải lại',
     use: 'Dùng',
-    stopSharing: 'Dừng chia sẻ',
     startSharing: 'Bắt đầu chia sẻ',
     update: 'Cập nhật',
     clear: 'Xóa',

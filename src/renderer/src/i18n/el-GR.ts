@@ -22,7 +22,6 @@ export const elGR: Dict = {
     save: 'Αποθήκευση',
     reload: 'Επαναφόρτωση',
     use: 'Χρήση',
-    stopSharing: 'Διακοπή κοινής χρήσης',
     startSharing: 'Έναρξη κοινής χρήσης',
     update: 'Ενημέρωση',
     clear: 'Εκκαθάριση',

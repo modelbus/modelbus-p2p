@@ -22,7 +22,6 @@ export const ptBR: Dict = {
     save: 'Salvar',
     reload: 'Recarregar',
     use: 'Usar',
-    stopSharing: 'Parar de compartilhar',
     startSharing: 'Começar a compartilhar',
     update: 'Atualizar',
     clear: 'Limpar',

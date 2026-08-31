@@ -22,7 +22,6 @@ export const nbNO: Dict = {
     save: 'Lagre',
     reload: 'Last inn på nytt',
     use: 'Bruk',
-    stopSharing: 'Stopp deling',
     startSharing: 'Start deling',
     update: 'Oppdater',
     clear: 'Tøm',

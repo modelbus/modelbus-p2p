@@ -22,7 +22,6 @@ export const zhTW: Dict = {
     save: '儲存',
     reload: '重新載入',
     use: '選用',
-    stopSharing: '停止分享',
     startSharing: '開始分享',
     update: '更新',
     clear: '清空',

@@ -22,7 +22,6 @@ export const enUS: Dict = {
     save: 'Save',
     reload: 'Reload',
     use: 'Use',
-    stopSharing: 'Stop sharing',
     startSharing: 'Start sharing',
     update: 'Update',
     clear: 'Clear',

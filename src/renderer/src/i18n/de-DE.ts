@@ -22,7 +22,6 @@ export const deDE: Dict = {
     save: 'Speichern',
     reload: 'Neu laden',
     use: 'Verwenden',
-    stopSharing: 'Freigabe stoppen',
     startSharing: 'Freigabe starten',
     update: 'Aktualisieren',
     clear: 'Leeren',

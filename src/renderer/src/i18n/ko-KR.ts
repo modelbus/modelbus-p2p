@@ -22,7 +22,6 @@ export const koKR: Dict = {
     save: '저장',
     reload: '다시 불러오기',
     use: '사용',
-    stopSharing: '공유 중지',
     startSharing: '공유 시작',
     update: '업데이트',
     clear: '비우기',

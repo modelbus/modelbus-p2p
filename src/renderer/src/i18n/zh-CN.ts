@@ -18,7 +18,6 @@ export const zhCN = {
     save: '保存',
     reload: '重新加载',
     use: '选用',
-    stopSharing: '停止分享',
     startSharing: '开始分享',
     update: '更新',
     clear: '清空',

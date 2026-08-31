@@ -22,7 +22,6 @@ export const trTR: Dict = {
     save: 'Kaydet',
     reload: 'Yeniden yükle',
     use: 'Kullan',
-    stopSharing: 'Paylaşımı durdur',
     startSharing: 'Paylaşımı başlat',
     update: 'Güncelle',
     clear: 'Temizle',

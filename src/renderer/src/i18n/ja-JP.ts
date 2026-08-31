@@ -22,7 +22,6 @@ export const jaJP: Dict = {
     save: '保存',
     reload: '再読込',
     use: '使用',
-    stopSharing: '共有を停止',
     startSharing: '共有を開始',
     update: '更新',
     clear: 'クリア',

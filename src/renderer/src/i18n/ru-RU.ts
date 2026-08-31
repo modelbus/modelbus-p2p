@@ -22,7 +22,6 @@ export const ruRU: Dict = {
     save: 'Сохранить',
     reload: 'Перезагрузить',
     use: 'Использовать',
-    stopSharing: 'Прекратить делиться',
     startSharing: 'Начать делиться',
     update: 'Обновить',
     clear: 'Очистить',

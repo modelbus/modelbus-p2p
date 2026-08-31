@@ -22,7 +22,6 @@ export const arSA: Dict = {
     save: 'حفظ',
     reload: 'إعادة تحميل',
     use: 'استخدام',
-    stopSharing: 'إيقاف المشاركة',
     startSharing: 'بدء المشاركة',
     update: 'تحديث',
     clear: 'مسح',

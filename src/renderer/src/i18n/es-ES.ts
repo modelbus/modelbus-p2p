@@ -22,7 +22,6 @@ export const esES: Dict = {
     save: 'Guardar',
     reload: 'Recargar',
     use: 'Usar',
-    stopSharing: 'Dejar de compartir',
     startSharing: 'Empezar a compartir',
     update: 'Actualizar',
     clear: 'Limpiar',

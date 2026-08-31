@@ -22,7 +22,6 @@ export const thTH: Dict = {
     save: 'บันทึก',
     reload: 'โหลดใหม่',
     use: 'ใช้',
-    stopSharing: 'หยุดแชร์',
     startSharing: 'เริ่มแชร์',
     update: 'อัปเดต',
     clear: 'ล้าง',

@@ -22,7 +22,6 @@ export const ukUA: Dict = {
     save: 'Зберегти',
     reload: 'Перезавантажити',
     use: 'Використати',
-    stopSharing: 'Припинити поширення',
     startSharing: 'Почати поширювати',
     update: 'Оновити',
     clear: 'Очистити',

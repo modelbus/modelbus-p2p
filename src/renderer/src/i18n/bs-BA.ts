@@ -22,7 +22,6 @@ export const bsBA: Dict = {
     save: 'Sačuvaj',
     reload: 'Ponovo učitaj',
     use: 'Koristi',
-    stopSharing: 'Prestani dijeliti',
     startSharing: 'Počni dijeliti',
     update: 'Ažuriraj',
     clear: 'Očisti',

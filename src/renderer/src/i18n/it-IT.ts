@@ -22,7 +22,6 @@ export const itIT: Dict = {
     save: 'Salva',
     reload: 'Ricarica',
     use: 'Usa',
-    stopSharing: 'Interrompi condivisione',
     startSharing: 'Inizia a condividere',
     update: 'Aggiorna',
     clear: 'Svuota',

@@ -22,7 +22,6 @@ export const plPL: Dict = {
     save: 'Zapisz',
     reload: 'Wczytaj ponownie',
     use: 'Użyj',
-    stopSharing: 'Zakończ udostępnianie',
     startSharing: 'Zacznij udostępniać',
     update: 'Aktualizuj',
     clear: 'Wyczyść',

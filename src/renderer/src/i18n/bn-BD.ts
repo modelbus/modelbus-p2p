@@ -22,7 +22,6 @@ export const bnBD: Dict = {
     save: 'সংরক্ষণ',
     reload: 'পুনরায় লোড',
     use: 'ব্যবহার',
-    stopSharing: 'শেয়ার বন্ধ',
     startSharing: 'শেয়ার শুরু',
     update: 'আপডেট',
     clear: 'পরিষ্কার',
