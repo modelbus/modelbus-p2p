@@ -66,7 +66,6 @@ export interface AppActions {
   selectProvider: (index: number, id: string) => Promise<void>;
   toggleModel: (index: number, m: ModelInfo) => void;
   saveProvision: () => Promise<void>;
-  clearProvision: () => Promise<void>;
   pickTarget: (peerId: string) => Promise<void>;
   clearTarget: () => Promise<void>;
   loadConfig: () => Promise<void>;

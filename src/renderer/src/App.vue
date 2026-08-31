@@ -263,16 +263,6 @@ async function saveProvision() {
   }
 }
 
-async function clearProvision() {
-  await window.modelbus.provision.clear();
-  provision.value = null;
-  draft.value = {
-    nickname: '',
-    providers: [],
-  };
-  await loadProviderDetail('');
-}
-
 async function pickTarget(peerId: string) {
   error.value = null;
   try {
@@ -350,7 +340,7 @@ const actions: AppActions = {
   refreshStatus, refreshProvision, refreshProxy, refreshNodes, refreshAll,
   startNode, stopNode,
   loadProviders, loadProviderDetail, addProvider, removeProvider, selectProvider, toggleModel,
-  saveProvision, clearProvision,
+  saveProvision,
   pickTarget, clearTarget,
   loadConfig, saveConfig,
   setError,
