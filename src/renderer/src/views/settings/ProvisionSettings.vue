@@ -7,7 +7,6 @@ import type { AppRefs, AppActions, DraftProvider } from '../types';
 const props = defineProps<{
   refs: AppRefs;
   actions: AppActions;
-  draftNickname: string;
 }>();
 
 const expanded = ref<Record<number, boolean>>({});
@@ -70,14 +69,6 @@ watch(
       <h2>{{ t('provision.title') }}</h2>
       <p class="muted">{{ t('settings.provisionHint') }}</p>
     </header>
-
-    <!-- Nickname shared across providers -->
-    <div class="form-row">
-      <div>
-        <label>{{ t('provision.nickname') }}</label>
-        <input :value="draftNickname" @input="(e) => (refs.draft.value.nickname = (e.target as HTMLInputElement).value)" />
-      </div>
-    </div>
 
     <!-- Token-provider list -->
     <div v-if="!hasAnyDraft" class="empty-card">
