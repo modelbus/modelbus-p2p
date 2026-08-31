@@ -93,7 +93,7 @@ export function registerIpc(deps: Deps): void {
 
   ipcMain.handle('p2p:status', async () => ({
     started: p2p.isStarted(),
-    peerId: p2p.peerIdString(),
+    peerId: p2p.cachedPeerId(),
     multiaddrs: p2p.multiaddrs(),
     role: provisioner.isActive() ? 'provision' : proxy.getTarget() ? 'consume' : 'idle',
     connected: p2p.isStarted() ? (p2p.getNode()?.getConnections().length ?? 0) : 0,
@@ -284,7 +284,7 @@ export function registerIpc(deps: Deps): void {
     }
   });
 
-  ipcMain.handle('system:openLogsFolder', async () => {
+ipcMain.handle('system:openLogsFolder', async () => {
     // Electron writes main-process logs into the userData directory; on
     // macOS that is ~/Library/Application Support/<appName>/. We open
     // the parent folder so the user can also see the persisted store.
