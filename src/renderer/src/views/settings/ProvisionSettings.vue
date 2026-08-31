@@ -266,8 +266,8 @@ watch(modal, async (v) => {
           <h3>
             {{ modal.mode === 'create' ? t('provision.addProvider') : t('provision.editProvider') }}
           </h3>
-          <button class="ghost-btn modal-close" @click="closeModal" aria-label="Close">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+          <button class="modal-close" @click="closeModal" aria-label="Close" type="button">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
               stroke="currentColor" stroke-width="2" stroke-linecap="round"
               stroke-linejoin="round" aria-hidden="true">
               <line x1="18" y1="6" x2="6" y2="18" />
@@ -538,11 +538,26 @@ watch(modal, async (v) => {
   font-weight: 600;
 }
 .modal-close {
-  width: 28px;
-  height: 28px;
+  width: 32px;
+  height: 32px;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  padding: 0;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: var(--muted);
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s, border-color 0.12s;
+}
+.modal-close:hover {
+  background: var(--bg-elev);
+  color: var(--text);
+  border-color: var(--border);
+}
+.modal-close svg {
+  display: block;
 }
 .modal-body {
   padding: 16px 20px;
