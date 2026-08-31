@@ -9,25 +9,27 @@ const props = defineProps<{
   helpers: AppHelpers;
 }>();
 
-const trustedNodes = computed(() =>
-  props.refs.nodes.value.map((n) => ({
-    peerId: n.peerId,
-    nickname: n.nickname,
-    providerName: n.providerName,
-    modelIds: n.modelIds,
-    trusted: n.trusted,
-  }))
-);
-
 const peerIdDisplay = computed(() => props.refs.status.value.peerId ?? '—');
+const draftNickname = computed({
+  get: () => props.refs.draft.value.nickname,
+  set: (v) => (props.refs.draft.value.nickname = v),
+});
 
 /**
- * UI-only placeholders for contact fields — not yet wired to the
- * backend, intentionally inert so the user can see what's planned.
+ * Contact fields are UI-only placeholders — they exist in the form so
+ * the layout already shows the eventual fields, but no persistence
+ * is wired up yet. Tying them to local state keeps the form self-
+ * contained until the account service lands.
  */
-const contactApiKey = ref('');
 const contactPhone = ref('');
 const contactEmail = ref('');
+
+async function saveAll() {
+  // The network config (registry URL, ports, bootstrap, nickname)
+  // is the only thing currently persisted. The contact fields are
+  // in-form only — see the comment on contactPhone / contactEmail.
+  await props.actions.saveConfig();
+}
 </script>
 
 <template>
@@ -43,7 +45,7 @@ const contactEmail = ref('');
       <div class="form-row cols-2">
         <div>
           <label>{{ t('profile.nickname') }}</label>
-          <input v-model="refs.draft.value.nickname" />
+          <input v-model="draftNickname" />
         </div>
         <div>
           <label>{{ t('profile.peerId') }}</label>
@@ -53,7 +55,7 @@ const contactEmail = ref('');
       </div>
     </section>
 
-    <!-- ========== 网络 ========== -->
+    <!-- ========== 网络 + 联系（合并） ========== -->
     <section class="form-section">
       <h3 class="section-title">{{ t('profile.sectionNetwork') }}</h3>
       <div class="form-row">
@@ -83,87 +85,21 @@ const contactEmail = ref('');
           ></textarea>
         </div>
       </div>
-      <div class="form-actions">
-        <button class="primary" @click="actions.saveConfig">{{ t('actions.save') }}</button>
-        <button @click="actions.loadConfig">{{ t('actions.reload') }}</button>
-        <span class="muted">{{ t('settings.saveHint') }}</span>
-      </div>
-    </section>
-
-    <!-- ========== 联系 ========== -->
-    <section class="form-section">
-      <h3 class="section-title">{{ t('profile.sectionContact') }}</h3>
-      <p class="muted section-hint">{{ t('profile.contactHint') }}</p>
       <div class="form-row cols-2">
-        <div>
-          <label>{{ t('profile.apiKey') }}</label>
-          <input
-            v-model="contactApiKey"
-            type="password"
-            placeholder="sk-mbus-…"
-            autocomplete="off"
-          />
-          <div class="hint">{{ t('profile.apiKeyHint') }}</div>
-        </div>
         <div>
           <label>{{ t('profile.phone') }}</label>
           <input v-model="contactPhone" placeholder="+86 138 0000 0000" />
         </div>
-      </div>
-      <div class="form-row">
         <div>
           <label>{{ t('profile.email') }}</label>
           <input v-model="contactEmail" type="email" placeholder="you@example.com" />
         </div>
       </div>
-    </section>
-
-    <!-- ========== 信任节点（继承自原 Register Tab） ========== -->
-    <section class="form-section">
-      <h3 class="section-title">{{ t('profile.sectionTrusted') }}</h3>
-      <p class="muted section-hint">{{ t('settings.trustHint') }}</p>
+      <p class="hint section-hint">{{ t('profile.contactHint') }}</p>
       <div class="form-actions">
-        <button class="primary" @click="actions.refreshNodes">
-          {{ t('actions.refreshNodes') }}
-        </button>
-        <span class="muted">
-          {{ refs.nodes.value.length }} {{ t('consume.modelCount', { n: '' }).trim() }}
-        </span>
+        <button class="primary" @click="saveAll">{{ t('actions.save') }}</button>
+        <span class="muted">{{ t('settings.saveHint') }}</span>
       </div>
-
-      <div class="trust-table-wrap">
-        <table class="log-table">
-          <thead>
-            <tr>
-              <th style="width: 90px;">{{ t('settings.trustBadge') }}</th>
-              <th>{{ t('home.lbNickname') }}</th>
-              <th style="width: 110px;">{{ t('settings.peerShort') }}</th>
-              <th>{{ t('settings.providers') }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr v-for="n in trustedNodes" :key="n.peerId">
-              <td>
-                <span v-if="n.trusted" class="tag success">
-                  {{ t('settings.trustTrusted') }}
-                </span>
-                <span v-else class="tag warn">
-                  {{ t('settings.trustQuarantine') }}
-                </span>
-              </td>
-              <td>{{ n.nickname }}</td>
-              <td class="muted peer-cell">{{ helpers.peerShort(n.peerId) }}</td>
-              <td class="muted">
-                {{ n.providerName }} · {{ n.modelIds.length }} {{ t('home.models') }}
-              </td>
-            </tr>
-            <tr v-if="!trustedNodes.length">
-              <td colspan="4" class="muted">{{ t('settings.trustEmpty') }}</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-      <p class="hint" style="margin-top: 16px;">{{ t('settings.registerHowto') }}</p>
     </section>
   </section>
 </template>
@@ -188,16 +124,6 @@ const contactEmail = ref('');
   background: var(--bg-elev);
   color: var(--text-soft);
   font-family: 'SFMono-Regular', Menlo, Consolas, monospace;
-  font-size: 12px;
-}
-.trust-table-wrap {
-  margin-top: 8px;
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  overflow: hidden;
-}
-.peer-cell {
   font-size: 12px;
 }
 </style>
