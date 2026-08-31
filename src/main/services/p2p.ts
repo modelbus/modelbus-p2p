@@ -48,6 +48,17 @@ export class P2PService {
     return this.node?.peerId.toString() ?? null;
   }
 
+  /**
+   * Best-effort peerId that doesn't require a running libp2p node:
+   * returns the live peerId when started, otherwise the value persisted
+   * the last time the node did boot. Used by `p2p:status` so the UI
+   * can show a stable identifier in the Profile pane even when the
+   * user hasn't clicked "start" yet.
+   */
+  cachedPeerId(): string | null {
+    return this.peerIdString() ?? this.store?.getPeerId() ?? null;
+  }
+
   multiaddrs(): string[] {
     if (!this.node) return [];
     return this.node.getMultiaddrs().map((m) => m.toString());
@@ -109,7 +120,17 @@ export class P2PService {
 
       this.wireEvents(this.node);
       this.startedAt = Date.now();
-      this.events.emit({ type: 'started', payload: { peerId: this.peerIdString() } });
+      // Persist the peerId so the renderer can show it before the user
+      // actually starts the node on the next session.
+      const id = this.peerIdString();
+      if (id && this.store) {
+        try {
+          await this.store.setPeerId(id);
+        } catch {
+          /* best-effort: store failure must not block startup */
+        }
+      }
+      this.events.emit({ type: 'started', payload: { peerId: id } });
     } finally {
       this.starting = false;
     }

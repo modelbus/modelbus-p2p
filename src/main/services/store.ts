@@ -18,6 +18,10 @@ interface StoreShape {
   /** base64-encoded protobuf Ed25519 private key used to derive the
    *  stable libp2p peerId (fallback when no hardware UUID exists). */
   peerKey?: string;
+  /** Cached libp2p peerId (multihash string) — saved the first time the
+   *  node starts so it can be displayed in the UI before the user
+   *  actually clicks "start node". Cleared if the peerKey is reset. */
+  peerId?: string;
 }
 
 const DEFAULT_BOOTSTRAP: BootstrapConfig = {
@@ -130,6 +134,17 @@ export class Store {
 
   async setPeerKey(base64: string): Promise<void> {
     this.data.peerKey = base64;
+    await this.save();
+  }
+
+  /** Last known peerId (multihash string). Persisted so the renderer can
+   *  show it in the Profile pane even before the user clicks start. */
+  getPeerId(): string | null {
+    return this.data.peerId ?? null;
+  }
+
+  async setPeerId(peerId: string): Promise<void> {
+    this.data.peerId = peerId;
     await this.save();
   }
 }
