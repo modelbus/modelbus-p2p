@@ -694,49 +694,6 @@ html[dir='rtl'] .kv dt {
   }
 }
 
-/* Settings — subtabs */
-.subtabs {
-  display: flex;
-  gap: 4px;
-  margin-bottom: 14px;
-  border-bottom: 1px solid var(--border);
-}
-.subtabs button {
-  background: transparent;
-  border: none;
-  padding: 8px 14px;
-  color: var(--muted);
-  font-size: 13px;
-  border-radius: 6px 6px 0 0;
-  border-bottom: 2px solid transparent;
-}
-.subtabs button:hover {
-  color: var(--text);
-}
-.subtabs button.active {
-  color: var(--accent);
-  border-bottom-color: var(--accent);
-}
-.subtabs-spacer {
-  flex: 1;
-}
-.subtab-icon-btn {
-  background: transparent;
-  border: none;
-  color: var(--muted);
-  width: 28px;
-  height: 28px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 4px;
-  align-self: center;
-  margin-bottom: -1px;
-}
-.subtab-icon-btn:hover {
-  color: var(--text);
-  background: var(--bg-elev);
-}
 
 .form-row {
   display: grid;
@@ -745,6 +702,14 @@ html[dir='rtl'] .kv dt {
 }
 .form-row.cols-2 {
   grid-template-columns: 1fr 1fr;
+}
+
+/* Generic form hint rendered under an input */
+.hint {
+  font-size: 11px;
+  color: var(--muted);
+  margin-top: 4px;
+  line-height: 1.45;
 }
 
 /* Logs view */
