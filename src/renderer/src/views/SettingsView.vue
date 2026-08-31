@@ -1,9 +1,8 @@
 <script setup lang="ts">
-import { computed } from 'vue';
+import { ref } from 'vue';
 import { t } from '../i18n';
 import type { AppRefs, AppActions, AppHelpers } from './types';
-import NodeSettings from './settings/NodeSettings.vue';
-import RegisterSettings from './settings/RegisterSettings.vue';
+import ProfileSettings from './settings/ProfileSettings.vue';
 import ProvisionSettings from './settings/ProvisionSettings.vue';
 import ServiceSettings from './settings/ServiceSettings.vue';
 
@@ -11,34 +10,26 @@ const props = defineProps<{
   refs: AppRefs;
   actions: AppActions;
   helpers: AppHelpers;
-  initialSub?: 'node' | 'register' | 'provision' | 'service';
+  initialSub?: 'profile' | 'provision' | 'service';
 }>();
 
-type Sub = 'node' | 'register' | 'provision' | 'service';
+type Sub = 'profile' | 'provision' | 'service';
 
-import { ref } from 'vue';
-
-const sub = ref<Sub>(props.initialSub ?? 'node');
-
-const draftNickname = computed({
-  get: () => props.refs.draft.value.nickname,
-  set: (v) => (props.refs.draft.value.nickname = v),
-});
+const sub = ref<Sub>(props.initialSub ?? 'profile');
 
 interface NavItem {
   key: Sub;
   labelKey: string;
   hintKey: string;
-  icon: 'node' | 'register' | 'provision' | 'service';
+  icon: 'profile' | 'provision' | 'service';
 }
 
 const navItems: NavItem[] = [
-  { key: 'node', labelKey: 'settings.tab.node', hintKey: 'settings.tabHint.node', icon: 'node' },
   {
-    key: 'register',
-    labelKey: 'settings.tab.register',
-    hintKey: 'settings.tabHint.register',
-    icon: 'register',
+    key: 'profile',
+    labelKey: 'settings.tab.profile',
+    hintKey: 'settings.tabHint.profile',
+    icon: 'profile',
   },
   {
     key: 'provision',
@@ -88,33 +79,21 @@ function openLogsFolder() {
           @click="pickSub(item.key)"
         >
           <span class="settings-nav-icon">
-            <!-- icon: node -->
-            <svg v-if="item.icon === 'node'" width="18" height="18" viewBox="0 0 24 24"
+            <!-- icon: profile -->
+            <svg v-if="item.icon === 'profile'" width="18" height="18" viewBox="0 0 24 24"
               fill="none" stroke="currentColor" stroke-width="1.7"
               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <circle cx="12" cy="6" r="2.2" />
-              <circle cx="5" cy="18" r="2.2" />
-              <circle cx="19" cy="18" r="2.2" />
-              <path d="M12 8v3" />
-              <path d="M12 11l-5 5" />
-              <path d="M12 11l5 5" />
+              <circle cx="12" cy="8" r="3.4" />
+              <path d="M4 20a8 8 0 0 1 16 0" />
             </svg>
-            <!-- icon: register -->
-            <svg v-else-if="item.icon === 'register'" width="18" height="18" viewBox="0 0 24 24"
-              fill="none" stroke="currentColor" stroke-width="1.7"
-              stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M4 5a2 2 0 0 1 2-2h9l5 5v11a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2z" />
-              <polyline points="14 3 14 8 19 8" />
-              <path d="M9 14h6" />
-              <path d="M9 17h4" />
-            </svg>
-            <!-- icon: provision (token) -->
+            <!-- icon: provision (models / cube) -->
             <svg v-else-if="item.icon === 'provision'" width="18" height="18" viewBox="0 0 24 24"
               fill="none" stroke="currentColor" stroke-width="1.7"
               stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <circle cx="12" cy="12" r="9" />
-              <path d="M12 7v10" />
-              <path d="M9 10h4.5a2 2 0 0 1 0 4H10a2 2 0 0 0 0 4h5" />
+              <path d="M12 3l8 4.5v9L12 21l-8-4.5v-9z" />
+              <path d="M12 12l8-4.5" />
+              <path d="M12 12v9" />
+              <path d="M12 12L4 7.5" />
             </svg>
             <!-- icon: service (globe) -->
             <svg v-else width="18" height="18" viewBox="0 0 24 24"
@@ -161,9 +140,8 @@ function openLogsFolder() {
 
     <!-- Right content pane -->
     <div class="settings-content">
-      <NodeSettings v-if="sub === 'node'" :refs="refs" :actions="actions" :helpers="helpers" />
-      <RegisterSettings
-        v-else-if="sub === 'register'"
+      <ProfileSettings
+        v-if="sub === 'profile'"
         :refs="refs"
         :actions="actions"
         :helpers="helpers"
@@ -172,7 +150,6 @@ function openLogsFolder() {
         v-else-if="sub === 'provision'"
         :refs="refs"
         :actions="actions"
-        :draft-nickname="draftNickname"
       />
       <ServiceSettings v-else-if="sub === 'service'" :refs="refs" :actions="actions" />
     </div>
