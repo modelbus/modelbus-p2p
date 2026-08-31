@@ -69,7 +69,7 @@ export const trTR: Dict = {
     models: 'Modeller',
   },
   provision: {
-    title: 'Paylaş — tokenını paylaş',
+    title: 'Modeller',
     offlineHint: 'Önce Ana sayfa sekmesinden P2P düğümünü başlat.',
     activeHint: '{provider} ({n} model) paylaşıyorsun. Diğer eşler istekleri senin üzerinden yönlendirecek.',
     provider: 'Sağlayıcı',
@@ -268,7 +268,7 @@ export const trTR: Dict = {
     },
   },
   models: {
-    title: 'Kullanılabilir modeller',
+    title: 'Modeller',
     hint: 'Kayıttaki tüm eşlerin sunduğu modelleri kaliteye göre sıralar.',
     empty: 'Henüz model yok. Ayarlar → Düğüm altındaki kayıt URL\'sini kontrol edin.',
     nodesTitle: 'Düğüm listesi',

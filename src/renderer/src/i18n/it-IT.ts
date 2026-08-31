@@ -69,7 +69,7 @@ export const itIT: Dict = {
     models: 'Modelli',
   },
   provision: {
-    title: 'Condividi — il tuo token',
+    title: 'Modelli',
     offlineHint: 'Avvia prima il nodo P2P dalla scheda Home.',
     activeHint: 'Stai condividendo {provider} ({n} modelli). Gli altri peer instraderanno le richieste tramite te.',
     provider: 'Provider',
@@ -268,7 +268,7 @@ export const itIT: Dict = {
     },
   },
   models: {
-    title: 'Modelli disponibili',
+    title: 'Modelli',
     hint: 'Aggrega tutti i modelli annunciati dai nodi del registro, ordinati per qualità.',
     empty: 'Nessun modello. Controlla l\'URL del registro in Impostazioni → Nodo.',
     nodesTitle: 'Elenco nodi',

@@ -69,7 +69,7 @@ export const esES: Dict = {
     models: 'Modelos',
   },
   provision: {
-    title: 'Aprovisionar — comparte tu token',
+    title: 'Modelos',
     offlineHint: 'Inicia primero el nodo P2P en la pestaña Inicio.',
     activeHint: 'Estás compartiendo {provider} ({n} modelos). Otros peers enrutarán las peticiones a través de ti.',
     provider: 'Proveedor',
@@ -268,7 +268,7 @@ export const esES: Dict = {
     },
   },
   models: {
-    title: 'Modelos disponibles',
+    title: 'Modelos',
     hint: 'Agrega todos los modelos anunciados por los nodos del registro, ordenados por calidad.',
     empty: 'Aún no hay modelos. Comprueba la URL del registro en Ajustes → Nodo.',
     nodesTitle: 'Lista de nodos',

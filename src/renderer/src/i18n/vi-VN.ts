@@ -69,7 +69,7 @@ export const viVN: Dict = {
     models: 'Mô hình',
   },
   provision: {
-    title: 'Chia sẻ — token của bạn',
+    title: 'Mô hình',
     offlineHint: 'Hãy khởi động nút P2P ở tab Trang chính trước.',
     activeHint: 'Bạn đang chia sẻ {provider} ({n} mô hình). Các peer khác sẽ chuyển tiếp yêu cầu qua bạn.',
     provider: 'Nhà cung cấp',
@@ -268,7 +268,7 @@ export const viVN: Dict = {
     },
   },
   models: {
-    title: 'Mô hình khả dụng',
+    title: 'Mô hình',
     hint: 'Tổng hợp mọi mô hình do các peer trong registry công bố, sắp xếp theo chất lượng.',
     empty: 'Chưa có mô hình. Kiểm tra URL registry tại Cài đặt → Nút.',
     nodesTitle: 'Danh sách nút',

@@ -69,7 +69,7 @@ export const zhTW: Dict = {
     models: '模型',
   },
   provision: {
-    title: '上線 · 分享我的 Token',
+    title: '模型',
     offlineHint: '請先在首頁啟動 P2P 節點。',
     activeHint: '你正在分享 {provider}（{n} 個模型）。其他使用者選中你的節點後會透過你轉發請求。',
     provider: '模型供應商',
@@ -268,7 +268,7 @@ export const zhTW: Dict = {
     },
   },
   models: {
-    title: '可用模型',
+    title: '模型',
     hint: '匯總目前註冊到節點清單的所有模型，按品質排序。',
     empty: '暫無模型資料。請確認節點清單 URL 設定正確。',
     nodesTitle: '節點清單',

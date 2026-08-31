@@ -69,7 +69,7 @@ export const nbNO: Dict = {
     models: 'Modeller',
   },
   provision: {
-    title: 'Del — din token',
+    title: 'Modeller',
     offlineHint: 'Start P2P-noden fra Hjem først.',
     activeHint: 'Du deler {provider} ({n} modeller). Andre peers ruter forespørsler gjennom deg.',
     provider: 'Leverandør',
@@ -268,7 +268,7 @@ export const nbNO: Dict = {
     },
   },
   models: {
-    title: 'Tilgjengelige modeller',
+    title: 'Modeller',
     hint: 'Samler alle modeller fra peers i registeret, sortert etter kvalitet.',
     empty: 'Ingen modeller. Sjekk registerets URL under Innstillinger → Node.',
     nodesTitle: 'Node-liste',

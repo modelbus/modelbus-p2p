@@ -69,7 +69,7 @@ export const daDK: Dict = {
     models: 'Modeller',
   },
   provision: {
-    title: 'Del — din token',
+    title: 'Modeller',
     offlineHint: 'Start først P2P-noden fra Start.',
     activeHint: 'Du deler {provider} ({n} modeller). Andre peers ruter forespørgsler gennem dig.',
     provider: 'Udbyder',
@@ -268,7 +268,7 @@ export const daDK: Dict = {
     },
   },
   models: {
-    title: 'Tilgængelige modeller',
+    title: 'Modeller',
     hint: 'Sammenlægger alle modeller fra peers i registret, sorteret efter kvalitet.',
     empty: 'Ingen modeller endnu. Tjek registerets URL under Indstillinger → Node.',
     nodesTitle: 'Node-liste',

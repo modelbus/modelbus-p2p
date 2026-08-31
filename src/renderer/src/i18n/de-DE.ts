@@ -69,7 +69,7 @@ export const deDE: Dict = {
     models: 'Modelle',
   },
   provision: {
-    title: 'Bereitstellen — Token freigeben',
+    title: 'Modelle',
     offlineHint: 'Bitte starte den P2P-Knoten zuerst auf der Startseite.',
     activeHint: 'Du gibst {provider} frei ({n} Modelle). Andere Peers leiten Anfragen über dich.',
     provider: 'Anbieter',
@@ -268,7 +268,7 @@ export const deDE: Dict = {
     },
   },
   models: {
-    title: 'Verfügbare Modelle',
+    title: 'Modelle',
     hint: 'Aggregiert alle Modelle der registrierten Peers, sortiert nach Qualität.',
     empty: 'Noch keine Modelle. Prüfe die Registry-URL unter Einstellungen → Knoten.',
     nodesTitle: 'Knotenliste',

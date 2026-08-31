@@ -69,7 +69,7 @@ export const frFR: Dict = {
     models: 'Modèles',
   },
   provision: {
-    title: 'Partager — votre token',
+    title: 'Modèles',
     offlineHint: 'Démarrez d\'abord le nœud P2P depuis l\'onglet Accueil.',
     activeHint: 'Vous partagez {provider} ({n} modèles). Les autres pairs routeront les requêtes via vous.',
     provider: 'Fournisseur',
@@ -268,7 +268,7 @@ export const frFR: Dict = {
     },
   },
   models: {
-    title: 'Modèles disponibles',
+    title: 'Modèles',
     hint: 'Agrège tous les modèles annoncés par les pairs du registre, triés par qualité.',
     empty: 'Aucun modèle pour le moment. Vérifiez l\'URL du registre dans Paramètres → Nœud.',
     nodesTitle: 'Liste des nœuds',

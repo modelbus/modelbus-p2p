@@ -69,7 +69,7 @@ export const bsBA: Dict = {
     models: 'Modeli',
   },
   provision: {
-    title: 'Dijeli — svoj token',
+    title: 'Models',
     offlineHint: 'Najprije pokrenite P2P čvor na kartici Početna.',
     activeHint: 'Dijelite {provider} ({n} modela). Ostali čvorovi će usmjeravati zahtjeve preko vas.',
     provider: 'Dobavljač',
@@ -268,7 +268,7 @@ export const bsBA: Dict = {
     },
   },
   models: {
-    title: 'Dostupni modeli',
+    title: 'Models',
     hint: 'Sažima sve modele koje čvorovi iz registra objavljuju, poredane po kvaliteti.',
     empty: 'Nema modela. Provjerite URL registra u Postavke → Čvor.',
     nodesTitle: 'Lista čvorova',

@@ -69,7 +69,7 @@ export const plPL: Dict = {
     models: 'Modele',
   },
   provision: {
-    title: 'Udostępnij — swój token',
+    title: 'Modele',
     offlineHint: 'Najpierw uruchom węzeł P2P na stronie głównej.',
     activeHint: 'Udostępniasz {provider} ({n} modeli). Inne węzły będą kierować zapytania przez Ciebie.',
     provider: 'Dostawca',
@@ -268,7 +268,7 @@ export const plPL: Dict = {
     },
   },
   models: {
-    title: 'Dostępne modele',
+    title: 'Modele',
     hint: 'Agreguje wszystkie modele zgłoszone przez węzły w rejestrze, posortowane wg jakości.',
     empty: 'Brak modeli. Sprawdź URL rejestru w Ustawienia → Węzeł.',
     nodesTitle: 'Lista węzłów',

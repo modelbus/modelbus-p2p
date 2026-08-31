@@ -69,7 +69,7 @@ export const koKR: Dict = {
     models: '모델',
   },
   provision: {
-    title: '공유 · 내 토큰 공유하기',
+    title: '모델',
     offlineHint: '먼저 홈 탭에서 P2P 노드를 시작하세요.',
     activeHint: '{provider} ({n} 모델)을 공유 중입니다. 다른 사용자가 내 노드를 선택하면 요청이 경유됩니다.',
     provider: '프로바이더',
@@ -268,7 +268,7 @@ export const koKR: Dict = {
     },
   },
   models: {
-    title: '사용 가능한 모델',
+    title: '모델',
     hint: '레지스트의 모든 피어가 제공하는 모델을 품질 순으로 집계합니다.',
     empty: '모델이 없습니다. 설정 → 노드의 레지스트리 URL을 확인하세요.',
     nodesTitle: '노드 목록',

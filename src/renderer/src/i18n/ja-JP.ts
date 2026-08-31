@@ -69,7 +69,7 @@ export const jaJP: Dict = {
     models: 'モデル',
   },
   provision: {
-    title: '共有 · トークンを共有する',
+    title: 'モデル',
     offlineHint: 'まずホームタブで P2P ノードを起動してください。',
     activeHint: '{provider}（{n} モデル）を共有中です。他の利用者があなたのノードを選ぶとリクエストが経由されます。',
     provider: 'プロバイダー',
@@ -268,7 +268,7 @@ export const jaJP: Dict = {
     },
   },
   models: {
-    title: '利用可能なモデル',
+    title: 'モデル',
     hint: 'レジストリ内の全ピアが提供するモデルを品質順に集約します。',
     empty: 'モデルがありません。設定 → ノードでレジストリ URL を確認してください。',
     nodesTitle: 'ノード一覧',

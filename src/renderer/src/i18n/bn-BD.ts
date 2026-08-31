@@ -69,7 +69,7 @@ export const bnBD: Dict = {
     models: 'মডেল',
   },
   provision: {
-    title: 'শেয়ার — আপনার টোকেন',
+    title: 'Models',
     offlineHint: 'প্রথমে হোম ট্যাবে P2P নোড শুরু করুন।',
     activeHint: 'আপনি {provider} ({n} মডেল) শেয়ার করছেন। অন্যান্য পিয়ার আপনার মাধ্যমে অনুরোধ পাঠাবে।',
     provider: 'প্রোভাইডার',
@@ -268,7 +268,7 @@ export const bnBD: Dict = {
     },
   },
   models: {
-    title: 'ব্যবহারযোগ্য মডেল',
+    title: 'Models',
     hint: 'রেজিস্ট্রির সব পিয়ারের মডেলকে গুণমান অনুসারে সাজায়।',
     empty: 'কোনো মডেল নেই। সেটিংস → নোডে রেজিস্ট্রি URL যাচাই করুন।',
     nodesTitle: 'নোড তালিকা',

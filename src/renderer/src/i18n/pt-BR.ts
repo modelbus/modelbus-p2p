@@ -69,7 +69,7 @@ export const ptBR: Dict = {
     models: 'Modelos',
   },
   provision: {
-    title: 'Compartilhar — seu token',
+    title: 'Modelos',
     offlineHint: 'Inicie o nó P2P em Início primeiro.',
     activeHint: 'Você está compartilhando {provider} ({n} modelos). Outros peers rotearão requisições por você.',
     provider: 'Provedor',
@@ -268,7 +268,7 @@ export const ptBR: Dict = {
     },
   },
   models: {
-    title: 'Modelos disponíveis',
+    title: 'Modelos',
     hint: 'Agrega todos os modelos anunciados pelos nós do registro, ordenados por qualidade.',
     empty: 'Ainda não há modelos. Confira a URL do registro em Configurações → Nó.',
     nodesTitle: 'Lista de nós',
