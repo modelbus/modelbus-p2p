@@ -273,9 +273,6 @@ watch(modal, async (v) => {
       >
         {{ activeProvision ? t('actions.update') : t('actions.startSharing') }}
       </button>
-      <button v-if="activeProvision" class="danger" @click="actions.clearProvision">
-        {{ t('actions.stopSharing') }}
-      </button>
       <span v-if="refs.error.value" class="tag danger">{{ refs.error.value }}</span>
     </div>
 
