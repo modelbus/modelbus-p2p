@@ -121,14 +121,12 @@ export const itIT: Dict = {
     proxyPortField: 'Porta proxy locale',
     bootstrapHint: 'Peer contattati da libp2p all\'avvio',
     tab: {
-      node: 'Nodo',
-      register: 'Registra',
-      provision: 'Condivisione token',
-      service: 'Servizio API',
+      profile: 'Profilo',
+      provision: 'Modelli',
+      service: 'Servizio',
     },
     tabHint: {
-      node: 'Rete del nodo e bootstrap',
-      register: 'Registra nella lista globale',
+      profile: 'Identità, rete e contatti',
       provision: 'Condividi token LLM',
       service: 'Limiti di consumo e chiamate',
     },
@@ -166,6 +164,24 @@ export const itIT: Dict = {
     usageRequestsUnit: '',
     usageRequestsHint: 'Richieste cumulate dall\'avvio del proxy',
     saveApiKey: 'Salva chiave API',
+
+},
+
+  profile: {
+    title: 'Profilo',
+    hint: 'Gestisci identità, parametri di rete e contatti',
+    sectionIdentity: 'Identità',
+    sectionNetwork: 'Rete',
+    sectionContact: 'Contatti',
+    sectionTrusted: 'Nodi attendibili',
+    nickname: 'Soprannome',
+    peerId: 'ID peer',
+    peerIdHint: 'Generato automaticamente da libp2p, non modificabile.',
+    apiKey: 'Chiave API account',
+    apiKeyHint: 'Chiave API a livello di account (persistenza non ancora attiva)',
+    phone: 'Telefono',
+    email: 'Email',
+    contactHint: 'I contatti sono solo segnaposto UI; la persistenza sarà aggiunta con il servizio account.',
   },
   days: {
     today: 'oggi',

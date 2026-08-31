@@ -121,14 +121,12 @@ export const esES: Dict = {
     proxyPortField: 'Puerto del proxy local',
     bootstrapHint: 'Peers que libp2p marca al iniciar',
     tab: {
-      node: 'Nodo',
-      register: 'Registrar',
-      provision: 'Token compartido',
-      service: 'Servicio de API',
+      profile: 'Perfil',
+      provision: 'Modelos',
+      service: 'Servicio',
     },
     tabHint: {
-      node: 'Red del nodo y bootstrap',
-      register: 'Registrar en la lista global',
+      profile: 'Identidad, red y contacto',
       provision: 'Compartir tokens LLM',
       service: 'Límites de consumo y llamadas',
     },
@@ -166,6 +164,24 @@ export const esES: Dict = {
     usageRequestsUnit: '',
     usageRequestsHint: 'Solicitudes acumuladas desde el inicio del proxy',
     saveApiKey: 'Guardar clave API',
+
+},
+
+  profile: {
+    title: 'Perfil',
+    hint: 'Gestiona tu identidad, parámetros de red y datos de contacto',
+    sectionIdentity: 'Identidad',
+    sectionNetwork: 'Red',
+    sectionContact: 'Contacto',
+    sectionTrusted: 'Nodos de confianza',
+    nickname: 'Alias',
+    peerId: 'ID de par',
+    peerIdHint: 'Generado automáticamente por libp2p, no se puede editar.',
+    apiKey: 'Clave API de cuenta',
+    apiKeyHint: 'Clave API a nivel de cuenta (persistencia aún no activa)',
+    phone: 'Teléfono',
+    email: 'Correo',
+    contactHint: 'Los datos de contacto son solo un marcador en la UI; se añadirá persistencia junto al servicio de cuentas.',
   },
   days: {
     today: 'hoy',

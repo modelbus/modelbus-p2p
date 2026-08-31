@@ -121,14 +121,12 @@ export const ptBR: Dict = {
     proxyPortField: 'Porta do proxy local',
     bootstrapHint: 'Peers que o libp2p disca ao iniciar',
     tab: {
-      node: 'Nó',
-      register: 'Registrar',
-      provision: 'Compartilhar token',
-      service: 'Serviço de API',
+      profile: 'Perfil',
+      provision: 'Modelos',
+      service: 'Serviço',
     },
     tabHint: {
-      node: 'Rede do nó e bootstrap',
-      register: 'Registrar na lista global',
+      profile: 'Identidade, rede e contato',
       provision: 'Compartilhar tokens LLM',
       service: 'Limites de consumo e chamadas',
     },
@@ -166,6 +164,24 @@ export const ptBR: Dict = {
     usageRequestsUnit: '',
     usageRequestsHint: 'Requisições acumuladas desde o início do proxy',
     saveApiKey: 'Salvar chave API',
+
+},
+
+  profile: {
+    title: 'Perfil',
+    hint: 'Gerencie sua identidade, parâmetros de rede e informações de contato',
+    sectionIdentity: 'Identidade',
+    sectionNetwork: 'Rede',
+    sectionContact: 'Contato',
+    sectionTrusted: 'Nós confiáveis',
+    nickname: 'Apelido',
+    peerId: 'ID do par',
+    peerIdHint: 'Gerado automaticamente pelo libp2p, não editável.',
+    apiKey: 'Chave API da conta',
+    apiKeyHint: 'Chave API em nível de conta (persistência ainda não ativa)',
+    phone: 'Telefone',
+    email: 'E-mail',
+    contactHint: 'As informações de contato são apenas marcadores de UI; a persistência virá com o serviço de contas.',
   },
   days: {
     today: 'hoje',

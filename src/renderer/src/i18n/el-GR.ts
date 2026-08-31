@@ -121,14 +121,12 @@ export const elGR: Dict = {
     proxyPortField: 'Τοπική θύρα proxy',
     bootstrapHint: 'Peer που καλεί το libp2p κατά την εκκίνηση',
     tab: {
-      node: 'Κόμβος',
-      register: 'Εγγραφή',
-      provision: 'Διαμοιρασμός token',
-      service: 'Υπηρεσία API',
+      profile: 'Προφίλ',
+      provision: 'Μοντέλα',
+      service: 'Υπηρεσία',
     },
     tabHint: {
-      node: 'Δίκτυο κόμβου και bootstrap',
-      register: 'Εγγραφή στη γενική λίστα',
+      profile: 'Ταυτότητα, δίκτυο και επαφές',
       provision: 'Κοινή χρήση LLM token',
       service: 'Όρια κατανάλωσης & κλήσεων',
     },
@@ -166,6 +164,24 @@ export const elGR: Dict = {
     usageRequestsUnit: '',
     usageRequestsHint: 'Αιτήματα από την εκκίνηση του proxy',
     saveApiKey: 'Αποθήκευση κλειδιού API',
+
+},
+
+  profile: {
+    title: 'Προφίλ',
+    hint: 'Διαχείριση ταυτότητας, παραμέτρων δικτύου και στοιχείων επικοινωνίας',
+    sectionIdentity: 'Ταυτότητα',
+    sectionNetwork: 'Δίκτυο',
+    sectionContact: 'Επικοινωνία',
+    sectionTrusted: 'Έμπιστοι κόμβοι',
+    nickname: 'Ψευδώνυμο',
+    peerId: 'ID peer',
+    peerIdHint: 'Δημιουργείται αυτόματα από το libp2p και δεν επεξεργάζεται.',
+    apiKey: 'Κλειδί API λογαριασμού',
+    apiKeyHint: 'Κλειδί API επιπέδου λογαριασμού (η αποθήκευση δεν είναι ενεργή)',
+    phone: 'Τηλέφωνο',
+    email: 'E-mail',
+    contactHint: 'Τα στοιχεία επικοινωνίας είναι προς το παρόν placeholders UI· η αποθήκευση θα προστεθεί με την υπηρεσία λογαριασμού.',
   },
   days: {
     today: 'σήμερα',

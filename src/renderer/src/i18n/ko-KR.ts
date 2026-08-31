@@ -121,14 +121,12 @@ export const koKR: Dict = {
     proxyPortField: '로컬 프록시 포트',
     bootstrapHint: 'libp2p가 시작 시 접속할 피어',
     tab: {
-      node: '노드',
-      register: '등록',
-      provision: 'Token 공유',
-      service: '호출 서비스',
+      profile: '내 정보',
+      provision: '모델',
+      service: '서비스',
     },
     tabHint: {
-      node: '노드 네트워크 및 부트스트랩',
-      register: '전역 목록에 등록',
+      profile: '신원·네트워크·연락처',
       provision: 'LLM 토큰 공유',
       service: '소비 및 호출 한도',
     },
@@ -166,6 +164,24 @@ export const koKR: Dict = {
     usageRequestsUnit: '회',
     usageRequestsHint: '프록시 시작 이후 누적 요청',
     saveApiKey: 'API 키 저장',
+
+},
+
+  profile: {
+    title: '내 정보',
+    hint: '신원, 네트워크, 연락처 관리',
+    sectionIdentity: '신원',
+    sectionNetwork: '네트워크',
+    sectionContact: '연락처',
+    sectionTrusted: '신뢰 노드',
+    nickname: '닉네임',
+    peerId: '피어 ID',
+    peerIdHint: 'libp2p가 자동 생성하며 수정할 수 없습니다.',
+    apiKey: '계정 API 키',
+    apiKeyHint: '계정 수준 API 키 (아직 저장되지 않음)',
+    phone: '전화번호',
+    email: '이메일',
+    contactHint: '연락처 정보는 현재 UI 자리표시자이며, 계정 서비스와 함께 저장 기능이 추가됩니다.',
   },
   days: {
     today: '오늘',

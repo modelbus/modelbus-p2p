@@ -121,14 +121,12 @@ export const ukUA: Dict = {
     proxyPortField: 'Порт локального проксі',
     bootstrapHint: 'Піри, до яких libp2p підключається при старті',
     tab: {
-      node: 'Вузол',
-      register: 'Реєстрація',
-      provision: 'Поширення токена',
-      service: 'API-сервіс',
+      profile: 'Профіль',
+      provision: 'Моделі',
+      service: 'Сервіс',
     },
     tabHint: {
-      node: 'Мережа вузла й bootstrap',
-      register: 'Реєстрація у глобальному списку',
+      profile: 'Ідентичність, мережа та контакти',
       provision: 'Поділитися токенами LLM',
       service: 'Ліміти споживання й викликів',
     },
@@ -166,6 +164,24 @@ export const ukUA: Dict = {
     usageRequestsUnit: '',
     usageRequestsHint: 'Запити від запуску проксі',
     saveApiKey: 'Зберегти API-ключ',
+
+},
+
+  profile: {
+    title: 'Профіль',
+    hint: 'Керування ідентичністю, мережевими параметрами та контактами',
+    sectionIdentity: 'Ідентичність',
+    sectionNetwork: 'Мережа',
+    sectionContact: 'Контакти',
+    sectionTrusted: 'Довірені вузли',
+    nickname: 'Нікнейм',
+    peerId: 'ID піра',
+    peerIdHint: 'Генерується libp2p автоматично, редагуванню не підлягає.',
+    apiKey: 'API-ключ акаунта',
+    apiKeyHint: 'API-ключ рівня акаунта (збереження поки не активне)',
+    phone: 'Телефон',
+    email: 'E-mail',
+    contactHint: 'Контакти зараз — лише UI-заглушка; збереження зявиться разом із сервісом акаунтів.',
   },
   days: {
     today: 'сьогодні',

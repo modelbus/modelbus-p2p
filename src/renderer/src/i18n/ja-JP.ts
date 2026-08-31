@@ -121,14 +121,12 @@ export const jaJP: Dict = {
     proxyPortField: 'ローカルプロキシポート',
     bootstrapHint: '起動時に libp2p がダイヤルするピア',
     tab: {
-      node: 'ノード',
-      register: '登録',
-      provision: 'トークン共有',
-      service: 'API サービス',
+      profile: 'プロフィール',
+      provision: 'モデル',
+      service: 'サービス',
     },
     tabHint: {
-      node: 'ノードネットワークとブートストラップ',
-      register: 'グローバルリストに登録',
+      profile: 'アイデンティティ・ネットワーク・連絡先',
       provision: 'LLM トークンを共有',
       service: '利用と呼び出しの上限',
     },
@@ -166,6 +164,24 @@ export const jaJP: Dict = {
     usageRequestsUnit: '件',
     usageRequestsHint: 'プロキシ起動以降の累計リクエスト数',
     saveApiKey: 'API キーを保存',
+
+},
+
+  profile: {
+    title: 'プロフィール',
+    hint: 'アイデンティティ、ネットワーク、連絡先の管理',
+    sectionIdentity: 'アイデンティティ',
+    sectionNetwork: 'ネットワーク',
+    sectionContact: '連絡先',
+    sectionTrusted: '信頼ノード',
+    nickname: 'ニックネーム',
+    peerId: 'ピア ID',
+    peerIdHint: 'libp2p により自動生成され、変更できません。',
+    apiKey: 'アカウント API キー',
+    apiKeyHint: 'アカウントレベルの API キー（永続化は未対応）',
+    phone: '電話番号',
+    email: 'メール',
+    contactHint: '連絡先は現在 UI プレースホルダーのみで、永続化はアカウントサービスと共に追加予定です。',
   },
   days: {
     today: '今日',

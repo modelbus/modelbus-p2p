@@ -121,14 +121,12 @@ export const plPL: Dict = {
     proxyPortField: 'Port lokalnego proxy',
     bootstrapHint: 'Węzły, które libp2p odpyta przy starcie',
     tab: {
-      node: 'Węzeł',
-      register: 'Zarejestruj',
-      provision: 'Token',
-      service: 'Serwis API',
+      profile: 'Profil',
+      provision: 'Modele',
+      service: 'Usługa',
     },
     tabHint: {
-      node: 'Sieć węzła i bootstrap',
-      register: 'Zarejestruj w globalnej liście',
+      profile: 'Tożsamość, sieć i kontakt',
       provision: 'Udostępniaj tokeny LLM',
       service: 'Limity zużycia i wywołań',
     },
@@ -166,6 +164,24 @@ export const plPL: Dict = {
     usageRequestsUnit: '',
     usageRequestsHint: 'Żądania od uruchomienia proxy',
     saveApiKey: 'Zapisz klucz API',
+
+},
+
+  profile: {
+    title: 'Profil',
+    hint: 'Zarządzaj tożsamością, parametrami sieci i danymi kontaktowymi',
+    sectionIdentity: 'Tożsamość',
+    sectionNetwork: 'Sieć',
+    sectionContact: 'Kontakt',
+    sectionTrusted: 'Zaufane węzły',
+    nickname: 'Pseudonim',
+    peerId: 'ID węzła',
+    peerIdHint: 'Generowane automatycznie przez libp2p, nieedytowalne.',
+    apiKey: 'Klucz API konta',
+    apiKeyHint: 'Klucz API na poziomie konta (zapis jeszcze nieaktywny)',
+    phone: 'Telefon',
+    email: 'E-mail',
+    contactHint: 'Dane kontaktowe to obecnie tylko symbole zastępcze UI; zapis zostanie dodany wraz z usługą kont.',
   },
   days: {
     today: 'dziś',

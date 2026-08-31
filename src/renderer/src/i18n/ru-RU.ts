@@ -121,14 +121,12 @@ export const ruRU: Dict = {
     proxyPortField: 'Порт локального прокси',
     bootstrapHint: 'Пиры, к которым libp2p подключается при старте',
     tab: {
-      node: 'Узел',
-      register: 'Регистрация',
-      provision: 'Токен',
-      service: 'API-сервис',
+      profile: 'Профиль',
+      provision: 'Модели',
+      service: 'Сервис',
     },
     tabHint: {
-      node: 'Сеть узла и bootstrap',
-      register: 'Регистрация в глобальном списке',
+      profile: 'Идентичность, сеть и контакты',
       provision: 'Поделиться LLM-токенами',
       service: 'Лимиты потребления и вызовов',
     },
@@ -166,6 +164,24 @@ export const ruRU: Dict = {
     usageRequestsUnit: '',
     usageRequestsHint: 'Запросы с момента запуска прокси',
     saveApiKey: 'Сохранить API-ключ',
+
+},
+
+  profile: {
+    title: 'Профиль',
+    hint: 'Управление идентичностью, сетевыми параметрами и контактами',
+    sectionIdentity: 'Идентичность',
+    sectionNetwork: 'Сеть',
+    sectionContact: 'Контакты',
+    sectionTrusted: 'Доверенные узлы',
+    nickname: 'Никнейм',
+    peerId: 'ID пира',
+    peerIdHint: 'Генерируется libp2p автоматически, недоступно для редактирования.',
+    apiKey: 'API-ключ аккаунта',
+    apiKeyHint: 'API-ключ уровня аккаунта (сохранение пока не активно)',
+    phone: 'Телефон',
+    email: 'E-mail',
+    contactHint: 'Контакты сейчас — только UI-заглушка; сохранение появится вместе с сервисом аккаунтов.',
   },
   days: {
     today: 'сегодня',

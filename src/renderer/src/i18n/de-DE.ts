@@ -121,14 +121,12 @@ export const deDE: Dict = {
     proxyPortField: 'Lokaler Proxy-Port',
     bootstrapHint: 'Peers, die libp2p beim Start anruft',
     tab: {
-      node: 'Knoten',
-      register: 'Registrieren',
-      provision: 'Token-Freigabe',
-      service: 'API-Dienst',
+      profile: 'Profil',
+      provision: 'Modelle',
+      service: 'Service',
     },
     tabHint: {
-      node: 'Knotennetzwerk & Bootstrap',
-      register: 'In globale Liste eintragen',
+      profile: 'Identität, Netzwerk und Kontakt',
       provision: 'LLM-Token teilen',
       service: 'Verbrauch & Aufruf-Limits',
     },
@@ -166,6 +164,24 @@ export const deDE: Dict = {
     usageRequestsUnit: '',
     usageRequestsHint: 'Anfragen seit Proxy-Start',
     saveApiKey: 'API-Schlüssel speichern',
+
+},
+
+  profile: {
+    title: 'Profil',
+    hint: 'Identität, Netzwerkparameter und Kontaktinformationen verwalten',
+    sectionIdentity: 'Identität',
+    sectionNetwork: 'Netzwerk',
+    sectionContact: 'Kontakt',
+    sectionTrusted: 'Vertrauenswürdige Knoten',
+    nickname: 'Spitzname',
+    peerId: 'Peer-ID',
+    peerIdHint: 'Wird von libp2p automatisch erzeugt und kann nicht geändert werden.',
+    apiKey: 'Konto-API-Schlüssel',
+    apiKeyHint: 'Kontobezogener API-Schlüssel (Persistenz noch nicht aktiv)',
+    phone: 'Telefon',
+    email: 'E-Mail',
+    contactHint: 'Kontaktdaten sind derzeit nur UI-Platzhalter; die Persistenz wird mit dem Konto-Service ergänzt.',
   },
   days: {
     today: 'heute',

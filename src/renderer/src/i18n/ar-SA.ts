@@ -121,14 +121,12 @@ export const arSA: Dict = {
     proxyPortField: 'منفذ الوكيل المحلي',
     bootstrapHint: 'النظراء الذين يتصل بهم libp2p عند البدء',
     tab: {
-      node: 'العقدة',
-      register: 'تسجيل',
-      provision: 'مشاركة الرمز',
-      service: 'خدمة API',
+      profile: 'الملف الشخصي',
+      provision: 'النماذج',
+      service: 'الخدمة',
     },
     tabHint: {
-      node: 'شبكة العقدة والإقلاع',
-      register: 'تسجيل في القائمة العامة',
+      profile: 'الهوية والشبكة والتواصل',
       provision: 'مشاركة رموز LLM',
       service: 'حدود الاستهلاك والاستدعاء',
     },
@@ -166,6 +164,24 @@ export const arSA: Dict = {
     usageRequestsUnit: '',
     usageRequestsHint: 'الطلبات المتراكمة منذ بدء الوكيل',
     saveApiKey: 'حفظ مفتاح API',
+
+},
+
+  profile: {
+    title: 'الملف الشخصي',
+    hint: 'إدارة الهوية ومعاملات الشبكة ومعلومات التواصل',
+    sectionIdentity: 'الهوية',
+    sectionNetwork: 'الشبكة',
+    sectionContact: 'التواصل',
+    sectionTrusted: 'العقد الموثوقة',
+    nickname: 'الاسم المستعار',
+    peerId: 'معرّف الأقران',
+    peerIdHint: 'يتم إنشاؤه تلقائياً بواسطة libp2p ولا يمكن تعديله.',
+    apiKey: 'مفتاح API للحساب',
+    apiKeyHint: 'مفتاح API على مستوى الحساب (الحفظ غير مفعّل بعد)',
+    phone: 'الهاتف',
+    email: 'البريد الإلكتروني',
+    contactHint: 'معلومات التواصل حالياً مجرد عنصر نائب؛ سيتم الحفظ مع خدمة الحساب.',
   },
   days: {
     today: 'اليوم',

@@ -121,14 +121,12 @@ export const zhTW: Dict = {
     proxyPortField: '本機代理通訊埠',
     bootstrapHint: '供 libp2p 啟動時連線的對等節點',
     tab: {
-      node: '節點',
-      register: '註冊',
-      provision: 'Token 上線',
-      service: '呼叫服務',
+      profile: '我的',
+      provision: '模型',
+      service: '服務',
     },
     tabHint: {
-      node: '節點網路與引導參數',
-      register: '註冊到全域節點清單',
+      profile: '身份、網路與聯絡方式',
       provision: '共享 LLM Token',
       service: '消費與呼叫參數',
     },
@@ -166,6 +164,24 @@ export const zhTW: Dict = {
     usageRequestsUnit: '次',
     usageRequestsHint: '代理啟動以來累計處理的請求',
     saveApiKey: '儲存 API Key',
+
+},
+
+  profile: {
+    title: '我的',
+    hint: '管理個人身分、網路參數與聯絡方式',
+    sectionIdentity: '身分',
+    sectionNetwork: '網路',
+    sectionContact: '聯絡',
+    sectionTrusted: '信任節點',
+    nickname: '暱稱',
+    peerId: '節點 ID',
+    peerIdHint: '由 libp2p 自動產生，無法修改。',
+    apiKey: '帳戶 API Key',
+    apiKeyHint: '帳號級 API Key（暫未啟用持久化）',
+    phone: '手機號',
+    email: '電子郵件',
+    contactHint: '這些聯絡方式暫未保存，僅作為後續接入帳號服務時的占位。',
   },
   days: {
     today: '今天',

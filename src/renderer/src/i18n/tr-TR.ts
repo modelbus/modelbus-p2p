@@ -121,14 +121,12 @@ export const trTR: Dict = {
     proxyPortField: 'Yerel proxy portu',
     bootstrapHint: 'libp2p\'nin başlangıçta aradığı eşler',
     tab: {
-      node: 'Düğüm',
-      register: 'Kayıt',
-      provision: 'Token paylaşımı',
-      service: 'API servisi',
+      profile: 'Profil',
+      provision: 'Modeller',
+      service: 'Hizmet',
     },
     tabHint: {
-      node: 'Düğüm ağı ve bootstrap',
-      register: 'Genel listeye kayıt ol',
+      profile: 'Kimlik, ağ ve iletişim',
       provision: 'LLM tokenlerini paylaş',
       service: 'Tüketim ve çağrı limitleri',
     },
@@ -166,6 +164,24 @@ export const trTR: Dict = {
     usageRequestsUnit: '',
     usageRequestsHint: 'Proxy başlangıcından beri birikmiş istekler',
     saveApiKey: 'API anahtarını kaydet',
+
+},
+
+  profile: {
+    title: 'Profil',
+    hint: 'Kimlik, ağ parametreleri ve iletişim bilgilerini yönet',
+    sectionIdentity: 'Kimlik',
+    sectionNetwork: 'Ağ',
+    sectionContact: 'İletişim',
+    sectionTrusted: 'Güvenilir düğümler',
+    nickname: 'Takma ad',
+    peerId: 'Eş ID',
+    peerIdHint: 'libp2p tarafından otomatik üretilir, düzenlenemez.',
+    apiKey: 'Hesap API anahtarı',
+    apiKeyHint: 'Hesap düzeyinde API anahtarı (kalıcılık henüz etkin değil)',
+    phone: 'Telefon',
+    email: 'E-posta',
+    contactHint: 'İletişim bilgileri şimdilik yalnızca UI yer tutucu; kalıcılık hesap hizmetiyle eklenecek.',
   },
   days: {
     today: 'bugün',

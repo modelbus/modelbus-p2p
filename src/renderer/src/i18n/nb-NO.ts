@@ -121,14 +121,12 @@ export const nbNO: Dict = {
     proxyPortField: 'Lokal proxy-port',
     bootstrapHint: 'Peers libp2p ringer ved oppstart',
     tab: {
-      node: 'Node',
-      register: 'Registrer',
-      provision: 'Token-deling',
-      service: 'API-tjeneste',
+      profile: 'Profil',
+      provision: 'Modeller',
+      service: 'Tjeneste',
     },
     tabHint: {
-      node: 'Nodenettverk og bootstrap',
-      register: 'Registrer i global liste',
+      profile: 'Identitet, nettverk og kontakt',
       provision: 'Del LLM-tokens',
       service: 'Forbruks- og oppkallsgrenser',
     },
@@ -166,6 +164,24 @@ export const nbNO: Dict = {
     usageRequestsUnit: '',
     usageRequestsHint: 'Forespørsler siden proxy-start',
     saveApiKey: 'Lagre API-nøkkel',
+
+},
+
+  profile: {
+    title: 'Profil',
+    hint: 'Administrer identitet, nettverksparametre og kontaktinfo',
+    sectionIdentity: 'Identitet',
+    sectionNetwork: 'Nettverk',
+    sectionContact: 'Kontakt',
+    sectionTrusted: 'Klarerte noder',
+    nickname: 'Kallenavn',
+    peerId: 'Peer-ID',
+    peerIdHint: 'Genereres automatisk av libp2p og kan ikke endres.',
+    apiKey: 'Konto-API-nøkkel',
+    apiKeyHint: 'Kontonivå API-nøkkel (lagring ikke aktivert ennå)',
+    phone: 'Telefon',
+    email: 'E-post',
+    contactHint: 'Kontaktinfo er foreløpig kun en UI-plassholder; lagring legges til med kontotjenesten.',
   },
   days: {
     today: 'i dag',

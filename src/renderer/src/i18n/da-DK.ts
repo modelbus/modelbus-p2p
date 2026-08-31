@@ -121,14 +121,12 @@ export const daDK: Dict = {
     proxyPortField: 'Lokal proxy-port',
     bootstrapHint: 'Peers libp2p ringer op ved opstart',
     tab: {
-      node: 'Node',
-      register: 'Registrer',
-      provision: 'Token-deling',
-      service: 'API-tjeneste',
+      profile: 'Profil',
+      provision: 'Modeller',
+      service: 'Tjeneste',
     },
     tabHint: {
-      node: 'Nodenetværk og bootstrap',
-      register: 'Tilmeld global liste',
+      profile: 'Identitet, netværk og kontakt',
       provision: 'Del LLM-tokens',
       service: 'Forbrugs- og opkaldsgrænser',
     },
@@ -166,6 +164,24 @@ export const daDK: Dict = {
     usageRequestsUnit: '',
     usageRequestsHint: 'Forespørgsler siden proxy-start',
     saveApiKey: 'Gem API-nøgle',
+
+},
+
+  profile: {
+    title: 'Profil',
+    hint: 'Administrer identitet, netværksparametre og kontaktoplysninger',
+    sectionIdentity: 'Identitet',
+    sectionNetwork: 'Netværk',
+    sectionContact: 'Kontakt',
+    sectionTrusted: 'Betroede noder',
+    nickname: 'Kaldenavn',
+    peerId: 'Peer-ID',
+    peerIdHint: 'Genereres automatisk af libp2p og kan ikke ændres.',
+    apiKey: 'Konto-API-nøgle',
+    apiKeyHint: 'Konto-niveau API-nøgle (persistens ikke aktiveret endnu)',
+    phone: 'Telefon',
+    email: 'E-mail',
+    contactHint: 'Kontaktoplysninger er kun UI-pladsholdere; persistens tilføjes sammen med kontotjenesten.',
   },
   days: {
     today: 'i dag',

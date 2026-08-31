@@ -121,14 +121,12 @@ export const viVN: Dict = {
     proxyPortField: 'Cổng proxy cục bộ',
     bootstrapHint: 'Peer mà libp2p quay số khi khởi động',
     tab: {
-      node: 'Nút',
-      register: 'Đăng ký',
-      provision: 'Chia sẻ token',
-      service: 'Dịch vụ API',
+      profile: 'Hồ sơ',
+      provision: 'Mô hình',
+      service: 'Dịch vụ',
     },
     tabHint: {
-      node: 'Mạng nút và bootstrap',
-      register: 'Đăng ký vào danh sách chung',
+      profile: 'Danh tính, mạng và liên hệ',
       provision: 'Chia sẻ token LLM',
       service: 'Giới hạn tiêu thụ và gọi',
     },
@@ -166,6 +164,24 @@ export const viVN: Dict = {
     usageRequestsUnit: '',
     usageRequestsHint: 'Yêu cầu tích lũy kể từ khi proxy khởi động',
     saveApiKey: 'Lưu khóa API',
+
+},
+
+  profile: {
+    title: 'Hồ sơ',
+    hint: 'Quản lý danh tính, tham số mạng và thông tin liên hệ',
+    sectionIdentity: 'Danh tính',
+    sectionNetwork: 'Mạng',
+    sectionContact: 'Liên hệ',
+    sectionTrusted: 'Nút đáng tin',
+    nickname: 'Bí danh',
+    peerId: 'ID peer',
+    peerIdHint: 'Được libp2p tạo tự động, không thể chỉnh sửa.',
+    apiKey: 'Khóa API tài khoản',
+    apiKeyHint: 'Khóa API cấp tài khoản (chưa bật lưu trữ)',
+    phone: 'Điện thoại',
+    email: 'Email',
+    contactHint: 'Thông tin liên hệ hiện chỉ là chỗ giữ chỗ trong UI; việc lưu trữ sẽ được thêm cùng dịch vụ tài khoản.',
   },
   days: {
     today: 'hôm nay',

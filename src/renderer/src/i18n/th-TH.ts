@@ -121,14 +121,12 @@ export const thTH: Dict = {
     proxyPortField: 'พอร์ตพร็อกซีภายใน',
     bootstrapHint: 'เพียร์ที่ libp2p โทรหาเมื่อเริ่มต้น',
     tab: {
-      node: 'โหนด',
-      register: 'ลงทะเบียน',
-      provision: 'แชร์โทเคน',
-      service: 'บริการ API',
+      profile: 'โปรไฟล์',
+      provision: 'โมเดล',
+      service: 'บริการ',
     },
     tabHint: {
-      node: 'เครือข่ายโหนดและ bootstrap',
-      register: 'ลงทะเบียนในรายการสากล',
+      profile: 'ข้อมูลส่วนตัว เครือข่าย และการติดต่อ',
       provision: 'แชร์โทเค็น LLM',
       service: 'ขีดจำกัดการใช้และการเรียก',
     },
@@ -166,6 +164,24 @@ export const thTH: Dict = {
     usageRequestsUnit: '',
     usageRequestsHint: 'คำขอสะสมตั้งแต่เริ่มพร็อกซี',
     saveApiKey: 'บันทึกคีย์ API',
+
+},
+
+  profile: {
+    title: 'โปรไฟล์',
+    hint: 'จัดการข้อมูลส่วนตัว พารามิเตอร์เครือข่าย และข้อมูลติดต่อ',
+    sectionIdentity: 'ข้อมูลส่วนตัว',
+    sectionNetwork: 'เครือข่าย',
+    sectionContact: 'การติดต่อ',
+    sectionTrusted: 'โหนดที่เชื่อถือ',
+    nickname: 'ชื่อเล่น',
+    peerId: 'Peer ID',
+    peerIdHint: 'สร้างโดย libp2p โดยอัตโนมัติ ไม่สามารถแก้ไขได้',
+    apiKey: 'คีย์ API ของบัญชี',
+    apiKeyHint: 'คีย์ API ระดับบัญชี (ยังไม่เปิดใช้การบันทึก)',
+    phone: 'โทรศัพท์',
+    email: 'อีเมล',
+    contactHint: 'ข้อมูลติดต่อเป็นเพียงตัวยึดใน UI; การบันทึกจะถูกเพิ่มพร้อมกับบริการบัญชี',
   },
   days: {
     today: 'วันนี้',
