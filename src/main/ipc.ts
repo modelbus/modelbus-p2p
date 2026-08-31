@@ -1,4 +1,5 @@
 import { app, BrowserWindow, ipcMain, shell } from 'electron';
+import { promises as fsPromises } from 'node:fs';
 import type { BootstrapConfig, ConsumerLimits, NodeAnnouncementFlat, ProvisionConfig, WalletScore, ModelEntry, LeaderboardEntry, ModelQualityNode } from '@shared/types';
 import type { Store } from './services/store.js';
 import type { ProviderService } from './services/providers.js';
@@ -10,6 +11,7 @@ import type { BootstrapCache } from './services/bootstrap-cache.js';
 import type { Logger } from './services/logger.js';
 import { computeWallet } from './services/wallet.js';
 import { buildModelViews } from './services/models.js';
+import { MODELBUS_DIR } from './services/paths.js';
 
 export interface Deps {
   store: Store;
@@ -285,10 +287,14 @@ export function registerIpc(deps: Deps): void {
   });
 
 ipcMain.handle('system:openLogsFolder', async () => {
-    // Electron writes main-process logs into the userData directory; on
-    // macOS that is ~/Library/Application Support/<appName>/. We open
-    // the parent folder so the user can also see the persisted store.
-    await shell.openPath(app.getPath('userData'));
+    // Open ~/.modelbus/ — the on-disk home for p2p.json, event.log and
+    // modelbus.db. shell.openPath delegates to the platform's default
+    // file manager: Finder on macOS, Explorer on Windows, xdg-open on
+    // Linux. Make sure the directory exists so the manager has
+    // something to focus on a first-run install.
+    await fsPromises.mkdir(MODELBUS_DIR, { recursive: true });
+    const err = await shell.openPath(MODELBUS_DIR);
+    if (err) console.warn('[ipc] openLogsFolder failed:', err);
   });
 
   // -------- Wallet --------
