@@ -249,7 +249,7 @@ watch(modal, async (v) => {
                 ></span>
               </span>
             </div>
-            <button class="ghost-btn" :title="t('actions.expand')" @click="openEdit(idx)">
+            <button class="ghost-btn" :title="t('actions.edit')" @click="openEdit(idx)">
               {{ t('actions.edit') }}
             </button>
             <button class="danger" :title="t('actions.remove')" @click="removeProvider(idx)">
@@ -517,6 +517,23 @@ watch(modal, async (v) => {
 }
 .add-provider-row {
   margin-bottom: 12px;
+}
+.ghost-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: transparent;
+  border: 1px solid var(--border);
+  color: var(--text-soft);
+  padding: 4px 10px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.12s, color 0.12s, border-color 0.12s;
+}
+.ghost-btn:hover {
+  background: var(--bg-elev);
+  color: var(--text);
+  border-color: var(--border-strong);
 }
 .save-row {
   display: flex;
