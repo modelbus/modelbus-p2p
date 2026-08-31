@@ -145,6 +145,22 @@ watch(
   }
 );
 
+// Build the logo URL for a given provider id. The logo files live in
+// src/renderer/public/logos/ — pulled from models.dev — and are served
+// from the renderer root by Vite.
+function logoUrl(providerId: string): string {
+  return `./logos/${providerId}.svg`;
+}
+
+function onLogoError(evt: Event) {
+  // Fall back to the initial-letter chip when the SVG is missing or
+  // fails to load. Hide the broken <img> so the parent letter chip
+  // can take its place visually.
+  const el = evt.target as HTMLImageElement;
+  el.style.display = 'none';
+  el.dataset['broken'] = '1';
+}
+
 // Focus the first input after the modal opens for keyboard users.
 const firstFieldRef = ref<HTMLInputElement | null>(null);
 watch(modal, async (v) => {
@@ -158,7 +174,7 @@ watch(modal, async (v) => {
 <template>
   <section class="settings-pane">
     <header class="pane-header">
-      <h2>{{ t('provision.title') }}</h2>
+      <h2>{{ t('models.title') }}</h2>
       <p class="muted">{{ t('settings.provisionHint') }}</p>
     </header>
 
@@ -189,7 +205,16 @@ watch(modal, async (v) => {
         >
           <div class="provider-card-main">
             <div class="provider-icon">
-              {{ (p.providerName || p.providerId || '?').slice(0, 1).toUpperCase() }}
+              <img
+                v-if="p.providerId"
+                :src="logoUrl(p.providerId)"
+                :alt="p.providerName || p.providerId"
+                class="provider-logo"
+                @error="onLogoError"
+              />
+              <span v-else class="provider-letter">
+                {{ (p.providerName || p.providerId || '?').slice(0, 1).toUpperCase() }}
+              </span>
             </div>
             <div class="provider-meta">
               <div class="provider-title">
@@ -399,9 +424,21 @@ watch(modal, async (v) => {
   justify-content: center;
   background: var(--accent-soft);
   color: var(--accent);
+  flex-shrink: 0;
+  overflow: hidden;
+  position: relative;
+}
+.provider-logo {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  padding: 4px;
+  background: var(--panel);
+  border-radius: inherit;
+}
+.provider-letter {
   font-weight: 700;
   font-size: 16px;
-  flex-shrink: 0;
 }
 .provider-meta {
   min-width: 0;
