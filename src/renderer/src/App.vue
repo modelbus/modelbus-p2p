@@ -20,13 +20,14 @@ import ModelsView from './views/ModelsView.vue';
 import WalletView from './views/WalletView.vue';
 import LogsView from './views/LogsView.vue';
 import SettingsView from './views/SettingsView.vue';
+import NodesView from './views/NodesView.vue';
 
 import type { EventLogEntry, AppRefs, AppActions, AppHelpers, DraftProvider } from './views/types';
 
-type Tab = 'home' | 'models' | 'wallet' | 'logs' | 'settings';
+type Tab = 'home' | 'models' | 'nodes' | 'wallet' | 'logs' | 'settings';
 
 const tab = ref<Tab>('home');
-const settingsSub = ref<'node' | 'register' | 'provision' | 'service'>('node');
+const settingsSub = ref<'profile' | 'provision' | 'service'>('profile');
 
 // ---- state (kept as refs so we can pass to child views) ----
 const status = ref<{
@@ -330,6 +331,7 @@ function onDocClick(e: MouseEvent) {
 const tabs = computed<Array<{ id: Tab; label: string }>>(() => [
   { id: 'home', label: t('nav.home') },
   { id: 'models', label: t('nav.models') },
+  { id: 'nodes', label: t('nav.nodes') },
   { id: 'wallet', label: t('nav.wallet') },
   { id: 'logs', label: t('nav.logs') },
   { id: 'settings', label: t('nav.settings') },
@@ -386,7 +388,7 @@ function onNavEvent(e: Event) {
   const detail = (e as CustomEvent<{ tab?: Tab; sub?: string }>).detail;
   if (!detail) return;
   if (detail.tab) tab.value = detail.tab;
-  if (detail.sub && (detail.sub === 'node' || detail.sub === 'register' || detail.sub === 'provision' || detail.sub === 'service')) {
+  if (detail.sub && (detail.sub === 'profile' || detail.sub === 'provision' || detail.sub === 'service')) {
     settingsSub.value = detail.sub;
   }
 }
@@ -524,6 +526,7 @@ onBeforeUnmount(() => {
     <main class="content">
       <HomeView v-if="tab === 'home'" :refs="refs" :actions="actions" :helpers="helpers" />
       <ModelsView v-else-if="tab === 'models'" />
+      <NodesView v-else-if="tab === 'nodes'" :refs="refs" :actions="actions" :helpers="helpers" />
       <WalletView v-else-if="tab === 'wallet'" />
       <LogsView v-else-if="tab === 'logs'" :refs="refs" :actions="actions" :helpers="helpers" />
       <SettingsView v-else-if="tab === 'settings'" :key="settingsSub" :initial-sub="settingsSub" :refs="refs" :actions="actions" :helpers="helpers" />

@@ -88,7 +88,7 @@ function goService() {
   window.dispatchEvent(new CustomEvent('modelbus:nav', { detail: { tab: 'settings', sub: 'service' } }));
 }
 function goConsume() {
-  window.dispatchEvent(new CustomEvent('modelbus:nav', { detail: { tab: 'settings', sub: 'node' } }));
+  window.dispatchEvent(new CustomEvent('modelbus:nav', { detail: { tab: 'nodes' } }));
 }
 
 function fmtMin(m: number): string {
