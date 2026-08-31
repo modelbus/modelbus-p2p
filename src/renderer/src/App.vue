@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onBeforeUnmount } from 'vue';
+import { ref, computed, onMounted, onBeforeUnmount, watch } from 'vue';
 import type {
   ProviderSummary,
   ProviderDetail,
@@ -56,6 +56,67 @@ const draft = ref<{
   nickname: '',
   providers: [],
 });
+
+/**
+ * localStorage cache key for the in-progress provision draft. The draft
+ * is the *unsaved* state the user is editing on the Settings → Models
+ * pane; without persistence, an app restart (or a Ctrl-R in dev) wipes
+ * every provider the user added but didn't yet "开始分享". The cache is
+ * intentionally local to the renderer — the real, shareable config
+ * still lives in the main process store and is the source of truth
+ * after the user clicks the top "开始分享 / 更新" button.
+ */
+const DRAFT_CACHE_KEY = 'modelbus.provision.draft.v1';
+
+type CachedDraft = { nickname: string; providers: DraftProvider[] };
+
+function loadCachedDraft(): CachedDraft | null {
+  if (typeof localStorage === 'undefined') return null;
+  try {
+    const raw = localStorage.getItem(DRAFT_CACHE_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as Partial<CachedDraft>;
+    if (
+      !parsed ||
+      typeof parsed.nickname !== 'string' ||
+      !Array.isArray(parsed.providers)
+    ) {
+      return null;
+    }
+    // Filter out anything that doesn't look like a DraftProvider so a
+    // corrupted cache can't crash the render.
+    const providers = parsed.providers.filter(
+      (p): p is DraftProvider =>
+        !!p &&
+        typeof p.providerId === 'string' &&
+        typeof p.providerName === 'string' &&
+        typeof p.apiBase === 'string' &&
+        typeof p.apiKey === 'string' &&
+        Array.isArray(p.selectedModels)
+    );
+    return { nickname: parsed.nickname, providers };
+  } catch {
+    return null;
+  }
+}
+
+function saveCachedDraft(d: CachedDraft) {
+  if (typeof localStorage === 'undefined') return;
+  try {
+    localStorage.setItem(DRAFT_CACHE_KEY, JSON.stringify(d));
+  } catch {
+    /* quota / private-mode failures are non-fatal */
+  }
+}
+
+function clearCachedDraft() {
+  if (typeof localStorage === 'undefined') return;
+  try {
+    localStorage.removeItem(DRAFT_CACHE_KEY);
+  } catch {
+    /* best-effort */
+  }
+}
 
 const nodes = ref<NodeAnnouncement[]>([]);
 const registryLoading = ref(false);
@@ -121,6 +182,9 @@ async function refreshStatus() {
 async function refreshProvision() {
   provision.value = await window.modelbus.provision.get();
   if (provision.value) {
+    // A persisted provision always wins over the local cache — it's
+    // the source of truth. The cache is only useful when there is
+    // nothing to load yet (first boot after a draft-only session).
     draft.value = {
       nickname: provision.value.nickname,
       providers: provision.value.providers.map((p) => ({
@@ -136,6 +200,31 @@ async function refreshProvision() {
     }
   }
 }
+
+/** Restore the cached draft (if any) when the renderer boots up. Must
+ *  run before `refreshProvision` so a subsequent refreshProvision with
+ *  no persisted provision keeps the cached draft instead of overwriting
+ *  it back to empty. */
+function restoreDraftFromCache() {
+  const cached = loadCachedDraft();
+  if (!cached) return;
+  if (cached.providers.length === 0 && !cached.nickname) return;
+  draft.value = cached;
+}
+
+// Persist draft on every change. Deep watch on `draft.value` so nested
+// edits (adding/removing a provider, editing apiKey) all flush.
+watch(
+  draft,
+  (d) => {
+    if (!d || (d.providers.length === 0 && !d.nickname)) {
+      clearCachedDraft();
+    } else {
+      saveCachedDraft({ nickname: d.nickname, providers: d.providers });
+    }
+  },
+  { deep: true }
+);
 
 async function refreshProxy() {
   proxyStats.value = await window.modelbus.proxy.stats();
@@ -256,6 +345,12 @@ async function saveProvision() {
       providers: creds,
     });
     provision.value = full;
+    // The persisted provision is now the source of truth; drop the
+    // local cache so the next launch hydrates from main instead of
+    // a stale draft. (The watcher would have written a copy a moment
+    // ago when draft.value was last assigned; we explicitly clear to
+    // avoid that race.)
+    clearCachedDraft();
     await refreshStatus();
     await refreshNodes();
   } catch (err) {
@@ -354,6 +449,12 @@ const currentLocaleCc = computed(() => currentLocaleEntry.value?.cc ?? 'cn');
 const currentThemeLabel = computed(() => themeOptions.find((o) => o.id === theme.value)?.label ?? '');
 
 onMounted(async () => {
+  // Pull the in-progress draft from localStorage BEFORE we hit the main
+  // process. refreshProvision will overwrite the draft when a persisted
+  // provision exists, so the cache is effectively a 'fallback while
+  // the saved config is empty' buffer.
+  restoreDraftFromCache();
+
   await loadConfig();
   await loadProviders(false);
   await refreshAll();
