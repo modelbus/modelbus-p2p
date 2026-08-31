@@ -1,6 +1,6 @@
 <script setup lang="ts">
-import { ref, computed, watch } from 'vue';
-import type { ProviderDetail, ProviderSummary, ProvisionConfig } from '@shared/types';
+import { ref, computed, watch, nextTick } from 'vue';
+import type { ProvisionConfig } from '@shared/types';
 import { t } from '../../i18n';
 import type { AppRefs, AppActions, DraftProvider } from '../types';
 
@@ -9,28 +9,111 @@ const props = defineProps<{
   actions: AppActions;
 }>();
 
-const expanded = ref<Record<number, boolean>>({});
-
-function toggle(idx: number) {
-  expanded.value[idx] = !expanded.value[idx];
-}
-
-function isExpanded(idx: number) {
-  return !!expanded.value[idx];
-}
-
-const providers = props.refs.providers;
-const providerDetail = props.refs.providerDetail;
 const draftProviders = props.refs.draft.value.providers;
 
 /**
- * Mock quota / status for a ProviderCredential. Real values aren't wired
+ * Modal state: null when closed, otherwise an object describing the
+ * draft being edited. `mode === 'create'` opens with a fresh blank
+ * provider; `mode === 'edit'` opens with a copy of the existing
+ * one so the user can cancel without touching the live draft.
+ */
+type ModalState =
+  | { mode: 'create'; draft: DraftProvider }
+  | { mode: 'edit'; index: number; draft: DraftProvider }
+  | null;
+
+const modal = ref<ModalState>(null);
+
+function blankProvider(): DraftProvider {
+  return { providerId: '', providerName: '', apiBase: '', apiKey: '', selectedModels: [] };
+}
+
+function openCreate() {
+  modal.value = { mode: 'create', draft: blankProvider() };
+  void props.actions.loadProviderDetail('');
+}
+
+function openEdit(idx: number) {
+  const orig = draftProviders[idx];
+  if (!orig) return;
+  // Shallow copy the selectedModels so editing doesn't mutate until save.
+  modal.value = {
+    mode: 'edit',
+    index: idx,
+    draft: {
+      providerId: orig.providerId,
+      providerName: orig.providerName,
+      apiBase: orig.apiBase,
+      apiKey: orig.apiKey,
+      selectedModels: [...orig.selectedModels],
+    },
+  };
+  if (orig.providerId) void props.actions.loadProviderDetail(orig.providerId);
+}
+
+function closeModal() {
+  modal.value = null;
+}
+
+const providerDetail = computed(() => props.refs.providerDetail.value);
+
+async function confirmModal() {
+  if (!modal.value) return;
+  const { draft } = modal.value;
+  if (!draft.providerId) {
+    // Match the original UX: refuse to save without a provider.
+    return;
+  }
+  if (modal.value.mode === 'create') {
+    props.refs.draft.value.providers.push({ ...draft });
+  } else {
+    const i = modal.value.index;
+    props.refs.draft.value.providers.splice(i, 1, { ...draft });
+  }
+  modal.value = null;
+}
+
+async function onProviderChange(id: string) {
+  if (!modal.value) return;
+  modal.value.draft.providerId = id;
+  modal.value.draft.providerName = props.refs.providers.value.find((p) => p.id === id)?.name ?? '';
+  // Drop the model selection — the user is switching to a different
+  // upstream, the previous chip list doesn't apply any more.
+  modal.value.draft.selectedModels = [];
+  if (id) await props.actions.loadProviderDetail(id);
+}
+
+function toggleModel(id: string) {
+  if (!modal.value) return;
+  const cur = modal.value.draft.selectedModels;
+  const i = cur.indexOf(id);
+  if (i >= 0) cur.splice(i, 1);
+  else cur.push(id);
+}
+
+function selectAllModels() {
+  if (!modal.value) return;
+  const det = providerDetail.value;
+  if (det && det.id === modal.value.draft.providerId) {
+    modal.value.draft.selectedModels = det.models.map((m) => m.id);
+  }
+}
+
+function clearModels() {
+  if (!modal.value) return;
+  modal.value.draft.selectedModels = [];
+}
+
+function removeProvider(idx: number) {
+  props.refs.draft.value.providers.splice(idx, 1);
+}
+
+/**
+ * Mock quota / status for the row badge. Real values aren't wired
  * upstream yet so we surface a deterministic mock so the list can show
  * a believable "connection / quota" column.
  */
 function mockStatus(p: DraftProvider) {
-  // Stable hash of providerId so the same provider always shows the
-  // same mock values between renders.
   let h = 0;
   for (const c of p.providerId) h = (h * 31 + c.charCodeAt(0)) | 0;
   const connected = (p.providerId !== '' && p.apiKey !== '') || h % 3 === 0;
@@ -40,9 +123,7 @@ function mockStatus(p: DraftProvider) {
 }
 
 const hasAnyDraft = computed(() => draftProviders.length > 0);
-const activeProvision = computed<ProvisionConfig | null>(
-  () => props.refs.provision.value
-);
+const activeProvision = computed<ProvisionConfig | null>(() => props.refs.provision.value);
 
 function statusTag(connected: boolean) {
   return connected
@@ -50,17 +131,33 @@ function statusTag(connected: boolean) {
     : { cls: 'tag warn', label: t('provision.statusOffline') };
 }
 
-function loadDetail(idx: number) {
-  const p = draftProviders[idx];
-  if (p && p.providerId) props.actions.loadProviderDetail(p.providerId);
-}
+const modalCanConfirm = computed(() => {
+  const m = modal.value;
+  if (!m) return false;
+  return m.draft.providerId !== '';
+});
+
+const modalPlaceholder = computed(() => {
+  const det = providerDetail.value;
+  if (det?.api) return det.api;
+  return 'https://api.openai.com/v1';
+});
 
 watch(
   () => draftProviders.length,
   () => {
-    expanded.value = {};
+    // No expanded-state tracking any more; the modal handles editing.
   }
 );
+
+// Focus the first input after the modal opens for keyboard users.
+const firstFieldRef = ref<HTMLInputElement | null>(null);
+watch(modal, async (v) => {
+  if (v) {
+    await nextTick();
+    firstFieldRef.value?.focus();
+  }
+});
 </script>
 
 <template>
@@ -70,7 +167,7 @@ watch(
       <p class="muted">{{ t('settings.provisionHint') }}</p>
     </header>
 
-    <!-- Token-provider list -->
+    <!-- Empty state -->
     <div v-if="!hasAnyDraft" class="empty-card">
       <div class="empty-card-inner">
         <svg width="36" height="36" viewBox="0 0 24 24" fill="none"
@@ -81,20 +178,20 @@ watch(
         </svg>
         <div class="empty-title">{{ t('provision.emptyTitle') }}</div>
         <div class="empty-hint">{{ t('provision.emptyHint') }}</div>
-        <button class="primary" @click="actions.addProvider">
+        <button class="primary" @click="openCreate">
           + {{ t('provision.addProvider') }}
         </button>
       </div>
     </div>
 
-    <ul v-else class="provider-list">
-      <li
-        v-for="(p, idx) in draftProviders"
-        :key="idx"
-        class="provider-card"
-        :class="{ expanded: isExpanded(idx) }"
-      >
-        <header class="provider-card-head" @click="toggle(idx)">
+    <!-- Provider list (read-only cards) -->
+    <template v-else>
+      <ul class="provider-list">
+        <li
+          v-for="(p, idx) in draftProviders"
+          :key="idx"
+          class="provider-card"
+        >
           <div class="provider-card-main">
             <div class="provider-icon">
               {{ (p.providerName || p.providerId || '?').slice(0, 1).toUpperCase() }}
@@ -132,97 +229,22 @@ watch(
                 ></span>
               </span>
             </div>
-            <button
-              class="chevron-btn"
-              :class="{ open: isExpanded(idx) }"
-              :title="t('actions.expand')"
-              @click.stop="toggle(idx)"
-            >
-              <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                stroke-linejoin="round">
-                <polyline points="6 9 12 15 18 9" />
-              </svg>
+            <button class="ghost-btn" :title="t('actions.expand')" @click="openEdit(idx)">
+              {{ t('actions.edit') }}
             </button>
-          </div>
-        </header>
-
-        <div v-if="isExpanded(idx)" class="provider-card-body">
-          <div class="form-row cols-2">
-            <div>
-              <label>{{ t('provision.provider') }}</label>
-              <select
-                :value="p.providerId"
-                @change="
-                  actions.selectProvider(idx, ($event.target as HTMLSelectElement).value);
-                  loadDetail(idx);
-                "
-              >
-                <option value="">{{ t('setup.pickProvider') }}</option>
-                <option v-for="sp in providers.value" :key="sp.id" :value="sp.id">
-                  {{ sp.name }} ({{ sp.id }})
-                </option>
-              </select>
-            </div>
-            <div>
-              <label>{{ t('provision.apiKey') }}</label>
-              <input
-                type="password"
-                v-model="p.apiKey"
-                placeholder="sk-…"
-                autocomplete="off"
-              />
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div>
-              <label>{{ t('provision.apiBase') }}</label>
-              <input
-                v-model="p.apiBase"
-                :placeholder="providerDetail.value?.api ?? 'https://api.openai.com/v1'"
-              />
-            </div>
-          </div>
-
-          <div v-if="providerDetail.value && p.providerId === providerDetail.value.id">
-            <label>{{ t('provision.modelsToShare') }}</label>
-            <div class="chip-grid">
-              <span
-                v-for="m in providerDetail.value.models"
-                :key="m.id"
-                class="chip"
-                :class="{ selected: p.selectedModels.includes(m.id) }"
-                @click="actions.toggleModel(idx, m)"
-              >
-                {{ m.id }}
-              </span>
-            </div>
-            <div class="chip-actions">
-              <button @click="p.selectedModels = providerDetail.value!.models.map((m) => m.id)">
-                {{ t('actions.selectAll') }}
-              </button>
-              <button @click="p.selectedModels = []">
-                {{ t('actions.clearSelection') }}
-              </button>
-            </div>
-          </div>
-
-          <div class="provider-card-foot">
-            <button class="danger" @click="actions.removeProvider(idx)">
+            <button class="danger" :title="t('actions.remove')" @click="removeProvider(idx)">
               {{ t('actions.remove') }}
             </button>
           </div>
-        </div>
-      </li>
-    </ul>
+        </li>
+      </ul>
 
-    <div v-if="hasAnyDraft" class="add-provider-row">
-      <button @click="actions.addProvider">
-        + {{ t('provision.addProvider') }}
-      </button>
-    </div>
+      <div class="add-provider-row">
+        <button @click="openCreate">+ {{ t('provision.addProvider') }}</button>
+      </div>
+    </template>
 
+    <!-- Save / stop sharing -->
     <div class="save-row">
       <button
         class="primary"
@@ -235,6 +257,91 @@ watch(
         {{ t('actions.stopSharing') }}
       </button>
       <span v-if="refs.error.value" class="tag danger">{{ refs.error.value }}</span>
+    </div>
+
+    <!-- Modal -->
+    <div v-if="modal" class="modal-overlay" @click.self="closeModal">
+      <div class="modal-card" role="dialog" aria-modal="true">
+        <header class="modal-head">
+          <h3>
+            {{ modal.mode === 'create' ? t('provision.addProvider') : t('provision.editProvider') }}
+          </h3>
+          <button class="ghost-btn modal-close" @click="closeModal" aria-label="Close">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" aria-hidden="true">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </header>
+
+        <div class="modal-body">
+          <div class="form-row">
+            <div>
+              <label>{{ t('provision.provider') }}</label>
+              <select
+                ref="firstFieldRef"
+                :value="modal.draft.providerId"
+                @change="onProviderChange(($event.target as HTMLSelectElement).value)"
+              >
+                <option value="">{{ t('setup.pickProvider') }}</option>
+                <option v-for="sp in refs.providers.value" :key="sp.id" :value="sp.id">
+                  {{ sp.name }} ({{ sp.id }})
+                </option>
+              </select>
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div>
+              <label>{{ t('provision.apiKey') }}</label>
+              <input
+                v-model="modal.draft.apiKey"
+                type="password"
+                placeholder="sk-…"
+                autocomplete="off"
+              />
+            </div>
+          </div>
+
+          <div class="form-row">
+            <div>
+              <label>{{ t('provision.apiBase') }}</label>
+              <input
+                v-model="modal.draft.apiBase"
+                :placeholder="modalPlaceholder"
+              />
+            </div>
+          </div>
+
+          <div v-if="providerDetail && modal.draft.providerId === providerDetail.id">
+            <label>{{ t('provision.modelsToShare') }}</label>
+            <div class="chip-grid">
+              <span
+                v-for="m in providerDetail.models"
+                :key="m.id"
+                class="chip"
+                :class="{ selected: modal.draft.selectedModels.includes(m.id) }"
+                @click="toggleModel(m.id)"
+              >
+                {{ m.id }}
+              </span>
+            </div>
+            <div class="chip-actions">
+              <button @click="selectAllModels">{{ t('actions.selectAll') }}</button>
+              <button @click="clearModels">{{ t('actions.clearSelection') }}</button>
+            </div>
+          </div>
+        </div>
+
+        <footer class="modal-foot">
+          <button @click="closeModal">{{ t('actions.cancel') }}</button>
+          <button class="primary" :disabled="!modalCanConfirm" @click="confirmModal">
+            {{ t('actions.save') }}
+          </button>
+        </footer>
+      </div>
     </div>
   </section>
 </template>
@@ -276,24 +383,15 @@ watch(
   background: var(--panel);
   border: 1px solid var(--border);
   border-radius: 12px;
-  overflow: hidden;
-  transition: border-color 0.15s, box-shadow 0.15s;
-}
-.provider-card:hover {
-  border-color: var(--border-strong);
-}
-.provider-card.expanded {
-  border-color: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-soft);
-}
-.provider-card-head {
+  padding: 14px 18px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-  padding: 14px 18px;
-  cursor: pointer;
-  user-select: none;
+  transition: border-color 0.15s;
+}
+.provider-card:hover {
+  border-color: var(--border-strong);
 }
 .provider-card-main {
   display: flex;
@@ -351,7 +449,7 @@ watch(
 .provider-card-aside {
   display: flex;
   align-items: center;
-  gap: 14px;
+  gap: 12px;
   flex-shrink: 0;
 }
 .provider-card-aside .tag {
@@ -392,41 +490,6 @@ watch(
   height: 100%;
   background: linear-gradient(90deg, var(--accent), var(--accent-2));
 }
-.chevron-btn {
-  width: 28px;
-  height: 28px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background: transparent;
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  color: var(--muted);
-  cursor: pointer;
-  transition: transform 0.15s, color 0.15s;
-}
-.chevron-btn:hover {
-  color: var(--text);
-}
-.chevron-btn.open {
-  transform: rotate(180deg);
-  color: var(--accent);
-}
-.provider-card-body {
-  padding: 4px 18px 16px;
-  border-top: 1px solid var(--border);
-  background: var(--bg-elev);
-}
-.chip-actions {
-  margin-top: 8px;
-  display: flex;
-  gap: 8px;
-}
-.provider-card-foot {
-  margin-top: 10px;
-  display: flex;
-  justify-content: flex-end;
-}
 .add-provider-row {
   margin-bottom: 12px;
 }
@@ -437,6 +500,66 @@ watch(
   margin-top: 18px;
   padding-top: 18px;
   border-top: 1px solid var(--border);
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 24px;
+}
+.modal-card {
+  width: 100%;
+  max-width: 560px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.28);
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 96px);
+  overflow: hidden;
+}
+.modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--border);
+}
+.modal-head h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+.modal-close {
+  width: 28px;
+  height: 28px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-body {
+  padding: 16px 20px;
+  overflow-y: auto;
+}
+.modal-foot {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 12px 20px;
+  border-top: 1px solid var(--border);
+  background: var(--bg-elev);
+}
+.chip-actions {
+  margin-top: 8px;
+  display: flex;
+  gap: 8px;
 }
 
 @media (max-width: 720px) {
