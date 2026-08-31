@@ -1,6 +1,17 @@
 import { app, BrowserWindow } from 'electron';
 import { join } from 'node:path';
 
+// Disable hardware acceleration / EGL on Linux/macOS to avoid noisy
+// "EGL Driver message (Error) eglQueryDeviceAttribEXT: Bad attribute" warnings
+// from Chromium's GPU process when no compatible GPU stack is available.
+// Must run before app is ready.
+if (process.platform === 'linux' || process.platform === 'darwin') {
+  app.disableHardwareAcceleration();
+  app.commandLine.appendSwitch('disable-gpu');
+  app.commandLine.appendSwitch('disable-software-rasterizer');
+  app.commandLine.appendSwitch('use-gl', 'swiftshader');
+}
+
 import { Store } from './services/store.js';
 import { ProviderService } from './services/providers.js';
 import { RegistryService } from './services/registry.js';
