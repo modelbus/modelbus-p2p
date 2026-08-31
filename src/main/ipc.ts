@@ -34,18 +34,41 @@ export function registerIpc(deps: Deps): void {
    * FIRST provider as the headline provider; the full provider list is
    * only carried on the wire-format NodeAnnouncement (v2).
    */
-  function localFlat(config: ProvisionConfig): NodeAnnouncementFlat {
-    const first = config.providers[0];
-    return {
-      peerId: p2p.peerIdString() ?? config.peerId,
-      nickname: config.nickname,
-      providerId: first?.providerId ?? '',
-      providerName: first?.providerName ?? '',
-      modelIds: first ? [...first.modelIds] : [],
-      primaryAddr: p2p.multiaddrs()[0] ?? '',
+  /**
+   * Project a (possibly multi-provider) ProvisionConfig into the
+   * backwards-compatible flat shape. Each provider the local node
+   * carries becomes its own flat row so the Models UI can list
+   * `deepseek` and `minimax-token-plan` separately even though they
+   * share the same peer identity. If the config has no providers at
+   * all we still emit a single placeholder row so the local node
+   * remains visible in the registry.
+   */
+  function localFlat(config: ProvisionConfig): NodeAnnouncementFlat[] {
+    const peerId = p2p.peerIdString() ?? config.peerId;
+    const nickname = config.nickname;
+    const primaryAddr = p2p.multiaddrs()[0] ?? '';
+    if (!config.providers.length) {
+      return [{
+        peerId,
+        nickname,
+        providerId: '',
+        providerName: '',
+        modelIds: [],
+        primaryAddr,
+        announcedAt: Date.now(),
+        trusted: true,
+      }];
+    }
+    return config.providers.map((p) => ({
+      peerId,
+      nickname,
+      providerId: p.providerId,
+      providerName: p.providerName,
+      modelIds: [...p.modelIds],
+      primaryAddr,
       announcedAt: Date.now(),
       trusted: true,
-    };
+    }));
   }
 
   ipcMain.handle('bootstrap:getConfig', async () => store.getBootstrap());
@@ -69,7 +92,11 @@ export function registerIpc(deps: Deps): void {
       const prov = store.getProvision();
       if (prov) {
         const local = localFlat(prov);
-        if (!items.find((it) => it.peerId === local.peerId)) items.unshift(local);
+        for (const entry of local) {
+          if (!items.find((it) => it.peerId === entry.peerId && it.providerId === entry.providerId)) {
+            items.unshift(entry);
+          }
+        }
       }
     }
     // Persist the validated/trusted subset so the next launch has a
@@ -133,7 +160,9 @@ export function registerIpc(deps: Deps): void {
         const local = store.getProvision();
         const me = p2p.peerIdString();
         if (local && me) {
-          proxy.setTarget(localFlat(local));
+          // Auto-start picks the first provider; the user can switch to
+          // a different upstream from the Models tab later.
+          proxy.setTarget(localFlat(local)[0]);
           await proxy.start(cfg.proxyPort);
         }
       } catch (err) {
@@ -170,7 +199,7 @@ export function registerIpc(deps: Deps): void {
     // provision.
     if (store.getConsumerAutostart() && p2p.isStarted() && !proxy.isRunning()) {
       try {
-        proxy.setTarget(localFlat(full));
+        proxy.setTarget(localFlat(full)[0]);
         await proxy.start(store.getBootstrap().proxyPort);
       } catch (err) {
         console.warn('[ipc] consumer autostart after provision failed:', (err as Error).message);
@@ -236,7 +265,9 @@ export function registerIpc(deps: Deps): void {
     if (!target && peerId === p2p.peerIdString()) {
       const local = store.getProvision();
       if (local) {
-        target = localFlat(local);
+        // The local peer exposes one or more providers; default the
+        // proxy target to the first one.
+        target = localFlat(local)[0];
       }
     }
     if (!target) throw new Error(`peer ${peerId} not found in registry`);
@@ -261,7 +292,7 @@ export function registerIpc(deps: Deps): void {
     if (!found && p2p.peerIdString() === peerId) {
       const local = store.getProvision();
       if (local) {
-        found = localFlat(local);
+        found = localFlat(local)[0];
       }
     }
     if (!found) throw new Error(`peer ${peerId} not found in registry`);
@@ -320,12 +351,22 @@ ipcMain.handle('system:openLogsFolder', async () => {
     leaderboard: LeaderboardEntry[];
   }> => {
     const items = await registry.fetch(store.getBootstrap().registryUrl);
-    // Always include the local node if it is provisioned.
+    // Always include the local node if it is provisioned. Each
+    // provider becomes its own row so the Models UI can list them
+    // separately.
     if (provisioner.isActive()) {
       const prov = store.getProvision();
       if (prov) {
-        const localEntry = localFlat(prov);
-        if (!items.find((it) => it.peerId === localEntry.peerId)) items.unshift(localEntry);
+        const localEntries = localFlat(prov);
+        for (const entry of localEntries) {
+          if (
+            !items.find(
+              (it) => it.peerId === entry.peerId && it.providerId === entry.providerId
+            )
+          ) {
+            items.unshift(entry);
+          }
+        }
       }
     }
     return buildModelViews(items, {

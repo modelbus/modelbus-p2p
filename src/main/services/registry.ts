@@ -50,28 +50,30 @@ export class RegistryService {
   /**
    * Validates + flattens a raw list of NodeAnnouncement into the
    * backwards-compatible flat shape that consume / leaderboard views
-   * consume. Items with bad schema are dropped silently; the renderer
-   * is expected to render whatever survived.
+   * consume. Each provider on a single announcement becomes its own
+   * flat row so the Models UI can list `deepseek` separately from
+   * `minimax-token-plan` even when both live under the same peer
+   * identity. Items with bad schema are dropped silently.
    */
   flatten(items: unknown[]): NodeAnnouncementFlat[] {
     const out: NodeAnnouncementFlat[] = [];
     for (const raw of items) {
-      const flat = this.toFlat(raw);
-      if (flat) out.push(flat);
+      out.push(...this.toFlatAll(raw));
     }
     return out;
   }
 
-  /** Returns the single flat row derived from a raw entry, or null. */
-  toFlat(raw: unknown): NodeAnnouncementFlat | null {
-    if (!raw || typeof raw !== 'object') return null;
+  /** Returns every flat row derived from a raw announcement, one per
+   *  provider, or an empty array if the entry is malformed. */
+  toFlatAll(raw: unknown): NodeAnnouncementFlat[] {
+    if (!raw || typeof raw !== 'object') return [];
     const item = raw as Partial<NodeAnnouncement> & Record<string, unknown>;
 
-    if (typeof item.peerId !== 'string' || item.peerId.length === 0) return null;
-    if (!item.addr || typeof item.addr !== 'object') return null;
+    if (typeof item.peerId !== 'string' || item.peerId.length === 0) return [];
+    if (!item.addr || typeof item.addr !== 'object') return [];
     const structuredAddr = item.addr as Partial<NodeAnnouncement['addr']>;
-    if (typeof structuredAddr.addr !== 'string') return null;
-    if (!Array.isArray(item.providers) || item.providers.length === 0) return null;
+    if (typeof structuredAddr.addr !== 'string') return [];
+    if (!Array.isArray(item.providers) || item.providers.length === 0) return [];
 
     const providers = item.providers
       .filter((p): p is NodeAnnouncement['providers'][number] => !!p && typeof p === 'object')
@@ -87,28 +89,33 @@ export class RegistryService {
       }))
       .filter((p) => p.providerId);
 
-    if (providers.length === 0) return null;
-
-    // The "flat" view picks the first provider's first model as the
-    // headline. Real routing is done by model.id (see upstream.ts +
-    // proxy-server.ts) so this is only used for backwards-compatible
-    // summaries.
-    const primary = providers[0];
-    const modelIds = primary.models.map((m) => m.id);
+    if (providers.length === 0) return [];
 
     const announcedAt =
       typeof item.announcedAt === 'number' ? item.announcedAt : Date.now();
+    const trusted = this.trustedRoots.has(item.peerId);
+    const peerId = item.peerId;
+    const nickname = String(item.nickname ?? peerId.slice(0, 8));
+    const primaryAddr = structuredAddr.addr;
 
-    return {
-      peerId: item.peerId,
-      nickname: String(item.nickname ?? item.peerId.slice(0, 8)),
-      providerId: primary.providerId,
-      providerName: primary.providerName,
-      modelIds,
-      primaryAddr: structuredAddr.addr,
+    return providers.map((p) => ({
+      peerId,
+      nickname,
+      providerId: p.providerId,
+      providerName: p.providerName,
+      modelIds: p.models.map((m) => m.id),
+      primaryAddr,
       announcedAt,
-      trusted: this.trustedRoots.has(item.peerId),
-    };
+      trusted,
+    }));
+  }
+
+  /** Returns the single flat row derived from a raw entry, or null.
+   *  Kept for backwards compatibility — the multi-provider
+   *  `toFlatAll` is the preferred entry point. */
+  toFlat(raw: unknown): NodeAnnouncementFlat | null {
+    const rows = this.toFlatAll(raw);
+    return rows[0] ?? null;
   }
 
   /**

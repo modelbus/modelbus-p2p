@@ -47,9 +47,17 @@ export function buildModelViews(nodes: NodeAnnouncementFlat[], localStats: {
 } {
   const now = Date.now();
 
-  // Deduplicate nodes by peerId (registry may list the same peer twice).
+  // Flat entries sharing a peerId but different providers represent a
+  // single peer carrying multiple upstreams; we want to surface each
+  // (peer, provider) pair independently in the Models UI so users can
+  // pick `deepseek` separately from `minimax-token-plan`. Deduplicate
+  // only when both peerId AND providerId collide (true duplicate from
+  // the registry).
   const dedup = new Map<string, NodeAnnouncementFlat>();
-  for (const n of nodes) dedup.set(n.peerId, n);
+  for (const n of nodes) {
+    const key = `${n.peerId}::${n.providerId}`;
+    if (!dedup.has(key)) dedup.set(key, n);
+  }
 
   // Heuristic: latency scales with how many models the node advertises.
   // 1 model => ~200ms, 10 models => ~1200ms. We also seed a tiny per-node
