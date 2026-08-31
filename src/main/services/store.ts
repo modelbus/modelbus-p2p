@@ -1,5 +1,5 @@
 import { promises as fs } from 'node:fs';
-import type { ProvisionConfig, BootstrapConfig } from '@shared/types';
+import type { ProvisionConfig, BootstrapConfig, ConsumerLimits } from '@shared/types';
 import { PATHS } from './paths.js';
 
 interface StoreShape {
@@ -12,6 +12,9 @@ interface StoreShape {
    *  whenever the P2P node comes up (so curl works without having to
    *  click anything first). */
   consumerAutostart?: boolean;
+  /** Soft usage limits for the consumer-side proxy. Persisted so the
+   *  user can adjust them across restarts. */
+  consumerLimits?: ConsumerLimits;
   /** base64-encoded protobuf Ed25519 private key used to derive the
    *  stable libp2p peerId (fallback when no hardware UUID exists). */
   peerKey?: string;
@@ -24,6 +27,11 @@ const DEFAULT_BOOTSTRAP: BootstrapConfig = {
   ],
   tcpPort: 15001,
   proxyPort: 18100,
+};
+
+const DEFAULT_CONSUMER_LIMITS: ConsumerLimits = {
+  maxConcurrentNodes: 3,
+  monthlyTokenLimit: 1_000_000,
 };
 
 export class Store {
@@ -95,6 +103,19 @@ export class Store {
   async setConsumerAutostart(enabled: boolean): Promise<void> {
     this.data.consumerAutostart = enabled;
     await this.save();
+  }
+
+  /** Soft usage limits the consumer proxy surfaces in the UI. The
+   *  proxy itself does not yet reject on these; they are advisory. */
+  getConsumerLimits(): ConsumerLimits {
+    return { ...DEFAULT_CONSUMER_LIMITS, ...(this.data.consumerLimits ?? {}) };
+  }
+
+  async setConsumerLimits(patch: Partial<ConsumerLimits>): Promise<ConsumerLimits> {
+    const merged: ConsumerLimits = { ...this.getConsumerLimits(), ...patch };
+    this.data.consumerLimits = merged;
+    await this.save();
+    return merged;
   }
 
   /**

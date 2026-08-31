@@ -160,6 +160,21 @@ export interface BootstrapConfig {
   proxyPort: number;
 }
 
+/**
+ * Soft limits applied to how much traffic this node will serve as a
+ * consumer-side provider. Stored in the settings store and surfaced
+ * in the UI as a usage progress bar; the proxy server itself does not
+ * reject requests based on these — they are advisory in this release.
+ */
+export interface ConsumerLimits {
+  /** Maximum number of upstream peer connections the proxy will hold
+   *  open concurrently. 0 / null means "no limit". */
+  maxConcurrentNodes: number;
+  /** Maximum tokens the node is willing to spend this calendar month.
+   *  0 / null means "no limit". */
+  monthlyTokenLimit: number;
+}
+
 // -------- Wallet --------
 
 export interface WalletScore {

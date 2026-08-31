@@ -1,5 +1,5 @@
 import { app, BrowserWindow, ipcMain, shell } from 'electron';
-import type { BootstrapConfig, NodeAnnouncementFlat, ProvisionConfig, WalletScore, ModelEntry, LeaderboardEntry, ModelQualityNode } from '@shared/types';
+import type { BootstrapConfig, ConsumerLimits, NodeAnnouncementFlat, ProvisionConfig, WalletScore, ModelEntry, LeaderboardEntry, ModelQualityNode } from '@shared/types';
 import type { Store } from './services/store.js';
 import type { ProviderService } from './services/providers.js';
 import type { RegistryService } from './services/registry.js';
@@ -214,6 +214,11 @@ export function registerIpc(deps: Deps): void {
   });
 
   ipcMain.handle('consumer:getAutostart', async () => store.getConsumerAutostart());
+
+  ipcMain.handle('consumer:getLimits', async () => store.getConsumerLimits());
+  ipcMain.handle('consumer:setLimits', async (_e, patch: Partial<ConsumerLimits>) =>
+    store.setConsumerLimits(patch)
+  );
 
   /**
    * Start the proxy pointed at a specific peer (or the local node if

@@ -8,6 +8,7 @@ import type {
   ProxyStats,
   NodeRole,
   BootstrapConfig,
+  ConsumerLimits,
   WalletScore,
   ModelEntry,
   LeaderboardEntry,
@@ -93,6 +94,9 @@ const api = {
     setAutostart: (enabled: boolean): Promise<{ autostart: boolean }> =>
       ipcRenderer.invoke('consumer:setAutostart', enabled),
     getAutostart: (): Promise<boolean> => ipcRenderer.invoke('consumer:getAutostart'),
+    getLimits: (): Promise<ConsumerLimits> => ipcRenderer.invoke('consumer:getLimits'),
+    setLimits: (patch: Partial<ConsumerLimits>): Promise<ConsumerLimits> =>
+      ipcRenderer.invoke('consumer:setLimits', patch),
   },
 
   system: {
