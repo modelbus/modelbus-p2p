@@ -77,10 +77,18 @@ async function onProviderChange(id: string) {
   if (!modal.value) return;
   modal.value.draft.providerId = id;
   modal.value.draft.providerName = props.refs.providers.value.find((p) => p.id === id)?.name ?? '';
-  // Drop the model selection — the user is switching to a different
-  // upstream, the previous chip list doesn't apply any more.
-  modal.value.draft.selectedModels = [];
-  if (id) await props.actions.loadProviderDetail(id);
+  // Pre-select every model the new provider exposes — the user can
+  // deselect individual chips afterwards. The previous chip list
+  // doesn't apply to the new upstream so we always start from a
+  // clean slate.
+  if (id) {
+    const detail = await props.actions.loadProviderDetail(id);
+    if (detail && modal.value && modal.value.draft.providerId === id) {
+      modal.value.draft.selectedModels = detail.models.map((m) => m.id);
+    }
+  } else {
+    modal.value.draft.selectedModels = [];
+  }
 }
 
 function toggleModel(id: string) {
@@ -89,19 +97,6 @@ function toggleModel(id: string) {
   const i = cur.indexOf(id);
   if (i >= 0) cur.splice(i, 1);
   else cur.push(id);
-}
-
-function selectAllModels() {
-  if (!modal.value) return;
-  const det = providerDetail.value;
-  if (det && det.id === modal.value.draft.providerId) {
-    modal.value.draft.selectedModels = det.models.map((m) => m.id);
-  }
-}
-
-function clearModels() {
-  if (!modal.value) return;
-  modal.value.draft.selectedModels = [];
 }
 
 function removeProvider(idx: number) {
@@ -295,22 +290,22 @@ watch(modal, async (v) => {
 
           <div class="form-row">
             <div>
-              <label>{{ t('provision.apiKey') }}</label>
+              <label>{{ t('provision.apiBase') }}</label>
               <input
-                v-model="modal.draft.apiKey"
-                type="password"
-                placeholder="sk-…"
-                autocomplete="off"
+                v-model="modal.draft.apiBase"
+                :placeholder="modalPlaceholder"
               />
             </div>
           </div>
 
           <div class="form-row">
             <div>
-              <label>{{ t('provision.apiBase') }}</label>
+              <label>{{ t('provision.apiKey') }}</label>
               <input
-                v-model="modal.draft.apiBase"
-                :placeholder="modalPlaceholder"
+                v-model="modal.draft.apiKey"
+                type="password"
+                placeholder="sk-…"
+                autocomplete="off"
               />
             </div>
           </div>
@@ -327,10 +322,6 @@ watch(modal, async (v) => {
               >
                 {{ m.id }}
               </span>
-            </div>
-            <div class="chip-actions">
-              <button @click="selectAllModels">{{ t('actions.selectAll') }}</button>
-              <button @click="clearModels">{{ t('actions.clearSelection') }}</button>
             </div>
           </div>
         </div>
