@@ -1,4 +1,6 @@
 import { promises as fs } from 'node:fs';
+import { resolve } from 'node:path';
+import { pathToFileURL } from 'node:url';
 import type { ProvisionConfig, BootstrapConfig, ConsumerLimits } from '@shared/types';
 import { PATHS } from './paths.js';
 
@@ -24,8 +26,14 @@ interface StoreShape {
   peerId?: string;
 }
 
+// Dev default points at the local mock catalogue so `pnpm run dev` works
+// fully offline (see mock/nodes.json). Packaged builds should override this
+// via Settings with a real http(s):// registry.
+const DEFAULT_REGISTRY_URL =
+  pathToFileURL(resolve(process.cwd(), 'mock', 'nodes.json')).href;
+
 const DEFAULT_BOOTSTRAP: BootstrapConfig = {
-  registryUrl: 'http://localhost:8089/nodes.json',
+  registryUrl: DEFAULT_REGISTRY_URL,
   bootstrapMultiaddrs: [
     '/ip4/127.0.0.1/tcp/15001/p2p/12D3KooWBnM2JxV67R3sX8kHnYwYqGRkfKvFnhGPGFJ6mhYMwRkz',
   ],
