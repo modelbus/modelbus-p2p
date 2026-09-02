@@ -42,7 +42,12 @@ export class RegistryService {
       const announcements = Array.isArray(raw) ? raw : [];
       return this.flatten(announcements);
     } catch (err) {
-      console.warn('[registry] fetch failed:', (err as Error).message);
+      const cause = (err as { cause?: unknown }).cause;
+      const causeMsg = cause instanceof Error ? cause.message : '';
+      console.warn(
+        `[registry] fetch failed: ${(err as Error).message}` +
+          `${causeMsg ? ` (${causeMsg})` : ''} — url: ${url}`
+      );
       return [];
     }
   }
