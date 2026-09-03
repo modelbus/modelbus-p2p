@@ -16,6 +16,9 @@ export const bnBD: Dict = {
     settings: 'সেটিংস',
   },
   toolbar: {
+    popoverHeader: "My node",
+    popoverProvidersCount: "{n} providers",
+    popoverEditBtn: "Edit",
     popoverNodeHeader: "Node info",
     popoverModelsHeader: "My models",
     popoverTutorialBtn: "Call tutorial",
