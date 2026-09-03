@@ -16,6 +16,9 @@ export const thTH: Dict = {
     settings: 'การตั้งค่า',
   },
   toolbar: {
+    popoverHeader: "My node",
+    popoverProvidersCount: "{n} providers",
+    popoverEditBtn: "Edit",
     popoverNodeHeader: "Node info",
     popoverModelsHeader: "My models",
     popoverTutorialBtn: "Call tutorial",
