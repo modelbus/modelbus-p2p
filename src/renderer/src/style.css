@@ -285,47 +285,33 @@ hr {
   box-shadow: 0 0 6px var(--accent-2);
 }
 
-/* ===== Toolbar cluster (node actions + popover) ===== */
+/* ===== Toolbar cluster (P2P pill + hover popover) ===== */
 .cluster {
   position: relative;
   display: inline-flex;
 }
-.cluster-trigger {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  height: 36px;
-  padding: 0 10px;
-  background: var(--bg-elev);
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  color: var(--text);
+.cluster .status-pill {
   cursor: pointer;
   font: inherit;
-  font-size: 13px;
   transition: background 0.12s, border-color 0.12s;
 }
-.cluster-trigger:hover {
+.cluster .status-pill:hover,
+.cluster .status-pill.popover-open {
   border-color: var(--border-strong);
   background: var(--panel);
-}
-.cluster-caret {
-  font-size: 10px;
-  transition: transform 0.15s;
-}
-.cluster:hover .cluster-caret {
-  transform: translateY(1px);
 }
 .cluster-popover {
   position: absolute;
   top: calc(100% + 8px);
   right: 0;
-  width: 340px;
+  width: 360px;
+  max-height: 70vh;
+  overflow-y: auto;
   background: var(--panel);
   border: 1px solid var(--border);
   border-radius: 10px;
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
-  padding: 14px;
+  padding: 6px;
   z-index: 80;
   animation: cluster-pop 0.12s ease-out;
 }
@@ -339,17 +325,39 @@ hr {
     transform: translateY(0);
   }
 }
-.cluster-head {
+.popover-section {
+  padding: 10px 12px;
+}
+.popover-section + .popover-section {
+  border-top: 1px solid var(--border);
+  margin-top: 4px;
+}
+.popover-section-head {
   display: flex;
-  justify-content: flex-end;
-  margin-bottom: 10px;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+.popover-section-head h4 {
+  margin: 0;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  font-weight: 600;
+}
+.popover-section-count {
+  font-size: 11px;
+  color: var(--muted);
+  font-variant-numeric: tabular-nums;
 }
 .cluster-info {
   display: grid;
   grid-template-columns: 64px 1fr;
   gap: 6px 12px;
   font-size: 12px;
-  margin: 0 0 10px;
+  margin: 0;
 }
 .cluster-info dt {
   color: var(--muted);
@@ -365,36 +373,81 @@ hr {
   font-size: 11px;
   padding: 2px 6px;
 }
-.cluster-line {
-  border-top: 1px dashed var(--border);
-  padding-top: 10px;
-  margin-bottom: 10px;
-}
-.cluster-line.not-started {
-  opacity: 0.9;
-}
-.cluster-line-text {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text);
-}
-.cluster-line-sub {
-  font-size: 11px;
-  margin-top: 2px;
-}
-.cluster-actions {
+.popover-section-foot {
   display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  border-top: 1px dashed var(--border);
-  padding-top: 10px;
+  justify-content: flex-end;
+  margin-top: 10px;
 }
-.cluster-actions button {
+.popover-section-foot button {
   font-size: 12px;
   padding: 4px 10px;
 }
-.cluster-actions button:disabled {
+.popover-section-foot button:disabled {
   opacity: 0.45;
+}
+.popover-providers {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.popover-provider {
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 8px 10px;
+}
+.popover-provider-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  margin-bottom: 6px;
+  gap: 8px;
+}
+.popover-provider-name {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex: 1;
+  min-width: 0;
+}
+.popover-provider-count {
+  font-size: 10px;
+  padding: 1px 6px;
+  border-radius: 999px;
+  background: var(--accent-soft);
+  color: var(--accent);
+  font-weight: 500;
+}
+.popover-model-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  max-height: 120px;
+  overflow-y: auto;
+}
+.popover-model-list li {
+  font-size: 11px;
+  padding: 2px 6px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.popover-empty {
+  font-size: 12px;
+  color: var(--muted);
+  padding: 8px 0;
+  text-align: center;
+  border: 1px dashed var(--border);
+  border-radius: 6px;
 }
 
 .icon-btn {
