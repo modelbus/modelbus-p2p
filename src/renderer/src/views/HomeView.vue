@@ -186,6 +186,7 @@ onMounted(() => {
 onBeforeUnmount(() => {
   if (pollTimer) window.clearInterval(pollTimer);
   if (nowTimer) window.clearInterval(nowTimer);
+  if (copyTimer) window.clearTimeout(copyTimer);
 });
 
 // ---- Navigation helpers -------------------------------------------------------
@@ -202,6 +203,53 @@ function goService() {
       detail: { tab: 'settings', sub: 'service' },
     })
   );
+}
+function goWallet() {
+  window.dispatchEvent(
+    new CustomEvent('modelbus:nav', { detail: { tab: 'wallet' } })
+  );
+}
+function goLogs() {
+  window.dispatchEvent(
+    new CustomEvent('modelbus:nav', { detail: { tab: 'logs' } })
+  );
+}
+
+// ---- Model id copy -----------------------------------------------------------
+/** model id the user just copied — used to flash a one-shot "Copied" badge. */
+const copiedId = ref<string | null>(null);
+let copyTimer: number | undefined;
+
+async function copyModelId(id: string) {
+  const text = id;
+  try {
+    if (navigator?.clipboard?.writeText) {
+      await navigator.clipboard.writeText(text);
+    } else {
+      // Sandbox / older Electron: fall back to a hidden textarea + execCommand.
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.setAttribute('readonly', '');
+      ta.style.position = 'fixed';
+      ta.style.left = '-9999px';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+    }
+    copiedId.value = id;
+    if (copyTimer) window.clearTimeout(copyTimer);
+    copyTimer = window.setTimeout(() => (copiedId.value = null), 1400);
+  } catch (err) {
+    console.warn('[home] copy failed:', err);
+  }
+}
+
+/** Hide a 404'd provider logo so the row layout doesn't keep a broken
+ *  <img> shape in the DOM. Mirrors ModelsView's onProviderLogoError. */
+function onProviderLogoError(evt: Event) {
+  const el = evt.target as HTMLImageElement;
+  el.style.display = 'none';
 }
 
 // ---- Demo curl for the help / service modals ---------------------------------
@@ -230,7 +278,17 @@ const serviceCurlExample = computed(() => {
         <div class="stat-label">{{ t('home.statScore') }}</div>
         <div class="stat-value">{{ score }}</div>
         <div class="stat-unit">{{ t('home.statScoreUnit') }}</div>
-        <div class="stat-hint muted">{{ t('home.statScoreHint') }}</div>
+        <div class="stat-foot">
+          <span class="stat-hint muted">{{ t('home.statScoreHint') }}</span>
+          <button class="stat-link" type="button" @click="goWallet">
+            {{ t('home.statScoreOpen') }}
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" aria-hidden="true">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </button>
+        </div>
       </div>
 
       <div class="stat-card">
@@ -273,29 +331,34 @@ const serviceCurlExample = computed(() => {
           <span class="stat-divider">·</span>
           <span>{{ t('home.statRequestsMonth') }}</span>
         </div>
-      </div>
-
-      <div class="stat-card">
-        <div class="stat-label">{{ t('home.statConnections') }}</div>
-        <div class="stat-value">{{ connections }}</div>
-        <div class="stat-hint muted">{{ t('home.statConnectionsHint') }}</div>
+        <div class="stat-foot">
+          <span class="stat-hint muted">&nbsp;</span>
+          <button class="stat-link" type="button" @click="goLogs">
+            {{ t('home.statRequestsOpen') }}
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" aria-hidden="true">
+              <polyline points="9 18 15 12 9 6" />
+            </svg>
+          </button>
+        </div>
       </div>
     </section>
 
-    <!-- ============ Node info & status (merged) ============ -->
+    <!-- ============ 我的节点 (node + service + connections, merged) ============ -->
     <section class="card home-block">
       <header class="block-head">
-        <h3>{{ t('home.nodeAndStatus') }}</h3>
+        <h3>{{ t('home.myNode') }}</h3>
         <span class="status-pill" :class="{ online: refs.status.value.started }">
           <span class="led"></span>
           {{
             refs.status.value.started
-              ? t('home.nodeAndStatusOnline')
-              : t('home.nodeAndStatusOffline')
+              ? t('home.myNodeOnline')
+              : t('home.myNodeOffline')
           }}
         </span>
       </header>
-      <div class="node-status-grid">
+      <div class="my-node-grid">
         <dl class="kv kv-inline">
           <dt>{{ t('home.peerId') }}</dt>
           <dd class="code short">{{ localPeerId ?? t('status.placeholder') }}</dd>
@@ -322,29 +385,30 @@ const serviceCurlExample = computed(() => {
             <span v-else>{{ t('status.placeholder') }}</span>
           </dd>
         </dl>
-        <div class="node-status-side">
-          <div v-if="isProvisioning" class="provision-status">
+
+        <div class="my-node-side">
+          <div v-if="isProvisioning" class="provision-line">
             <div class="provision-text">
               {{
-                t('home.nodeAndStatusProvisionedTitle', {
+                t('home.myNodeProvisionedTitle', {
                   provider: nodeProviderNames.join(', '),
                   n: nodeModels.length,
                 })
               }}
             </div>
             <div class="muted provision-sub">
-              {{ t('home.nodeAndStatusProvisionedDesc') }}
+              {{ t('home.myNodeProvisionedDesc') }}
             </div>
           </div>
-          <div v-else class="provision-status not-started">
+          <div v-else class="provision-line not-started">
             <div class="provision-text">
-              {{ t('home.nodeAndStatusNotProvisionedTitle') }}
+              {{ t('home.myNodeNotProvisionedTitle') }}
             </div>
             <div class="muted provision-sub">
-              {{ t('home.nodeAndStatusNotProvisionedDesc') }}
+              {{ t('home.myNodeNotProvisionedDesc') }}
             </div>
           </div>
-          <div class="node-status-actions">
+          <div class="my-node-actions">
             <button
               v-if="!refs.status.value.started"
               class="primary"
@@ -358,16 +422,32 @@ const serviceCurlExample = computed(() => {
             <button @click="goProvision">
               {{
                 isProvisioning
-                  ? t('home.nodeAndStatusModify')
-                  : t('home.nodeAndStatusProvisionBtn')
+                  ? t('home.myNodeModify')
+                  : t('home.myNodeProvisionBtn')
               }}
+            </button>
+            <button
+              class="ghost"
+              type="button"
+              @click="serviceModalOpen = true"
+              :disabled="!isProvisioning"
+              :title="isProvisioning ? '' : t('home.myNodeServiceNoProvision')"
+            >
+              {{ t('home.myNodeServiceBtn') }}
             </button>
           </div>
         </div>
       </div>
+
+      <footer class="my-node-foot">
+        <span class="my-node-conn">
+          <span class="muted">{{ t('home.myNodeConnections') }}</span>
+          <span class="my-node-conn-num">{{ connections }}</span>
+        </span>
+      </footer>
     </section>
 
-    <!-- ============ 可使用 (available models) ============ -->
+    <!-- ============ 我能使用 (available models) ============ -->
     <section class="card home-block">
       <header class="block-head">
         <h3>{{ t('home.available') }}</h3>
@@ -389,36 +469,68 @@ const serviceCurlExample = computed(() => {
       </header>
       <p class="muted block-hint">{{ t('home.availableHint') }}</p>
       <ul v-if="models.length" class="model-list">
-        <li v-for="m in models.slice(0, 8)" :key="m.provider + '::' + m.id">
+        <li
+          v-for="m in models.slice(0, 8)"
+          :key="m.provider + '::' + m.id"
+          class="model-row"
+          role="button"
+          tabindex="0"
+          :title="t('home.copyModelId')"
+          :aria-label="t('home.copyModelId')"
+          @click="copyModelId(m.id)"
+          @keydown.enter="copyModelId(m.id)"
+          @keydown.space.prevent="copyModelId(m.id)"
+        >
+          <span class="model-icon">
+            <img
+              :src="`./logos/${m.provider}.svg`"
+              :alt="m.provider"
+              class="model-icon-img"
+              loading="lazy"
+              @error="onProviderLogoError"
+            />
+          </span>
           <span class="model-name">{{ m.id }}</span>
           <span class="model-provider muted">{{ m.provider }}</span>
           <span class="model-nodes">
             {{ t('home.availableNodesSuffix', { n: m.nodeCount }) }}
           </span>
+          <span
+            class="model-copy"
+            :class="{ copied: copiedId === m.id }"
+            aria-hidden="true"
+          >
+            <svg
+              v-if="copiedId !== m.id"
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.8"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <rect x="9" y="9" width="13" height="13" rx="2" />
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+            </svg>
+            <svg
+              v-else
+              width="14"
+              height="14"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+            >
+              <polyline points="20 6 9 17 4 12" />
+            </svg>
+          </span>
         </li>
       </ul>
       <div v-else class="empty-hint">{{ t('home.availableEmpty') }}</div>
-    </section>
-
-    <!-- ============ 开放调用服务 (popover entry) ============ -->
-    <section class="card home-block service-link">
-      <header class="block-head">
-        <h3>{{ t('home.serviceLink') }}</h3>
-      </header>
-      <div class="service-link-body">
-        <div class="muted service-link-desc">{{ t('home.serviceLinkDesc') }}</div>
-        <div class="service-link-endpoint muted">
-          {{ localEndpoint }}
-        </div>
-        <button
-          class="primary"
-          @click="serviceModalOpen = true"
-          :disabled="!isProvisioning"
-          :title="isProvisioning ? '' : t('home.serviceLinkEmpty')"
-        >
-          {{ t('home.serviceLinkOpen') }}
-        </button>
-      </div>
     </section>
 
     <!-- ============ 排行榜 ============ -->
@@ -579,7 +691,7 @@ const serviceCurlExample = computed(() => {
             {{ t('home.serviceModalClose') }}
           </button>
           <button v-if="!isProvisioning" class="ghost" @click="goProvision">
-            {{ t('home.startProvisionNow') }}
+            {{ t('home.myNodeProvisionBtn') }}
           </button>
         </footer>
       </div>
@@ -605,19 +717,19 @@ const serviceCurlExample = computed(() => {
 /* ===== Stats grid ===== */
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(5, minmax(0, 1fr));
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 10px;
   padding: 14px;
   margin-bottom: 0;
 }
 @media (max-width: 1100px) {
   .stats-grid {
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(2, 1fr);
   }
 }
 @media (max-width: 720px) {
   .stats-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr;
   }
 }
 .stat-card {
@@ -663,6 +775,40 @@ const serviceCurlExample = computed(() => {
 .stat-hint {
   font-size: 11px;
   margin-top: auto;
+}
+.stat-foot {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  margin-top: auto;
+}
+.stat-foot .stat-hint {
+  margin-top: 0;
+}
+.stat-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px 6px;
+  border-radius: 4px;
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--accent);
+  font-size: 11px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s;
+}
+.stat-link:hover {
+  background: var(--accent-soft);
+  border-color: transparent;
+}
+.stat-link svg {
+  transition: transform 0.12s;
+}
+.stat-link:hover svg {
+  transform: translateX(2px);
 }
 .stat-divider {
   margin: 0 4px;
@@ -724,15 +870,15 @@ const serviceCurlExample = computed(() => {
   color: var(--text);
 }
 
-/* ===== Node status grid ===== */
-.node-status-grid {
+/* ===== My node (node info + service + connections) ===== */
+.my-node-grid {
   display: grid;
   grid-template-columns: 1.4fr 1fr;
   gap: 16px;
   align-items: stretch;
 }
 @media (max-width: 720px) {
-  .node-status-grid {
+  .my-node-grid {
     grid-template-columns: 1fr;
   }
 }
@@ -756,7 +902,7 @@ const serviceCurlExample = computed(() => {
   flex: 1;
   min-width: 0;
 }
-.node-status-side {
+.my-node-side {
   background: var(--bg-elev);
   border: 1px solid var(--border);
   border-radius: 8px;
@@ -766,6 +912,14 @@ const serviceCurlExample = computed(() => {
   gap: 10px;
   min-width: 0;
 }
+.provision-line {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.provision-line.not-started {
+  opacity: 0.92;
+}
 .provision-text {
   font-size: 13px;
   font-weight: 500;
@@ -773,16 +927,34 @@ const serviceCurlExample = computed(() => {
 }
 .provision-sub {
   font-size: 12px;
-  margin-top: 4px;
 }
-.node-status-actions {
+.my-node-actions {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
   margin-top: auto;
 }
+.my-node-foot {
+  display: flex;
+  justify-content: flex-end;
+  border-top: 1px dashed var(--border);
+  margin-top: 12px;
+  padding-top: 10px;
+}
+.my-node-conn {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 12px;
+}
+.my-node-conn-num {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text);
+  font-variant-numeric: tabular-nums;
+}
 
-/* ===== Available models list ===== */
+/* ===== Available / I-can-use models list ===== */
 .model-list {
   list-style: none;
   padding: 0;
@@ -791,9 +963,9 @@ const serviceCurlExample = computed(() => {
   flex-direction: column;
   gap: 4px;
 }
-.model-list li {
+.model-row {
   display: grid;
-  grid-template-columns: 1fr auto auto;
+  grid-template-columns: 22px minmax(0, 1fr) auto auto auto;
   align-items: center;
   gap: 10px;
   padding: 8px 10px;
@@ -802,6 +974,38 @@ const serviceCurlExample = computed(() => {
   border: 1px solid var(--border);
   font-size: 13px;
   min-width: 0;
+  cursor: pointer;
+  transition: background 0.12s, border-color 0.12s, transform 0.08s;
+}
+.model-row:hover {
+  border-color: var(--accent);
+  background: var(--panel);
+}
+.model-row:active {
+  transform: scale(0.99);
+}
+.model-row:focus {
+  outline: none;
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px var(--accent-soft);
+}
+.model-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  overflow: hidden;
+  flex-shrink: 0;
+}
+.model-icon-img {
+  width: 16px;
+  height: 16px;
+  object-fit: contain;
+  display: block;
 }
 .model-name {
   font-family: 'SFMono-Regular', Menlo, Consolas, monospace;
@@ -809,6 +1013,7 @@ const serviceCurlExample = computed(() => {
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  min-width: 0;
 }
 .model-provider {
   font-size: 11px;
@@ -823,6 +1028,23 @@ const serviceCurlExample = computed(() => {
   color: var(--accent);
   font-weight: 500;
 }
+.model-copy {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 5px;
+  color: var(--muted);
+  transition: color 0.12s, background 0.12s;
+}
+.model-row:hover .model-copy {
+  color: var(--accent);
+}
+.model-copy.copied {
+  color: var(--accent-2);
+  background: var(--accent-2-soft);
+}
 .empty-hint {
   color: var(--muted);
   font-size: 12px;
@@ -830,27 +1052,6 @@ const serviceCurlExample = computed(() => {
   text-align: center;
   border: 1px dashed var(--border);
   border-radius: 8px;
-}
-
-/* ===== Service link (lightweight entry) ===== */
-.service-link-body {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-.service-link-desc {
-  font-size: 13px;
-  flex: 1;
-  min-width: 200px;
-}
-.service-link-endpoint {
-  font-family: 'SFMono-Regular', Menlo, Consolas, monospace;
-  font-size: 12px;
-  background: var(--bg-elev);
-  padding: 4px 8px;
-  border-radius: 4px;
-  border: 1px solid var(--border);
 }
 
 /* ===== Leaderboard ===== */
