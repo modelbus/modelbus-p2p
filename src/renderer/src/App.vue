@@ -150,11 +150,11 @@ const langMenuOpen = ref(false);
 const themeMenuOpen = ref(false);
 const systemMenuOpen = ref(false);
 
-// ---- Node-actions cluster (toolbar) -----------------------------------------
-// Hover the cluster to peek at peer/role/listener/provision info; click an
-// action button inside to start/stop the node, jump to provisioning, or
-// open the public-API service modal.
-const clusterHover = ref(false);
+// ---- Node popover (anchored to the P2P pill in the toolbar) -----------------
+// Hover the pill to peek at peer info + the list of models we're sharing.
+// Click the pill to start/stop the node — or use the buttons inside the
+// popover to jump to provisioning or open the call-tutorial modal.
+const popoverHover = ref(false);
 const serviceModalOpen = ref(false);
 const apiKey = ref<string>(
   (typeof localStorage !== 'undefined' && localStorage.getItem('modelbus.consumer.apiKey')) || ''
@@ -167,22 +167,41 @@ const localEndpoint = computed(() => `http://127.0.0.1:${proxyPort.value}`);
 const nodeModels = computed(() =>
   provision.value ? provision.value.providers.flatMap((p) => p.modelIds) : []
 );
-const nodeProviderNames = computed(() =>
-  provision.value ? provision.value.providers.map((p) => p.providerName) : []
-);
 
-/** Show the cluster popover with a small delay so cursor passes through
- *  without flicker. Clearing the timer handles mouse-leave cleanly. */
-function openCluster() {
+/** Per-provider shape used by the "我的模型" section of the popover. Each
+ *  entry shows the provider's display name, the total count, and the
+ *  individual model ids so the user can audit what they are sharing. */
+const nodeProviders = computed(() => {
+  if (!provision.value) return [];
+  return provision.value.providers.map((p) => ({
+    id: p.providerId,
+    name: p.providerName,
+    models: p.modelIds,
+    count: p.modelIds.length,
+  }));
+});
+const nodeProviderNames = computed(() => nodeProviders.value.map((p) => p.name));
+
+/** Show the popover with a small delay so cursor passes through without
+ *  flicker. Clearing the timer handles mouse-leave cleanly. */
+function openPopover() {
   if (hoverTimer) window.clearTimeout(hoverTimer);
-  hoverTimer = window.setTimeout(() => (clusterHover.value = true), 80);
+  hoverTimer = window.setTimeout(() => (popoverHover.value = true), 80);
 }
-function closeCluster() {
+function closePopover() {
   if (hoverTimer) window.clearTimeout(hoverTimer);
-  hoverTimer = window.setTimeout(() => (clusterHover.value = false), 140);
+  hoverTimer = window.setTimeout(() => (popoverHover.value = false), 140);
 }
-function cancelCloseCluster() {
+function cancelClosePopover() {
   if (hoverTimer) window.clearTimeout(hoverTimer);
+}
+
+/** Click on the P2P pill toggles the node when no popover action button
+ *  is in the way; we still let the click bubble so the popover's buttons
+ *  can handle their own. */
+function onPillClick() {
+  if (status.value.started) stopNode();
+  else startNode();
 }
 
 /** Curl example shown inside the public-API service modal — opened from the
@@ -196,12 +215,12 @@ const serviceCurlExample = computed(() => {
 });
 
 function goProvisionFromCluster() {
-  clusterHover.value = false;
+  popoverHover.value = false;
   settingsSub.value = 'provision';
   tab.value = 'settings';
 }
 function goServiceFromCluster() {
-  clusterHover.value = false;
+  popoverHover.value = false;
   settingsSub.value = 'service';
   tab.value = 'settings';
 }
@@ -468,7 +487,7 @@ function onDocClick(e: MouseEvent) {
     systemMenuOpen.value = false;
   }
   if (!target.closest('.cluster')) {
-    clusterHover.value = false;
+    popoverHover.value = false;
   }
 }
 
@@ -569,145 +588,127 @@ onBeforeUnmount(() => {
       </nav>
 
       <div class="toolbar">
-        <!-- ============ Cluster: node actions + hover popover ============ -->
+        <!-- ============ P2P pill + hover popover (node info / my models) ============ -->
         <div
           class="cluster"
-          @mouseenter="openCluster"
-          @mouseleave="closeCluster"
+          @mouseenter="openPopover"
+          @mouseleave="closePopover"
         >
           <button
             type="button"
-            class="cluster-trigger"
-            :aria-expanded="clusterHover"
-            :title="t('toolbar.clusterLabel')"
+            class="status-pill"
+            :class="{ online: status.started, 'popover-open': popoverHover }"
+            :aria-expanded="popoverHover"
+            :title="status.peerId ?? ''"
+            @click="onPillClick"
           >
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
-              stroke-linejoin="round" aria-hidden="true">
-              <circle cx="12" cy="12" r="3" />
-              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
-            </svg>
-            <span>{{ t('toolbar.clusterLabel') }}</span>
-            <span class="muted cluster-caret">▾</span>
+            <span class="led"></span>
+            <span class="status-label">
+              {{
+                status.started
+                  ? t('status.p2pOnline')
+                  : t('status.p2pOffline')
+              }}
+            </span>
           </button>
 
           <div
-            v-show="clusterHover"
+            v-show="popoverHover"
             class="cluster-popover"
             role="tooltip"
-            @mouseenter="cancelCloseCluster"
-            @mouseleave="closeCluster"
+            @mouseenter="cancelClosePopover"
+            @mouseleave="closePopover"
           >
-            <header class="cluster-head">
-              <span class="status-pill" :class="{ online: status.started }">
-                <span class="led"></span>
-                {{
-                  status.started
-                    ? t('status.p2pOnline')
-                    : t('status.p2pOffline')
-                }}
-              </span>
-            </header>
-            <dl class="cluster-info">
-              <dt>{{ t('toolbar.popoverPeer') }}</dt>
-              <dd class="code short">
-                {{ status.peerId ?? t('status.placeholder') }}
-              </dd>
-              <dt>{{ t('toolbar.popoverRole') }}</dt>
-              <dd>
-                <span class="tag" :class="{ success: status.started }">
-                  {{
-                    status.role === 'provision'
-                      ? t('status.roleProvision')
-                      : status.role === 'consume'
-                      ? t('status.roleConsume')
-                      : t('status.roleIdle')
-                  }}
-                </span>
-              </dd>
-              <dt>{{ t('toolbar.popoverListen') }}</dt>
-              <dd class="muted">
-                <span v-if="status.multiaddrs.length">
-                  {{ status.multiaddrs[0] }}
-                  <span v-if="status.multiaddrs.length > 1">
-                    +{{ status.multiaddrs.length - 1 }}
+            <!-- ===== Section: 节点信息 ===== -->
+            <section class="popover-section">
+              <header class="popover-section-head">
+                <h4>{{ t('toolbar.popoverNodeHeader') }}</h4>
+              </header>
+              <dl class="cluster-info">
+                <dt>{{ t('toolbar.popoverPeer') }}</dt>
+                <dd class="code short">
+                  {{ status.peerId ?? t('status.placeholder') }}
+                </dd>
+                <dt>{{ t('toolbar.popoverRole') }}</dt>
+                <dd>
+                  <span class="tag" :class="{ success: status.started }">
+                    {{
+                      status.role === 'provision'
+                        ? t('status.roleProvision')
+                        : status.role === 'consume'
+                        ? t('status.roleConsume')
+                        : t('status.roleIdle')
+                    }}
                   </span>
-                </span>
-                <span v-else>{{ t('status.placeholder') }}</span>
-              </dd>
-              <dt>{{ t('toolbar.popoverConnections') }}</dt>
-              <dd>
-                <strong>{{ status.connected }}</strong>
-              </dd>
-            </dl>
-            <div
-              v-if="isProvisioning"
-              class="cluster-line"
-            >
-              <div class="cluster-line-text">
-                {{
-                  t('toolbar.popoverProvisionTitle', {
-                    provider: nodeProviderNames.join(', '),
-                    n: nodeModels.length,
-                  })
-                }}
+                </dd>
+                <dt>{{ t('toolbar.popoverListen') }}</dt>
+                <dd class="muted">
+                  <span v-if="status.multiaddrs.length">
+                    {{ status.multiaddrs[0] }}
+                    <span v-if="status.multiaddrs.length > 1">
+                      +{{ status.multiaddrs.length - 1 }}
+                    </span>
+                  </span>
+                  <span v-else>{{ t('status.placeholder') }}</span>
+                </dd>
+                <dt>{{ t('toolbar.popoverConnections') }}</dt>
+                <dd><strong>{{ status.connected }}</strong></dd>
+              </dl>
+              <div class="popover-section-foot">
+                <button
+                  type="button"
+                  class="ghost"
+                  @click="serviceModalOpen = true"
+                  :disabled="!isProvisioning"
+                  :title="isProvisioning ? '' : t('home.myNodeServiceNoProvision')"
+                >
+                  {{ t('toolbar.popoverTutorialBtn') }}
+                </button>
               </div>
-              <div class="muted cluster-line-sub">
-                {{ t('toolbar.popoverProvisionDesc') }}
-              </div>
-            </div>
-            <div v-else class="cluster-line not-started">
-              <div class="cluster-line-text">
-                {{ t('toolbar.popoverNotProvisionedTitle') }}
-              </div>
-              <div class="muted cluster-line-sub">
-                {{ t('toolbar.popoverNotProvisionedDesc') }}
-              </div>
-            </div>
-            <div class="cluster-actions">
-              <button
-                v-if="!status.started"
-                class="primary"
-                @click="startNode"
-              >
-                {{ t('actions.start') }}
-              </button>
-              <button v-else class="danger" @click="stopNode">
-                {{ t('actions.stop') }}
-              </button>
-              <button @click="goProvisionFromCluster">
-                {{
-                  isProvisioning
-                    ? t('home.myNodeModify')
-                    : t('home.myNodeProvisionBtn')
-                }}
-              </button>
-              <button
-                type="button"
-                class="ghost"
-                @click="serviceModalOpen = true"
-                :disabled="!isProvisioning"
-                :title="isProvisioning ? '' : t('home.myNodeServiceNoProvision')"
-              >
-                {{ t('home.myNodeServiceBtn') }}
-              </button>
-            </div>
-          </div>
-        </div>
+            </section>
 
-        <div
-          class="status-pill"
-          :class="{ online: status.started }"
-          :title="status.peerId ?? ''"
-        >
-          <span class="led"></span>
-          <span class="status-label">
-            {{
-              status.started
-                ? t('status.p2pOnline')
-                : t('status.p2pOffline')
-            }}
-          </span>
+            <!-- ===== Section: 我的模型 ===== -->
+            <section class="popover-section">
+              <header class="popover-section-head">
+                <h4>{{ t('toolbar.popoverModelsHeader') }}</h4>
+                <span
+                  v-if="isProvisioning"
+                  class="popover-section-count"
+                >{{ t('toolbar.popoverModelsCount', { n: nodeModels.length }) }}</span>
+              </header>
+              <div v-if="isProvisioning" class="popover-providers">
+                <div
+                  v-for="p in nodeProviders"
+                  :key="p.id"
+                  class="popover-provider"
+                >
+                  <div class="popover-provider-head">
+                    <span class="popover-provider-name">{{ p.name }}</span>
+                    <span class="popover-provider-count">{{ p.count }}</span>
+                  </div>
+                  <ul class="popover-model-list">
+                    <li
+                      v-for="m in p.models"
+                      :key="p.id + '::' + m"
+                      class="code"
+                    >{{ m }}</li>
+                  </ul>
+                </div>
+              </div>
+              <div v-else class="popover-empty">
+                {{ t('toolbar.popoverModelsEmpty') }}
+              </div>
+              <div class="popover-section-foot">
+                <button @click="goProvisionFromCluster">
+                  {{
+                    isProvisioning
+                      ? t('home.myNodeModify')
+                      : t('toolbar.popoverModelsAddBtn')
+                  }}
+                </button>
+              </div>
+            </section>
+          </div>
         </div>
 
         <div class="menu">
