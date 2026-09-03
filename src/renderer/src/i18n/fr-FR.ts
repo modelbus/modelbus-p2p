@@ -16,6 +16,9 @@ export const frFR: Dict = {
     settings: 'Paramètres',
   },
   toolbar: {
+    popoverHeader: "My node",
+    popoverProvidersCount: "{n} providers",
+    popoverEditBtn: "Edit",
     popoverNodeHeader: "Node info",
     popoverModelsHeader: "My models",
     popoverTutorialBtn: "Call tutorial",
