@@ -16,6 +16,12 @@ export const zhTW: Dict = {
     settings: '設定',
   },
   toolbar: {
+    popoverNodeHeader: "節點資訊",
+    popoverModelsHeader: "我的模型",
+    popoverTutorialBtn: "呼叫教學",
+    popoverModelsEmpty: "尚未配置任何 Token",
+    popoverModelsAddBtn: "去配置",
+    popoverModelsCount: "{n} 個模型",
     clusterLabel: '節點操作',
     popoverPeer: '節點 ID',
     popoverRole: '角色',
