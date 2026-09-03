@@ -693,7 +693,7 @@ onBeforeUnmount(() => {
                   </span>
                 </dd>
                 <dt>{{ t('toolbar.popoverListen') }}</dt>
-                <dd class="muted">
+                <dd class="muted popover-peer-cell">
                   <span v-if="status.multiaddrs.length">
                     {{ status.multiaddrs[0] }}
                     <span v-if="status.multiaddrs.length > 1">
@@ -790,7 +790,20 @@ onBeforeUnmount(() => {
           >
             <FlagIcon :cc="currentLocaleCc" :width="18" />
             <span>{{ currentLocaleLabel }}</span>
-            <span class="muted" style="font-size: 10px">▾</span>
+            <svg
+              class="lang-caret"
+              width="10"
+              height="10"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.4"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
           </button>
           <div v-if="langMenuOpen" class="menu-pop">
             <button
