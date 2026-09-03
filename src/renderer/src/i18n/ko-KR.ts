@@ -16,6 +16,9 @@ export const koKR: Dict = {
     settings: '설정',
   },
   toolbar: {
+    popoverHeader: '내 노드',
+    popoverProvidersCount: '공급자 {n}개',
+    popoverEditBtn: '수정',
     popoverNodeHeader: '노드 정보',
     popoverModelsHeader: '내 모델',
     popoverTutorialBtn: '호출 가이드',
