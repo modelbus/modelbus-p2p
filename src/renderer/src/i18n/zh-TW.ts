@@ -16,6 +16,9 @@ export const zhTW: Dict = {
     settings: '設定',
   },
   toolbar: {
+    popoverHeader: "我的節點",
+    popoverProvidersCount: "{n} 個提供商",
+    popoverEditBtn: "修改",
     popoverNodeHeader: "節點資訊",
     popoverModelsHeader: "我的模型",
     popoverTutorialBtn: "呼叫教學",
