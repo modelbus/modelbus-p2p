@@ -17,6 +17,12 @@ export const enUS: Dict = {
   },
   toolbar: {
     clusterLabel: 'Node actions',
+    popoverNodeHeader: 'Node info',
+    popoverModelsHeader: 'My models',
+    popoverTutorialBtn: 'Call tutorial',
+    popoverModelsEmpty: 'No token configured yet',
+    popoverModelsAddBtn: 'Configure',
+    popoverModelsCount: '{n} models',
     popoverPeer: 'Peer ID',
     popoverRole: 'Role',
     popoverListen: 'Listener',
