@@ -16,6 +16,12 @@ export const itIT: Dict = {
     settings: 'Impostazioni',
   },
   toolbar: {
+    popoverNodeHeader: "Node info",
+    popoverModelsHeader: "My models",
+    popoverTutorialBtn: "Call tutorial",
+    popoverModelsEmpty: "No token configured yet",
+    popoverModelsAddBtn: "Configure",
+    popoverModelsCount: "{n} models",
     clusterLabel: 'Node actions',
     popoverPeer: 'Peer ID',
     popoverRole: 'Role',
