@@ -15,6 +15,18 @@ export const jaJP: Dict = {
     logs: 'ログ',
     settings: '設定',
   },
+  toolbar: {
+    clusterLabel: 'ノード操作',
+    popoverPeer: 'ピア ID',
+    popoverRole: 'ロール',
+    popoverListen: 'リスナー',
+    popoverStatus: 'ステータス',
+    popoverConnections: '現在の接続',
+    popoverProvisionTitle: '{provider} を共有中（{n} モデル）',
+    popoverProvisionDesc: '他のノードは本ノード経由でリクエストを転送できます',
+    popoverNotProvisionedTitle: 'Token 未共有',
+    popoverNotProvisionedDesc: 'Token を共有していないため、他のノードは本ノード経由でリクエストを転送できません。',
+  },
   actions: {
     start: 'ノード起動',
     stop: 'ノード停止',
