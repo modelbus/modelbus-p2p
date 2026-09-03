@@ -204,6 +204,13 @@ function onPillClick() {
   else startNode();
 }
 
+/** Hide a 404'd provider logo so the row layout doesn't keep a broken
+ *  <img> shape in the DOM. Mirrors ModelsView's onProviderLogoError. */
+function onProviderLogoError(evt: Event) {
+  const el = evt.target as HTMLImageElement;
+  el.style.display = 'none';
+}
+
 /** Curl example shown inside the public-API service modal — opened from the
  *  cluster on the toolbar. */
 const serviceCurlExample = computed(() => {
@@ -610,6 +617,20 @@ onBeforeUnmount(() => {
                   : t('status.p2pOffline')
               }}
             </span>
+            <svg
+              class="status-caret"
+              width="10"
+              height="10"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2.4"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <polyline points="6 9 12 15 18 9" />
+            </svg>
           </button>
 
           <div
@@ -619,15 +640,45 @@ onBeforeUnmount(() => {
             @mouseenter="cancelClosePopover"
             @mouseleave="closePopover"
           >
+            <!-- ===== Popover header: 我的节点 + start/stop ===== -->
+            <header class="popover-head">
+              <h3>{{ t('toolbar.popoverHeader') }}</h3>
+              <button
+                v-if="!status.started"
+                type="button"
+                class="popover-head-btn primary"
+                @click="startNode"
+              >
+                {{ t('actions.start') }}
+              </button>
+              <button
+                v-else
+                type="button"
+                class="popover-head-btn danger"
+                @click="stopNode"
+              >
+                {{ t('actions.stop') }}
+              </button>
+            </header>
+
             <!-- ===== Section: 节点信息 ===== -->
             <section class="popover-section">
               <header class="popover-section-head">
                 <h4>{{ t('toolbar.popoverNodeHeader') }}</h4>
+                <button
+                  type="button"
+                  class="popover-section-btn"
+                  @click="serviceModalOpen = true"
+                  :disabled="!isProvisioning"
+                  :title="isProvisioning ? '' : t('home.myNodeServiceNoProvision')"
+                >
+                  {{ t('toolbar.popoverTutorialBtn') }}
+                </button>
               </header>
               <dl class="cluster-info">
                 <dt>{{ t('toolbar.popoverPeer') }}</dt>
-                <dd class="code short">
-                  {{ status.peerId ?? t('status.placeholder') }}
+                <dd class="popover-peer-cell">
+                  <code class="code short">{{ status.peerId ?? t('status.placeholder') }}</code>
                 </dd>
                 <dt>{{ t('toolbar.popoverRole') }}</dt>
                 <dd>
@@ -654,27 +705,21 @@ onBeforeUnmount(() => {
                 <dt>{{ t('toolbar.popoverConnections') }}</dt>
                 <dd><strong>{{ status.connected }}</strong></dd>
               </dl>
-              <div class="popover-section-foot">
-                <button
-                  type="button"
-                  class="ghost"
-                  @click="serviceModalOpen = true"
-                  :disabled="!isProvisioning"
-                  :title="isProvisioning ? '' : t('home.myNodeServiceNoProvision')"
-                >
-                  {{ t('toolbar.popoverTutorialBtn') }}
-                </button>
-              </div>
             </section>
 
             <!-- ===== Section: 我的模型 ===== -->
             <section class="popover-section">
               <header class="popover-section-head">
                 <h4>{{ t('toolbar.popoverModelsHeader') }}</h4>
-                <span
-                  v-if="isProvisioning"
-                  class="popover-section-count"
-                >{{ t('toolbar.popoverModelsCount', { n: nodeModels.length }) }}</span>
+                <div v-if="isProvisioning" class="popover-section-meta">
+                  <span class="popover-section-count">
+                    {{ t('toolbar.popoverProvidersCount', { n: nodeProviders.length }) }}
+                  </span>
+                  <span class="popover-section-dot">·</span>
+                  <span class="popover-section-count">
+                    {{ t('toolbar.popoverModelsCount', { n: nodeModels.length }) }}
+                  </span>
+                </div>
               </header>
               <div v-if="isProvisioning" class="popover-providers">
                 <div
@@ -683,8 +728,36 @@ onBeforeUnmount(() => {
                   class="popover-provider"
                 >
                   <div class="popover-provider-head">
+                    <span class="popover-provider-icon">
+                      <img
+                        :src="`./logos/${p.id}.svg`"
+                        :alt="p.name"
+                        loading="lazy"
+                        @error="onProviderLogoError"
+                      />
+                    </span>
                     <span class="popover-provider-name">{{ p.name }}</span>
-                    <span class="popover-provider-count">{{ p.count }}</span>
+                    <button
+                      type="button"
+                      class="popover-provider-edit"
+                      @click="goProvisionFromCluster"
+                      :title="t('toolbar.popoverEditBtn')"
+                    >
+                      <span>{{ t('toolbar.popoverEditBtn') }}</span>
+                      <svg
+                        width="12"
+                        height="12"
+                        viewBox="0 0 24 24"
+                        fill="none"
+                        stroke="currentColor"
+                        stroke-width="2"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        aria-hidden="true"
+                      >
+                        <polyline points="9 18 15 12 9 6" />
+                      </svg>
+                    </button>
                   </div>
                   <ul class="popover-model-list">
                     <li
@@ -696,15 +769,13 @@ onBeforeUnmount(() => {
                 </div>
               </div>
               <div v-else class="popover-empty">
-                {{ t('toolbar.popoverModelsEmpty') }}
-              </div>
-              <div class="popover-section-foot">
-                <button @click="goProvisionFromCluster">
-                  {{
-                    isProvisioning
-                      ? t('home.myNodeModify')
-                      : t('toolbar.popoverModelsAddBtn')
-                  }}
+                <p>{{ t('toolbar.popoverModelsEmpty') }}</p>
+                <button
+                  type="button"
+                  class="popover-empty-btn"
+                  @click="goProvisionFromCluster"
+                >
+                  {{ t('toolbar.popoverModelsAddBtn') }}
                 </button>
               </div>
             </section>
