@@ -285,6 +285,118 @@ hr {
   box-shadow: 0 0 6px var(--accent-2);
 }
 
+/* ===== Toolbar cluster (node actions + popover) ===== */
+.cluster {
+  position: relative;
+  display: inline-flex;
+}
+.cluster-trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 10px;
+  background: var(--bg-elev);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  color: var(--text);
+  cursor: pointer;
+  font: inherit;
+  font-size: 13px;
+  transition: background 0.12s, border-color 0.12s;
+}
+.cluster-trigger:hover {
+  border-color: var(--border-strong);
+  background: var(--panel);
+}
+.cluster-caret {
+  font-size: 10px;
+  transition: transform 0.15s;
+}
+.cluster:hover .cluster-caret {
+  transform: translateY(1px);
+}
+.cluster-popover {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  width: 340px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+  padding: 14px;
+  z-index: 80;
+  animation: cluster-pop 0.12s ease-out;
+}
+@keyframes cluster-pop {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.cluster-head {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 10px;
+}
+.cluster-info {
+  display: grid;
+  grid-template-columns: 64px 1fr;
+  gap: 6px 12px;
+  font-size: 12px;
+  margin: 0 0 10px;
+}
+.cluster-info dt {
+  color: var(--muted);
+}
+.cluster-info dd {
+  margin: 0;
+  word-break: break-all;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.cluster-info .code {
+  font-size: 11px;
+  padding: 2px 6px;
+}
+.cluster-line {
+  border-top: 1px dashed var(--border);
+  padding-top: 10px;
+  margin-bottom: 10px;
+}
+.cluster-line.not-started {
+  opacity: 0.9;
+}
+.cluster-line-text {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text);
+}
+.cluster-line-sub {
+  font-size: 11px;
+  margin-top: 2px;
+}
+.cluster-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  border-top: 1px dashed var(--border);
+  padding-top: 10px;
+}
+.cluster-actions button {
+  font-size: 12px;
+  padding: 4px 10px;
+}
+.cluster-actions button:disabled {
+  opacity: 0.45;
+}
+
 .icon-btn {
   width: 32px;
   height: 32px;
@@ -710,6 +822,122 @@ html[dir='rtl'] .kv dt {
   color: var(--muted);
   margin-top: 4px;
   line-height: 1.45;
+}
+
+/* ===== Reusable modal styles (used by App.vue service modal,
+            ModelsView modal, etc.) ===== */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 100;
+  padding: 24px;
+}
+.modal-card {
+  width: 100%;
+  max-width: 560px;
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.28);
+  display: flex;
+  flex-direction: column;
+  max-height: calc(100vh - 96px);
+  overflow: hidden;
+}
+.modal-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-bottom: 1px solid var(--border);
+  gap: 12px;
+}
+.modal-head h3 {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 600;
+}
+.modal-sub {
+  margin: 4px 0 0;
+  font-size: 12px;
+}
+.modal-close {
+  width: 30px;
+  height: 30px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: var(--muted);
+  cursor: pointer;
+}
+.modal-close:hover {
+  background: var(--bg-elev);
+  color: var(--text);
+  border-color: var(--border);
+}
+.modal-body {
+  padding: 14px 18px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.modal-foot {
+  display: flex;
+  justify-content: flex-end;
+  gap: 8px;
+  padding: 12px 18px;
+  border-top: 1px solid var(--border);
+}
+.modal-body .kv-stack dt {
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 6px;
+}
+.modal-body .kv-stack dd {
+  margin: 0 0 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+.modal-body .code.short {
+  display: inline-block;
+  max-width: 100%;
+  padding: 4px 8px;
+  font-size: 12px;
+}
+.api-key-mask {
+  font-family: 'SFMono-Regular', Menlo, Consolas, monospace;
+  letter-spacing: 2px;
+  display: inline-block;
+  min-width: 80px;
+}
+.help-example {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.help-example-label {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+.help-example .code {
+  margin: 0;
+}
+.model-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
 }
 
 /* Logs view */
