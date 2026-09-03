@@ -16,6 +16,12 @@ export const jaJP: Dict = {
     settings: '設定',
   },
   toolbar: {
+    popoverNodeHeader: 'ノード情報',
+    popoverModelsHeader: 'マイモデル',
+    popoverTutorialBtn: '呼び出し手順',
+    popoverModelsEmpty: 'Token が未設定です',
+    popoverModelsAddBtn: '設定する',
+    popoverModelsCount: '{n} モデル',
     clusterLabel: 'ノード操作',
     popoverPeer: 'ピア ID',
     popoverRole: 'ロール',
