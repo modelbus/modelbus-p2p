@@ -37,11 +37,7 @@ async function refreshAll() {
 }
 
 // ---- Ephemeral UI state -------------------------------------------------------
-const apiKey = ref<string>(
-  (typeof localStorage !== 'undefined' && localStorage.getItem('modelbus.consumer.apiKey')) || ''
-);
 const helpModalOpen = ref(false);
-const serviceModalOpen = ref(false);
 const now = ref(Date.now());
 let nowTimer: number | undefined;
 
@@ -60,19 +56,6 @@ watch(
 
 // ---- Local data derivations ---------------------------------------------------
 const localPeerId = computed(() => props.refs.status.value.peerId ?? null);
-const isProvisioning = computed(() => !!props.refs.provision.value);
-const nodeModels = computed(() => {
-  const p = props.refs.provision.value;
-  return p ? p.providers.flatMap((x) => x.modelIds) : [];
-});
-const nodeProviderNames = computed(() => {
-  const p = props.refs.provision.value;
-  return p ? p.providers.map((x) => x.providerName) : [];
-});
-const consumerKeyConfigured = computed(() => !!apiKey.value);
-const localEndpoint = computed(
-  () => `http://127.0.0.1:${props.refs.proxyPort.value}`
-);
 
 /**
  * Estimate tokens ~ bytes / 4. The proxy statistics track bytes sent/received
@@ -151,7 +134,6 @@ const tokensMonth = computed(() => {
   return Math.round((requestsMonth.value / r) * bytesToTokens(totalBytes.value));
 });
 
-const connections = computed(() => props.refs.status.value.connected);
 const score = computed(() =>
   wallet.value ? wallet.value.tokens.toFixed(2) : '—'
 );
@@ -194,13 +176,6 @@ function goProvision() {
   window.dispatchEvent(
     new CustomEvent('modelbus:nav', {
       detail: { tab: 'settings', sub: 'provision' },
-    })
-  );
-}
-function goService() {
-  window.dispatchEvent(
-    new CustomEvent('modelbus:nav', {
-      detail: { tab: 'settings', sub: 'service' },
     })
   );
 }
@@ -255,17 +230,10 @@ function onProviderLogoError(evt: Event) {
 // ---- Demo curl for the help / service modals ---------------------------------
 const helpModelExample = computed(() => {
   const m = models.value[0]?.id ?? '<model-id>';
-  return `curl ${localEndpoint.value}/v1/chat/completions \\
+  const port = props.refs.proxyPort.value;
+  return `curl http://127.0.0.1:${port}/v1/chat/completions \\
   -H "Content-Type: application/json" \\
-  -H "Authorization: Bearer ${apiKey.value || '<your-api-key>'}" \\
-  -d '{ "model": "${m}", "messages": [{"role":"user","content":"hi"}] }'`;
-});
-
-const serviceCurlExample = computed(() => {
-  const m = nodeModels.value[0] ?? '<model-id>';
-  return `curl ${localEndpoint.value}/v1/chat/completions \\
-  -H "Content-Type: application/json" \\
-  -H "Authorization: Bearer ${apiKey.value || '<your-api-key>'}" \\
+  -H "Authorization: Bearer <your-api-key>" \\
   -d '{ "model": "${m}", "messages": [{"role":"user","content":"hi"}] }'`;
 });
 </script>
@@ -343,108 +311,6 @@ const serviceCurlExample = computed(() => {
           </button>
         </div>
       </div>
-    </section>
-
-    <!-- ============ 我的节点 (node + service + connections, merged) ============ -->
-    <section class="card home-block">
-      <header class="block-head">
-        <h3>{{ t('home.myNode') }}</h3>
-        <span class="status-pill" :class="{ online: refs.status.value.started }">
-          <span class="led"></span>
-          {{
-            refs.status.value.started
-              ? t('home.myNodeOnline')
-              : t('home.myNodeOffline')
-          }}
-        </span>
-      </header>
-      <div class="my-node-grid">
-        <dl class="kv kv-inline">
-          <dt>{{ t('home.peerId') }}</dt>
-          <dd class="code short">{{ localPeerId ?? t('status.placeholder') }}</dd>
-          <dt>{{ t('home.role') }}</dt>
-          <dd>
-            <span class="tag" :class="{ success: refs.status.value.started }">
-              {{
-                refs.status.value.role === 'provision'
-                  ? t('status.roleProvision')
-                  : refs.status.value.role === 'consume'
-                  ? t('status.roleConsume')
-                  : t('status.roleIdle')
-              }}
-            </span>
-          </dd>
-          <dt>{{ t('status.listen') }}</dt>
-          <dd class="muted">
-            <span v-if="refs.status.value.multiaddrs.length">
-              {{ refs.status.value.multiaddrs[0] }}
-              <span v-if="refs.status.value.multiaddrs.length > 1">
-                +{{ refs.status.value.multiaddrs.length - 1 }}
-              </span>
-            </span>
-            <span v-else>{{ t('status.placeholder') }}</span>
-          </dd>
-        </dl>
-
-        <div class="my-node-side">
-          <div v-if="isProvisioning" class="provision-line">
-            <div class="provision-text">
-              {{
-                t('home.myNodeProvisionedTitle', {
-                  provider: nodeProviderNames.join(', '),
-                  n: nodeModels.length,
-                })
-              }}
-            </div>
-            <div class="muted provision-sub">
-              {{ t('home.myNodeProvisionedDesc') }}
-            </div>
-          </div>
-          <div v-else class="provision-line not-started">
-            <div class="provision-text">
-              {{ t('home.myNodeNotProvisionedTitle') }}
-            </div>
-            <div class="muted provision-sub">
-              {{ t('home.myNodeNotProvisionedDesc') }}
-            </div>
-          </div>
-          <div class="my-node-actions">
-            <button
-              v-if="!refs.status.value.started"
-              class="primary"
-              @click="actions.startNode"
-            >
-              {{ t('actions.start') }}
-            </button>
-            <button v-else class="danger" @click="actions.stopNode">
-              {{ t('actions.stop') }}
-            </button>
-            <button @click="goProvision">
-              {{
-                isProvisioning
-                  ? t('home.myNodeModify')
-                  : t('home.myNodeProvisionBtn')
-              }}
-            </button>
-            <button
-              class="ghost"
-              type="button"
-              @click="serviceModalOpen = true"
-              :disabled="!isProvisioning"
-              :title="isProvisioning ? '' : t('home.myNodeServiceNoProvision')"
-            >
-              {{ t('home.myNodeServiceBtn') }}
-            </button>
-          </div>
-        </div>
-      </div>
-
-      <footer class="my-node-foot">
-        <span class="my-node-conn">
-          <span class="muted">{{ t('home.myNodeConnections') }}</span>
-          <span class="my-node-conn-num">{{ connections }}</span>
-        </span>
-      </footer>
     </section>
 
     <!-- ============ 我能使用 (available models) ============ -->
@@ -626,76 +492,6 @@ const serviceCurlExample = computed(() => {
         </footer>
       </div>
     </div>
-
-    <!-- ===== Service modal (开放调用服务) ===== -->
-    <div
-      v-if="serviceModalOpen"
-      class="modal-overlay"
-      @click.self="serviceModalOpen = false"
-    >
-      <div class="modal-card home-modal" role="dialog" aria-modal="true">
-        <header class="modal-head">
-          <div>
-            <h3>{{ t('home.serviceModalTitle') }}</h3>
-            <p class="muted modal-sub">{{ t('home.serviceModalDesc') }}</p>
-          </div>
-          <button class="modal-close" @click="serviceModalOpen = false" aria-label="Close">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
-              stroke="currentColor" stroke-width="2" stroke-linecap="round"
-              stroke-linejoin="round" aria-hidden="true">
-              <line x1="18" y1="6" x2="6" y2="18" />
-              <line x1="6" y1="6" x2="18" y2="18" />
-            </svg>
-          </button>
-        </header>
-        <div class="modal-body">
-          <div v-if="!isProvisioning" class="banner">
-            {{ t('home.serviceModalNoProvision') }}
-          </div>
-          <template v-else>
-            <dl class="kv kv-stack">
-              <dt>{{ t('home.serviceModalApiKey') }}</dt>
-              <dd>
-                <span v-if="consumerKeyConfigured" class="api-key-mask code short">
-                  ••••••••
-                </span>
-                <span v-else class="muted code short">
-                  {{ t('home.serviceModalApiKeyMissing') }}
-                </span>
-                <button class="ghost" @click="goService">
-                  {{ t('home.serviceModalConfigure') }}
-                </button>
-              </dd>
-              <dt>{{ t('home.serviceModalEndpoint') }}</dt>
-              <dd class="code short">{{ localEndpoint }}</dd>
-              <dt>{{ t('home.serviceModalModels') }}</dt>
-              <dd>
-                <span v-if="nodeModels.length" class="model-chips">
-                  <span v-for="m in nodeModels" :key="m" class="chip selected">
-                    {{ m }}
-                  </span>
-                </span>
-                <span v-else class="muted">—</span>
-              </dd>
-            </dl>
-            <div class="help-example">
-              <div class="muted help-example-label">
-                {{ t('home.serviceModalUsageExample') }}
-              </div>
-              <pre class="code">{{ serviceCurlExample }}</pre>
-            </div>
-          </template>
-        </div>
-        <footer class="modal-foot">
-          <button class="primary" @click="serviceModalOpen = false">
-            {{ t('home.serviceModalClose') }}
-          </button>
-          <button v-if="!isProvisioning" class="ghost" @click="goProvision">
-            {{ t('home.myNodeProvisionBtn') }}
-          </button>
-        </footer>
-      </div>
-    </div>
   </div>
 </template>
 
@@ -714,23 +510,14 @@ const serviceCurlExample = computed(() => {
   font-weight: 600;
 }
 
-/* ===== Stats grid ===== */
+/* ===== Stats grid — always 4 columns, never wrap ===== */
 .stats-grid {
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 10px;
   padding: 14px;
   margin-bottom: 0;
-}
-@media (max-width: 1100px) {
-  .stats-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-@media (max-width: 720px) {
-  .stats-grid {
-    grid-template-columns: 1fr;
-  }
+  overflow-x: auto;
 }
 .stat-card {
   background: var(--bg-elev);
@@ -868,90 +655,6 @@ const serviceCurlExample = computed(() => {
 .ghost-icon:hover {
   background: var(--bg-elev);
   color: var(--text);
-}
-
-/* ===== My node (node info + service + connections) ===== */
-.my-node-grid {
-  display: grid;
-  grid-template-columns: 1.4fr 1fr;
-  gap: 16px;
-  align-items: stretch;
-}
-@media (max-width: 720px) {
-  .my-node-grid {
-    grid-template-columns: 1fr;
-  }
-}
-.kv-inline {
-  grid-template-columns: 80px 1fr;
-  font-size: 13px;
-}
-.kv-stack dt {
-  color: var(--muted);
-  font-size: 12px;
-  margin-top: 6px;
-}
-.kv-stack dd {
-  margin: 0 0 4px;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-}
-.kv-stack dd > .code.short {
-  flex: 1;
-  min-width: 0;
-}
-.my-node-side {
-  background: var(--bg-elev);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 12px 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  min-width: 0;
-}
-.provision-line {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-}
-.provision-line.not-started {
-  opacity: 0.92;
-}
-.provision-text {
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text);
-}
-.provision-sub {
-  font-size: 12px;
-}
-.my-node-actions {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  margin-top: auto;
-}
-.my-node-foot {
-  display: flex;
-  justify-content: flex-end;
-  border-top: 1px dashed var(--border);
-  margin-top: 12px;
-  padding-top: 10px;
-}
-.my-node-conn {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 6px;
-  font-size: 12px;
-}
-.my-node-conn-num {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text);
-  font-variant-numeric: tabular-nums;
 }
 
 /* ===== Available / I-can-use models list ===== */
@@ -1133,78 +836,7 @@ const serviceCurlExample = computed(() => {
   align-items: center;
 }
 
-/* ===== Modal ===== */
-.modal-overlay {
-  position: fixed;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.45);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 100;
-  padding: 24px;
-}
-.modal-card {
-  width: 100%;
-  max-width: 560px;
-  background: var(--panel);
-  border: 1px solid var(--border);
-  border-radius: 12px;
-  box-shadow: 0 18px 48px rgba(0, 0, 0, 0.28);
-  display: flex;
-  flex-direction: column;
-  max-height: calc(100vh - 96px);
-  overflow: hidden;
-}
-.modal-head {
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  padding: 14px 18px;
-  border-bottom: 1px solid var(--border);
-  gap: 12px;
-}
-.modal-head h3 {
-  margin: 0;
-  font-size: 15px;
-  font-weight: 600;
-}
-.modal-sub {
-  margin: 4px 0 0;
-  font-size: 12px;
-}
-.modal-close {
-  width: 30px;
-  height: 30px;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  padding: 0;
-  background: transparent;
-  border: 1px solid transparent;
-  border-radius: 8px;
-  color: var(--muted);
-  cursor: pointer;
-}
-.modal-close:hover {
-  background: var(--bg-elev);
-  color: var(--text);
-  border-color: var(--border);
-}
-.modal-body {
-  padding: 14px 18px;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-.modal-foot {
-  display: flex;
-  justify-content: flex-end;
-  gap: 8px;
-  padding: 12px 18px;
-  border-top: 1px solid var(--border);
-}
+/* ===== Help modal (shared styles live in style.css as global modal-* ===== */
 .help-steps {
   margin: 0;
   padding-left: 18px;
@@ -1214,37 +846,7 @@ const serviceCurlExample = computed(() => {
   font-size: 13px;
   color: var(--text);
 }
-.help-example {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-.help-example-label {
-  font-size: 11px;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-}
 .help-example .code {
-  margin: 0;
-}
-.api-key-mask {
-  font-family: 'SFMono-Regular', Menlo, Consolas, monospace;
-  letter-spacing: 2px;
-  display: inline-block;
-  min-width: 80px;
-}
-.modal-body .code.short {
-  display: inline-block;
-  max-width: 100%;
-  padding: 4px 8px;
-  font-size: 12px;
-}
-.model-chips {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px;
-}
-.modal-body .code {
   margin: 0;
   white-space: pre-wrap;
   word-break: break-all;
