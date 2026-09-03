@@ -16,6 +16,9 @@ export const jaJP: Dict = {
     settings: '設定',
   },
   toolbar: {
+    popoverHeader: 'マイノード',
+    popoverProvidersCount: '{n} プロバイダ',
+    popoverEditBtn: '編集',
     popoverNodeHeader: 'ノード情報',
     popoverModelsHeader: 'マイモデル',
     popoverTutorialBtn: '呼び出し手順',
