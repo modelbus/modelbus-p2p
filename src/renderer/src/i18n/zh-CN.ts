@@ -13,6 +13,12 @@ export const zhCN = {
   },
   toolbar: {
     clusterLabel: '节点操作',
+    popoverNodeHeader: '节点信息',
+    popoverModelsHeader: '我的模型',
+    popoverTutorialBtn: '调用教程',
+    popoverModelsEmpty: '尚未配置任何 Token',
+    popoverModelsAddBtn: '去配置',
+    popoverModelsCount: '{n} 个模型',
     popoverPeer: '节点 ID',
     popoverRole: '角色',
     popoverListen: '监听',
