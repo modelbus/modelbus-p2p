@@ -15,6 +15,18 @@ export const ptBR: Dict = {
     logs: 'Logs',
     settings: 'Ajustes',
   },
+  toolbar: {
+    clusterLabel: 'Node actions',
+    popoverPeer: 'Peer ID',
+    popoverRole: 'Role',
+    popoverListen: 'Listener',
+    popoverStatus: 'Status',
+    popoverConnections: 'Active connections',
+    popoverProvisionTitle: 'Sharing {provider} ({n} models)',
+    popoverProvisionDesc: 'Other nodes can route requests through you',
+    popoverNotProvisionedTitle: 'No token shared',
+    popoverNotProvisionedDesc: "You haven't shared a token yet — others cannot route requests through you.",
+  },
   actions: {
     start: 'Iniciar nó',
     stop: 'Parar nó',
