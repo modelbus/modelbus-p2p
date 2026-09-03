@@ -11,6 +11,18 @@ export const zhCN = {
     logs: '日志',
     settings: '设置',
   },
+  toolbar: {
+    clusterLabel: '节点操作',
+    popoverPeer: '节点 ID',
+    popoverRole: '角色',
+    popoverListen: '监听',
+    popoverStatus: '状态',
+    popoverConnections: '当前连接',
+    popoverProvisionTitle: '正在分享 {provider}（{n} 个模型）',
+    popoverProvisionDesc: '其他节点可通过本机转发请求',
+    popoverNotProvisionedTitle: '尚未共享 Token',
+    popoverNotProvisionedDesc: '你还未将 Token 上线，其他节点无法通过你转发请求。',
+  },
   actions: {
     start: '启动节点',
     stop: '停止节点',
