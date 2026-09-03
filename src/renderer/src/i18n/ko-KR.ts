@@ -16,6 +16,12 @@ export const koKR: Dict = {
     settings: '설정',
   },
   toolbar: {
+    popoverNodeHeader: '노드 정보',
+    popoverModelsHeader: '내 모델',
+    popoverTutorialBtn: '호출 가이드',
+    popoverModelsEmpty: 'Token이 설정되지 않음',
+    popoverModelsAddBtn: '설정',
+    popoverModelsCount: '모델 {n}개',
     clusterLabel: '노드 작업',
     popoverPeer: '피어 ID',
     popoverRole: '역할',
