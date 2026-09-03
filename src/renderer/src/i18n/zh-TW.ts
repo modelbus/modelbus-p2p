@@ -15,6 +15,18 @@ export const zhTW: Dict = {
     logs: '日誌',
     settings: '設定',
   },
+  toolbar: {
+    clusterLabel: '節點操作',
+    popoverPeer: '節點 ID',
+    popoverRole: '角色',
+    popoverListen: '監聽',
+    popoverStatus: '狀態',
+    popoverConnections: '當前連線',
+    popoverProvisionTitle: '正在分享 {provider}（{n} 個模型）',
+    popoverProvisionDesc: '其他節點可透過本機轉發請求',
+    popoverNotProvisionedTitle: '尚未分享 Token',
+    popoverNotProvisionedDesc: '你還未將 Token 上線，其他節點無法透過你轉發請求。',
+  },
   actions: {
     start: '啟動節點',
     stop: '停止節點',
