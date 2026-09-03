@@ -150,6 +150,62 @@ const langMenuOpen = ref(false);
 const themeMenuOpen = ref(false);
 const systemMenuOpen = ref(false);
 
+// ---- Node-actions cluster (toolbar) -----------------------------------------
+// Hover the cluster to peek at peer/role/listener/provision info; click an
+// action button inside to start/stop the node, jump to provisioning, or
+// open the public-API service modal.
+const clusterHover = ref(false);
+const serviceModalOpen = ref(false);
+const apiKey = ref<string>(
+  (typeof localStorage !== 'undefined' && localStorage.getItem('modelbus.consumer.apiKey')) || ''
+);
+let hoverTimer: number | undefined;
+
+const isProvisioning = computed(() => !!provision.value);
+const consumerKeyConfigured = computed(() => !!apiKey.value);
+const localEndpoint = computed(() => `http://127.0.0.1:${proxyPort.value}`);
+const nodeModels = computed(() =>
+  provision.value ? provision.value.providers.flatMap((p) => p.modelIds) : []
+);
+const nodeProviderNames = computed(() =>
+  provision.value ? provision.value.providers.map((p) => p.providerName) : []
+);
+
+/** Show the cluster popover with a small delay so cursor passes through
+ *  without flicker. Clearing the timer handles mouse-leave cleanly. */
+function openCluster() {
+  if (hoverTimer) window.clearTimeout(hoverTimer);
+  hoverTimer = window.setTimeout(() => (clusterHover.value = true), 80);
+}
+function closeCluster() {
+  if (hoverTimer) window.clearTimeout(hoverTimer);
+  hoverTimer = window.setTimeout(() => (clusterHover.value = false), 140);
+}
+function cancelCloseCluster() {
+  if (hoverTimer) window.clearTimeout(hoverTimer);
+}
+
+/** Curl example shown inside the public-API service modal — opened from the
+ *  cluster on the toolbar. */
+const serviceCurlExample = computed(() => {
+  const m = nodeModels.value[0] ?? '<model-id>';
+  return `curl ${localEndpoint.value}/v1/chat/completions \\
+  -H "Content-Type: application/json" \\
+  -H "Authorization: Bearer ${apiKey.value || '<your-api-key>'}" \\
+  -d '{ "model": "${m}", "messages": [{"role":"user","content":"hi"}] }'`;
+});
+
+function goProvisionFromCluster() {
+  clusterHover.value = false;
+  settingsSub.value = 'provision';
+  tab.value = 'settings';
+}
+function goServiceFromCluster() {
+  clusterHover.value = false;
+  settingsSub.value = 'service';
+  tab.value = 'settings';
+}
+
 function openDevTools() {
   window.modelbus.system.openDevTools().catch((err) => {
     console.error('[system] openDevTools failed:', err);
@@ -411,6 +467,9 @@ function onDocClick(e: MouseEvent) {
     themeMenuOpen.value = false;
     systemMenuOpen.value = false;
   }
+  if (!target.closest('.cluster')) {
+    clusterHover.value = false;
+  }
 }
 
 const tabs = computed<Array<{ id: Tab; label: string }>>(() => [
@@ -487,6 +546,7 @@ function onNavEvent(e: Event) {
 onBeforeUnmount(() => {
   document.removeEventListener('click', onDocClick);
   window.removeEventListener('modelbus:nav', onNavEvent);
+  if (hoverTimer) window.clearTimeout(hoverTimer);
 });
 </script>
 
@@ -509,6 +569,132 @@ onBeforeUnmount(() => {
       </nav>
 
       <div class="toolbar">
+        <!-- ============ Cluster: node actions + hover popover ============ -->
+        <div
+          class="cluster"
+          @mouseenter="openCluster"
+          @mouseleave="closeCluster"
+        >
+          <button
+            type="button"
+            class="cluster-trigger"
+            :aria-expanded="clusterHover"
+            :title="t('toolbar.clusterLabel')"
+          >
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="1.8" stroke-linecap="round"
+              stroke-linejoin="round" aria-hidden="true">
+              <circle cx="12" cy="12" r="3" />
+              <path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z" />
+            </svg>
+            <span>{{ t('toolbar.clusterLabel') }}</span>
+            <span class="muted cluster-caret">▾</span>
+          </button>
+
+          <div
+            v-show="clusterHover"
+            class="cluster-popover"
+            role="tooltip"
+            @mouseenter="cancelCloseCluster"
+            @mouseleave="closeCluster"
+          >
+            <header class="cluster-head">
+              <span class="status-pill" :class="{ online: status.started }">
+                <span class="led"></span>
+                {{
+                  status.started
+                    ? t('status.p2pOnline')
+                    : t('status.p2pOffline')
+                }}
+              </span>
+            </header>
+            <dl class="cluster-info">
+              <dt>{{ t('toolbar.popoverPeer') }}</dt>
+              <dd class="code short">
+                {{ status.peerId ?? t('status.placeholder') }}
+              </dd>
+              <dt>{{ t('toolbar.popoverRole') }}</dt>
+              <dd>
+                <span class="tag" :class="{ success: status.started }">
+                  {{
+                    status.role === 'provision'
+                      ? t('status.roleProvision')
+                      : status.role === 'consume'
+                      ? t('status.roleConsume')
+                      : t('status.roleIdle')
+                  }}
+                </span>
+              </dd>
+              <dt>{{ t('toolbar.popoverListen') }}</dt>
+              <dd class="muted">
+                <span v-if="status.multiaddrs.length">
+                  {{ status.multiaddrs[0] }}
+                  <span v-if="status.multiaddrs.length > 1">
+                    +{{ status.multiaddrs.length - 1 }}
+                  </span>
+                </span>
+                <span v-else>{{ t('status.placeholder') }}</span>
+              </dd>
+              <dt>{{ t('toolbar.popoverConnections') }}</dt>
+              <dd>
+                <strong>{{ status.connected }}</strong>
+              </dd>
+            </dl>
+            <div
+              v-if="isProvisioning"
+              class="cluster-line"
+            >
+              <div class="cluster-line-text">
+                {{
+                  t('toolbar.popoverProvisionTitle', {
+                    provider: nodeProviderNames.join(', '),
+                    n: nodeModels.length,
+                  })
+                }}
+              </div>
+              <div class="muted cluster-line-sub">
+                {{ t('toolbar.popoverProvisionDesc') }}
+              </div>
+            </div>
+            <div v-else class="cluster-line not-started">
+              <div class="cluster-line-text">
+                {{ t('toolbar.popoverNotProvisionedTitle') }}
+              </div>
+              <div class="muted cluster-line-sub">
+                {{ t('toolbar.popoverNotProvisionedDesc') }}
+              </div>
+            </div>
+            <div class="cluster-actions">
+              <button
+                v-if="!status.started"
+                class="primary"
+                @click="startNode"
+              >
+                {{ t('actions.start') }}
+              </button>
+              <button v-else class="danger" @click="stopNode">
+                {{ t('actions.stop') }}
+              </button>
+              <button @click="goProvisionFromCluster">
+                {{
+                  isProvisioning
+                    ? t('home.myNodeModify')
+                    : t('home.myNodeProvisionBtn')
+                }}
+              </button>
+              <button
+                type="button"
+                class="ghost"
+                @click="serviceModalOpen = true"
+                :disabled="!isProvisioning"
+                :title="isProvisioning ? '' : t('home.myNodeServiceNoProvision')"
+              >
+                {{ t('home.myNodeServiceBtn') }}
+              </button>
+            </div>
+          </div>
+        </div>
+
         <div
           class="status-pill"
           :class="{ online: status.started }"
@@ -622,5 +808,82 @@ onBeforeUnmount(() => {
       <LogsView v-else-if="tab === 'logs'" :refs="refs" :actions="actions" :helpers="helpers" />
       <SettingsView v-else-if="tab === 'settings'" :key="settingsSub" :initial-sub="settingsSub" :refs="refs" :actions="actions" :helpers="helpers" />
     </main>
+
+    <!-- ===== Service modal (开放调用服务) — moved from HomeView so the
+              toolbar cluster button can open it. ===== -->
+    <div
+      v-if="serviceModalOpen"
+      class="modal-overlay"
+      @click.self="serviceModalOpen = false"
+    >
+      <div class="modal-card" role="dialog" aria-modal="true">
+        <header class="modal-head">
+          <div>
+            <h3>{{ t('home.serviceModalTitle') }}</h3>
+            <p class="muted modal-sub">{{ t('home.serviceModalDesc') }}</p>
+          </div>
+          <button class="modal-close" @click="serviceModalOpen = false" aria-label="Close">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round"
+              stroke-linejoin="round" aria-hidden="true">
+              <line x1="18" y1="6" x2="6" y2="18" />
+              <line x1="6" y1="6" x2="18" y2="18" />
+            </svg>
+          </button>
+        </header>
+        <div class="modal-body">
+          <div v-if="!isProvisioning" class="banner">
+            {{ t('home.serviceModalNoProvision') }}
+          </div>
+          <template v-else>
+            <dl class="kv kv-stack">
+              <dt>{{ t('home.serviceModalApiKey') }}</dt>
+              <dd>
+                <span v-if="consumerKeyConfigured" class="api-key-mask code short">
+                  ••••••••
+                </span>
+                <span v-else class="muted code short">
+                  {{ t('home.serviceModalApiKeyMissing') }}
+                </span>
+                <button class="ghost" @click="goServiceFromCluster">
+                  {{ t('home.serviceModalConfigure') }}
+                </button>
+              </dd>
+              <dt>{{ t('home.serviceModalEndpoint') }}</dt>
+              <dd class="code short">{{ localEndpoint }}</dd>
+              <dt>{{ t('home.serviceModalModels') }}</dt>
+              <dd>
+                <span v-if="nodeModels.length" class="model-chips">
+                  <span
+                    v-for="m in nodeModels"
+                    :key="m"
+                    class="chip selected"
+                  >{{ m }}</span>
+                </span>
+                <span v-else class="muted">—</span>
+              </dd>
+            </dl>
+            <div class="help-example">
+              <div class="muted help-example-label">
+                {{ t('home.serviceModalUsageExample') }}
+              </div>
+              <pre class="code">{{ serviceCurlExample }}</pre>
+            </div>
+          </template>
+        </div>
+        <footer class="modal-foot">
+          <button class="primary" @click="serviceModalOpen = false">
+            {{ t('home.serviceModalClose') }}
+          </button>
+          <button
+            v-if="!isProvisioning"
+            class="ghost"
+            @click="goProvisionFromCluster"
+          >
+            {{ t('home.myNodeProvisionBtn') }}
+          </button>
+        </footer>
+      </div>
+    </div>
   </div>
 </template>
