@@ -16,6 +16,9 @@ export const itIT: Dict = {
     settings: 'Impostazioni',
   },
   toolbar: {
+    popoverHeader: "My node",
+    popoverProvidersCount: "{n} providers",
+    popoverEditBtn: "Edit",
     popoverNodeHeader: "Node info",
     popoverModelsHeader: "My models",
     popoverTutorialBtn: "Call tutorial",
