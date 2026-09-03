@@ -15,6 +15,18 @@ export const koKR: Dict = {
     logs: '로그',
     settings: '설정',
   },
+  toolbar: {
+    clusterLabel: '노드 작업',
+    popoverPeer: '피어 ID',
+    popoverRole: '역할',
+    popoverListen: '리스너',
+    popoverStatus: '상태',
+    popoverConnections: '현재 연결',
+    popoverProvisionTitle: '{provider} 공유 중 ({n}개 모델)',
+    popoverProvisionDesc: '다른 노드가 본 노드를 통해 요청을 라우팅할 수 있습니다',
+    popoverNotProvisionedTitle: 'Token 미공유',
+    popoverNotProvisionedDesc: '아직 Token을 공유하지 않아 다른 노드가 본 노드를 통해 요청을 라우팅할 수 없습니다.',
+  },
   actions: {
     start: '노드 시작',
     stop: '노드 중지',
